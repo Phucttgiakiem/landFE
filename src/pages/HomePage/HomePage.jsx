@@ -3,7 +3,7 @@ import SearchComponent from '../../components/SearchComponent/SearchComponent';
 import FilterComponent from '../../components/FilterComponent/FilterComponent';
 const HomePage = () => {
     return (
-        <div>
+        <div style={{"position":"relative"}}>
             <SearchComponent/>
             <FilterComponent/>
         </div>

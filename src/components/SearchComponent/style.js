@@ -1,9 +1,10 @@
 import { Row,Col } from "antd";
 import styled from 'styled-components';
 export const WrapperArea = styled.div`
-  width: calc(100% - 40px);
+  width: 100%;
   display:none;
-  padding: 0 20px 20px 20px;
+  padding:0px;
+  margin: 20px 0 20px ;
   height: 25rem;
   overflow-y: auto;
   overflow-x: hidden;
@@ -11,7 +12,7 @@ export const WrapperArea = styled.div`
     display: block;
   }
   &::-webkit-scrollbar {
-    width: 8px;   
+    width: 8px;
   }
 
   &::-webkit-scrollbar-track {
@@ -28,17 +29,27 @@ export const WrapperArea = styled.div`
   }
 `
 export const WrapperSearch = styled(Row)`
-  margin: 1.2rem 120px 5px 120px;
+  width: calc(100vw - 240px);
+  margin: 1.2rem auto 5px;
+  padding: 0 20px;
+  background-color: white;
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  right: 0;
+  left: 0;
   &.active {
     box-shadow: 0.15rem 0.15rem 5px rgba(98, 98, 98, 1), 
                 -0.15rem 0.15rem 5px rgba(98,98,98,1);
     border-radius: 8px;
+    
   }
+  
 `
 export const WrapperInputsearch = styled.div`
-  width: calc(100% - 40px);
+  width:100%;
   height:3.5rem;
-  margin: 20px;
+  margin: 20px 0;
   background-color: #f2f2f2;
   border-radius: 8px;
   display: flex;
@@ -116,7 +127,7 @@ export const Itemlistcommune = styled.span`
   
 `
 export const TextItemlistcommune = styled.span`
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-weight: 500;
   margin: 20px;
   color: #f01a1aff;

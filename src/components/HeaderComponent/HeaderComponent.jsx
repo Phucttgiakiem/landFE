@@ -5,7 +5,6 @@ import { WrapperHeader, WrapperTextHeader,WrapperHeaderMenu,WrapperHeaderSubMenu
 
 export default function HeaderComponent () {
     const [activeMenu, setActiveMenu] = useState("sell");
-    
     return (
         <div>
             <WrapperHeader>

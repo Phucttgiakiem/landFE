@@ -1,6 +1,7 @@
 import { Row } from "antd";
 import styled from 'styled-components';
 export const WrapperHeader = styled(Row)`
+  width: 100vw;
   padding: 10px 120px;
   background-color: #02CBE0;
 `
