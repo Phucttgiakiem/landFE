@@ -29,7 +29,7 @@ export const WrapperArea = styled.div`
   }
 `
 export const WrapperSearch = styled(Row)`
-  width: calc(100vw - 240px);
+  width: calc(100% - 240px);
   margin: 1.2rem auto 5px;
   padding: 0 20px;
   background-color: white;

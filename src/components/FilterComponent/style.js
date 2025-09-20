@@ -7,6 +7,7 @@ export const WrapperFilter = styled.div`
     position: absolute;
     z-index: 3;
     top: 6rem;
+    left: 0;
     border-bottom: 1px solid #b7b7b7ff;
 `
 export const CounterFilter = styled.span`

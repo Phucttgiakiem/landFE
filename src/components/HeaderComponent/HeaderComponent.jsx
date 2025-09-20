@@ -6,7 +6,7 @@ import { WrapperHeader, WrapperTextHeader,WrapperHeaderMenu,WrapperHeaderSubMenu
 export default function HeaderComponent () {
     const [activeMenu, setActiveMenu] = useState("sell");
     return (
-        <div>
+        <>
             <WrapperHeader>
                 <Col span={2}>
                     <WrapperTextHeader>Property</WrapperTextHeader>
@@ -63,6 +63,6 @@ export default function HeaderComponent () {
                     </WrapperHeaderAccount>
                 </Col>
             </WrapperHeader>
-        </div>
+        </>
     )
 }
