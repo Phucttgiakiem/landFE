@@ -4,10 +4,18 @@ export const WrapperSlider = styled.div`
     width: 60%;
     margin: 0;
     position: relative;
+    @media screen and (max-width: 767px){
+      .slidersmall {
+        display:none;
+      }
+    }
 `;
 export const ImageSlider = styled.img`
     height: 30rem;
     border-radius: 8px;
+    @media screen and (max-width: 767px){ 
+      height:15rem;
+    }
 `;
 export const SmallImageWrapper = styled.div`
   display: flex;
@@ -64,6 +72,9 @@ export const LocationLand = styled.span`
   font-weight: normal !important;
   color: #2C2C2C;
   display: block;
+  @media screen and (min-width: 768px) and (max-width: 1199px){
+    font-size:20px;
+  }
 `
 export const InfoLand = styled.div`
   margin-top: 1rem;
@@ -71,11 +82,21 @@ export const InfoLand = styled.div`
   border-top: 0.1rem solid #f2f2f2;
   display: flex;
   flex-direction: row;
+  align-items: stretch;
+  @media screen and (max-width:767px){
+    flex-direction: column;
+  }
 `
 export const InfoItem = styled.div`
   font-size: 14px;
   line-height: 20px;
   margin-right: 2rem;
+  @media screen and (max-width:767px){
+    margin-right: 0;
+    display:flex;
+    flex-direction:row;
+    align-items:baseline;
+  }
 `
 export const InfoItemTitle = styled.span`
   display: block;
@@ -83,18 +104,37 @@ export const InfoItemTitle = styled.span`
   line-height: 20px;
   font-weight: nomal !important;
   color: #999;
+  @media screen and (min-width:768px) and (max-width:1199px) {
+    font-size:19px;
+  }
+  @media screen and (max-width:767px){
+    font-size:15px;
+    width: 30%;
+    &:after {
+      content: ":"
+    }
+  }
 `
 export const InfoItemValue = styled.span`
   display: block;
   font-size: 18px;
   margin-top: 0.2rem;
   color: #2C2C2C;
+  @media screen and (min-width:768px) and (max-width:1199px) {
+    font-size:16px;
+  }
+  @media screen and (max-width:767px) {
+    font-size:13px;
+  }
 `
 export const InfoItemExtend = styled.span`
   display: block;
   font-size: 14px;
   margin-top: 0.2rem;
   color: #666;
+  @media screen and (min-width:768px) and (max-width:1199px) {
+    font-size:16px;
+  }
 `
 export const WrapperAction = styled.div`
   flex-grow: 1;
@@ -113,6 +153,9 @@ export const ActionIcon = styled.span`
   letter-spacing: -.2px;
   padding: 13px 15px;
   border-radius: 8px;
+  @media screen and (max-width: 767px){
+    font-size:1rem;
+  }
 `
 export const WrapperDiscriptionLand = styled.div`
   margin-top: 2rem;
@@ -133,6 +176,9 @@ export const BodyDescription = styled.div`
   font-size: 14px;
   line-height: 24px;
   font-weight: normal !important;
+  @media screen and (min-width:768px) and (max-width:1199px) {
+    font-size:16px;
+  }
 `
 export const WrapperSpecs = styled.div`
   margin-top: 2rem;
@@ -152,6 +198,10 @@ export const SpecBody = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  @media screen and (max-width: 767px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 `
 export const SpecItem = styled.div`
   width: 50%;
@@ -163,6 +213,10 @@ export const SpecItem = styled.div`
   border-bottom: 1px solid #F2F2F2;
   padding: 10px 0px;
   margin-bottom: -1px;
+  @media screen and (max-width:767px) {
+    width: 100%;
+    align-items:center;
+  }
 `
 export const SpecItemTitle = styled.span`
   margin: 2px 16px;
@@ -171,6 +225,15 @@ export const SpecItemTitle = styled.span`
   line-height: 20px;
   font-weight: normal !important;
   color: #2C2C2C;
+  @media screen and (min-width:768px) and (max-width:1199px) {
+    font-size:16px;
+  }
+  @media screen and (max-width:767px){
+    &:after{
+      content: " :";
+    }
+    flex-grow:1;
+  }
 `
 export const SpecItemValue = styled.span`
   margin: 2px 0px;
@@ -179,6 +242,9 @@ export const SpecItemValue = styled.span`
   line-height: 20px;
   font-weight: normal !important;
   color: #2C2C2C;
+  @media screen and (min-width:768px) and (max-width:1199px) {
+    font-size:16px;
+  }
 `
 export const WrapperConfig = styled.div`
   width: 100%;
@@ -196,6 +262,9 @@ export const ConfigItemTitle = styled.span`
   font-weight: normal !important;
   color: #999;
   display: block;
+  @media screen and (min-width:768px) and (max-width:1199px) {
+    font-size:16px;
+  }
 `
 export const ConfigItemValue = styled.span`
   font-family: "Roboto Medium", Roboto, Arial !important;
@@ -203,6 +272,9 @@ export const ConfigItemValue = styled.span`
   line-height: 20px;
   font-weight: normal !important;
   display: block;
+  @media screen and (min-width:768px) and (max-width:1199px) {
+    font-size:16px;
+  }
 `
 export const WrapperContactBox = styled.div`
   border: 2px solid #F2F2F2;
@@ -251,13 +323,44 @@ export const ContactInfo = styled.div`
 export const WrapperSimilarLands = styled.div`
   margin-top: 2rem;
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 18px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+  gap:1.2rem;
   & .image-land {
     height: auto !important;
     aspect-ratio: 16/9;
+  }
+  @media screen and (max-width:767px){
+    grid-template-columns: repeat(1,1fr);
+  }
+`
+export const InfoContact = styled.div`
+  position:fixed;
+  bottom:0;
+  left:0;
+  width: 100%;
+  height:7rem;
+  z-intex:5;
+  background-color: rgba(255, 255, 255, 1);
+  display:flex;
+  flex-direction: row;
+  padding:15px;
+  box-sizing:border-box;
+  align-items:center;
+  gap:1rem;
+  box-shadow: 0 4px 1.2rem rgba(0,0,0,0.25);
+  @media screen and (min-width: 768px){
+    display:none;
+  }
+`
+export const ImageUser = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  min-width: 48px;
+  & a img {
+    width: 48px;
+    height: 48px;
   }
 `

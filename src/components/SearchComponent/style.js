@@ -44,6 +44,13 @@ export const WrapperSearch = styled(Row)`
     border-radius: 8px;
     
   }
+  @media screen and (min-width:768px) and (max-width: 1199px) {
+    width: calc(100% - 40px);
+  }
+  
+  @media screen and (max-width:767px){
+    display:none;
+  }
   
 `
 export const WrapperInputsearch = styled.div`

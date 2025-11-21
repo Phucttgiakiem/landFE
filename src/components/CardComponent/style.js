@@ -8,7 +8,10 @@ export const WrapperCard = styled.div`
     flex-direction: row;
     border-radius: 10px;
     border: 1px solid #b7b7b7ff;
-
+    @media screen and (max-width: 767px) {
+        flex-direction: column;
+        height:max-content;
+    }
     
 `
 export const LeftCard = styled.div`
@@ -21,11 +24,21 @@ export const LeftCard = styled.div`
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     position: relative;
-    
+    overflow:hidden;
+    @media screen and (max-width: 767px) {
+        width: 100%;
+        height: 20rem;
+        border-bottom-left-radius:0px;
+        border-top-right-radius:10px;
+    }
 `
 export const RightCard = styled.div`
     width: 70%;
     padding: 1rem;
+    box-sizing: border-box;
+    @media screen and (max-width: 767px) {
+        width: 100%;
+    }
 `
 
 export const NewLogo = styled.img`
@@ -54,4 +67,10 @@ export const CardDescription = styled.div`
     margin-top: 1rem;
     font-size: 1rem;
     color: rgba(174, 174, 174, 1);
+    @media screen and (max-width:1199px) {
+       display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    } 
 `

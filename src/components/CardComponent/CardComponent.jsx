@@ -5,7 +5,7 @@ export const CardComponent = () => {
     return (
         <WrapperCard>
             <LeftCard>
-                <img style={{width:"100%",height:"100%",borderTopLeftRadius:"10px",borderBottomLeftRadius:"10px"}}  src="20250904001841_bdbe_wm.jpg" alt="Property exterior"/>
+                <img style={{width:"100%",height:"100%"}}  src="20250904001841_bdbe_wm.jpg" alt="Property exterior"/>
                 <NewLogo src="newlogo.png" alt="new"/>
             </LeftCard>
             <RightCard>

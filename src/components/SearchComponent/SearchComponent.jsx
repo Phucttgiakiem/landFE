@@ -77,7 +77,6 @@ export default function SearchComponent () {
         document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
-    //console.log("kq ",area);
     return (
         <div>
             <WrapperSearch ref={wrapperRef} className={showArea || showWard ? "active" : ""}>

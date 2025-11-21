@@ -8,7 +8,15 @@ export const WrapperFilter = styled.div`
     z-index: 3;
     top: 6rem;
     left: 0;
+    box-sizing: border-box;
     border-bottom: 1px solid #b7b7b7ff;
+    @media screen and (min-width: 768px) and (max-width: 1199px) {
+        width: calc(100% - 80px);
+        margin: 0 40px;
+    }
+    @media screen and (max-width: 767px) {
+        display:none;
+    }
 `
 export const CounterFilter = styled.span`
     display: flex;
