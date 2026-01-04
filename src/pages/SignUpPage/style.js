@@ -26,11 +26,10 @@ export const WrapperContainerRight = styled.div`
     }
     .btn-login {
         margin-top: 24px;
-        width: 100%;
-        font-weight:700;
-        border:none;
+        background-color:#c0c0c0;
         color:#fff;
-        background-color: #c0c0c0;
+        font-weight:700;
+        border:none
     }
     .btn-login.active {
         background-color: #02CBE0;
@@ -52,6 +51,27 @@ export const WrapperContainerRight = styled.div`
             color: #02CBE0;
             font-weight: bold
         }
+    }
+`
+export const WrapperSignup = styled.div`
+    box-sizing: border-box;
+    width: 100%;
+    height: 15rem;
+`
+export const Signupcontainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 1rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0,0,0,0.2);
+        border-radius: 10px;
     }
 `
 export const WrapperRememberandForgot = styled.div`

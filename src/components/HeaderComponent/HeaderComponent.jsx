@@ -1,14 +1,20 @@
 
-import { useState} from "react";
+import { useState,useMemo} from "react";
 import { WrapperHeader, WrapperLogoHeader,WrapperHeaderMenu,WrapperHeaderSubMenu,
     HeaderMenuItem,HeaderLink,HeaderLinkSubMenu,HeaderMenuItemsubMenu,
     WrapperHeaderAccount,WrapperMenuMobile,WrapperAction,Backgroundfaded,
     WrapperControl,MenuLeft,WrapperMainMenuLeft,DropdownMenu,
-    MenuHeader,MenuHeaderLink,SubMenuDropdown,SubMenuLink,CloseMenuMobile
+    MenuHeader,MenuHeaderLink,SubMenuDropdown,SubMenuLink,CloseMenuMobile,
+    WrapperUserInfo,WrapperPopupitem
 } from "./style";
-import { CloseCircleOutlined, DownOutlined, EuroOutlined, HomeOutlined, MenuOutlined, SearchOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, DownOutlined, EuroOutlined, HomeOutlined, MenuOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import logo from '../../assets/images/logo.png';
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Popover } from "antd";
+import * as UserService from "../../services/UserService";
+import { resetUser } from "../../redux/slides/userSlide";
 const menuData = [
   {
     title: "Nhà đất bán",
@@ -32,10 +38,37 @@ export default function HeaderComponent () {
     const [openIndex, setOpenIndex] = useState(null);
     const [itemActive, setItemActive] = useState(null);
     const [openMenuMobile, setOpenMenuMobile] = useState(false);
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
+    const navigate = useNavigate();
+    const [arrow, setArrow] = useState('Show');
+    const mergedArrow = useMemo(() => {
+        if (arrow === 'Hide') {
+        return false;
+        }
+        if (arrow === 'Show') {
+        return true;
+        }
+        return {
+        pointAtCenter: true,
+        };
+    }, [arrow]);
     const toggleMenu = (index) => {
         setOpenIndex(openIndex === index ? null : index);
     };
-
+    const handleNavigationLogin = () => {
+        navigate('/sign-in')
+    }
+    const handleLogout = async() => {
+        await UserService.logoutUser();
+        dispatch(resetUser());
+    }
+    const content = () => (
+        <div>
+            <WrapperPopupitem>Thông tin cá nhân</WrapperPopupitem>
+            <WrapperPopupitem onClick={()=> handleLogout()}>Đăng xuất</WrapperPopupitem>
+        </div>
+    )
     return (
         <>
             <WrapperHeader>
@@ -89,10 +122,31 @@ export default function HeaderComponent () {
                                 </WrapperHeaderSubMenu> 
                             </HeaderMenuItem>
                         </WrapperHeaderMenu>
-                        <WrapperHeaderAccount>
-                            <HeaderLink href="/">Đăng nhập</HeaderLink>
-                            <HeaderLink href="/">Đăng ký</HeaderLink>
-                        </WrapperHeaderAccount>
+                        {
+                            user?.name ? (
+                                <Popover placement="bottomRight"content={content} arrow={mergedArrow} color="#02CBE0" 
+                                    styles={{
+                                        body: {
+                                            padding: "0",
+                                            overflow: "hidden",
+                                    }}}>
+                                    <WrapperUserInfo>
+                                        <span>
+                                            <UserOutlined />
+                                        </span>
+                                        <span>
+                                            {user?.name}
+                                        </span>
+                                    </WrapperUserInfo>
+                                </Popover>
+                                
+                            ):(
+                                <WrapperHeaderAccount onClick={handleNavigationLogin}>
+                                    <HeaderLink>Đăng nhập</HeaderLink>
+                                    <HeaderLink>Đăng ký</HeaderLink>
+                                </WrapperHeaderAccount>
+                            )
+                        }
                     </WrapperAction>
                     {/* session will show on device when the device has viewport true*/}
                     {

@@ -7,16 +7,21 @@ import { StyleProvider } from '@ant-design/cssinjs';
 import store from './redux/store'; // Assuming you have a Redux store set up
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const root = ReactDOM.createRoot(document.getElementById('root'));
-
+const queryClient = new QueryClient();
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <StyleProvider layer>
-          <App />
-        </StyleProvider>
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <StyleProvider layer>
+            <App />
+          </StyleProvider>
+        </BrowserRouter>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </Provider>
   </React.StrictMode>
 );

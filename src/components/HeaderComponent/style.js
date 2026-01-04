@@ -186,6 +186,43 @@ export const WrapperHeaderAccount = styled.div`
         display:none;
   }
 `
+export const WrapperUserInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  margin: 1rem 0;
+  position: relative;
+  gap: 0.5rem;
+  cursor: pointer;
+  span {
+    color: #fff;
+    font-weight: 500;
+    font-size: 16px;
+  }
+  span:first-child {  
+    font-size: 20px;
+    line-height: 100%;
+  }
+`
+export const WrapperPopupitem = styled.p`
+  height: 3rem;
+  line-height: 3rem;
+  color:#fff;
+  font-weight: 500;
+  font-size:16px;
+  cursor: pointer;
+  padding: 0 1.5rem;
+  
+  margin:0;
+  
+  &:hover {
+    background-color: rgba(54, 201, 217, 1);;
+  }
+  &:first-child {
+    border-bottom: 1px solid #ccc;
+  }
+`
+
 // ------------------ the section below is for ipad and mobile view ------------------
 
 export const MenuLeft = styled.div`

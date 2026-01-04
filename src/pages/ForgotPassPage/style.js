@@ -26,22 +26,14 @@ export const WrapperContainerRight = styled.div`
     }
     .btn-login {
         margin-top: 24px;
-        width: 100%;
-        font-weight:700;
-        border:none;
+        background-color:#02CBE0;
         color:#fff;
-        background-color: #c0c0c0;
+        font-weight:700;
+        border:none
     }
-    .btn-login.active {
-        background-color: #02CBE0;
-    }
-    .btn-login.active:hover {
-        background-color: rgba(2,232,244,2);
-    }
-
-    .btn-login.disabled:hover {
-        
-        background-color: #c0c0c0;
+    .btn-login:hover {
+        border:none;
+        background-color: rgba(2,232,244,2)
     }
     & .signup_member {
         display: flex;
@@ -53,6 +45,18 @@ export const WrapperContainerRight = styled.div`
             font-weight: bold
         }
     }
+`
+export const WrapperSignup = styled.div`
+    width: 100%;
+    height: 18rem;
+`
+export const Signupcontainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 1rem;
+    overflow-y: auto;
+    overflow-x: hidden;
 `
 export const WrapperRememberandForgot = styled.div`
     margin-top: 16px;
