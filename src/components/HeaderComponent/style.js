@@ -46,6 +46,7 @@ export const WrapperMenuMobile = styled.div`
 `
 export const WrapperLogoHeader = styled.span`
   width: max-content;
+  cursor: pointer;
   .Image-logo {
     width: 4rem;
     height: 4rem;
@@ -216,7 +217,7 @@ export const WrapperPopupitem = styled.p`
   margin:0;
   
   &:hover {
-    background-color: rgba(54, 201, 217, 1);;
+    background-color: rgba(54, 201, 217, 1);
   }
   &:first-child {
     border-bottom: 1px solid #ccc;

@@ -7,11 +7,12 @@ export const WrapperCardsmallTitle = styled.div`
   display: -webkit-box;
   overflow: hidden;
 `
-export const CardsmallTitle = styled.h3`
+export const CardsmallTitle = styled.h2`
+  margin: 0;
   font-family: "Lexend Medium", Roboto, Arial !important;
   font-size: 14px; 
   line-height: 20px;
-  font-weight: normal !important;
+  font-weight: 600 !important;
   letter-spacing: -.2px;
   color: #2C2C2C;
 `

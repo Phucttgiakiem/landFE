@@ -211,7 +211,7 @@ export default function LandDetailComponent({ arrImages }) {
                     <div>
                         <SpecTitle>Bất động sản khác</SpecTitle>
                         <WrapperSimilarLands>
-                            <CardsmallComponent 
+                            {/* <CardsmallComponent 
                                 Title={"Europe Street beat"} 
                                 style={{width:"100%"}} 
                                 Img={<img draggable={false} alt="example" src={arrImages[0]} className="image-land"/>}
@@ -246,7 +246,7 @@ export default function LandDetailComponent({ arrImages }) {
                                 style={{width:"100%"}} 
                                 Img={<img draggable={false} alt="example" src={arrImages[0]} className="image-land"/>}
                                 bodyStyle={{padding:"12px 16px 16px 16px"}}
-                            />
+                            /> */}
                         </WrapperSimilarLands>
                     </div>
                 </Col>

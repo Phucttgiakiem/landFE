@@ -2,29 +2,17 @@ import React, { Fragment,useEffect } from 'react';
 import { Routes, Route } from "react-router";
 import {routes} from "./routes/index";
 import DefaultComponent from './components/DefaultComponent/DefaultComponent';
+import HeaderSidebarComponent from './components/HeaderSidebarComponent/HeaderSidebarComponent';
 import { isJsonString } from './utils';
 import * as UserService from "./services/UserService";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { updateUser } from './redux/slides/userSlide';
-import axios from 'axios';
-import { current } from '@reduxjs/toolkit';
 export default function App() {
   const dispatch = useDispatch();
   // Add a request interceptor
   UserService.axiosJWT.interceptors.request.use(
-      /* // Do something before request is sent
-      const currentTime = new Date();
-      const {decoded } = handleDecoded();
-      if(decoded?.exp < currentTime.getTime() / 1000){
-        const data = await UserService.refreshToken();
-        config.headers['Authorization'] = `Bearer ${data.access_token}`;
-      }
-      return config;
-    }, function (error) {
-      // Do something with request error
-      return Promise.reject(error);
-    } */
+      
     async (config) => {
       const decoded = handleDecoded()?.decoded;
 
@@ -71,7 +59,7 @@ export default function App() {
         <Route>
            {routes.map((route) => {
               const Page = route.page
-              const Layout = route.isShowHeader ? DefaultComponent : Fragment
+              const Layout = route.isShowHeader && !route.isShowSidebar ? DefaultComponent : route.isShowSidebar ? HeaderSidebarComponent : Fragment
               return (
                 <Route key={route.path} path={route.path} element={
                   <Layout>

@@ -1,13 +1,19 @@
+import React, { createContext, useContext } from "react";
 import {message} from "antd";
 
-const success = (mes = 'Success') => {
-    message.success(mes);
-}
-const error = (mes = 'Error') => {
-    message.error(mes);
-}
+const MessageContext = createContext(null);
 
-const warning = (mes = 'Warning') => {
-    message.warning(mes);
-}
-export {success,error,warning};
+export const Message = ({ children }) => {
+  const [messageApi, contextHolder] = message.useMessage();
+
+  return (
+    <MessageContext.Provider value={messageApi}>
+      {contextHolder}
+      {children}
+    </MessageContext.Provider>
+  );
+};
+
+export const useMessage = () => {
+  return useContext(MessageContext);
+};

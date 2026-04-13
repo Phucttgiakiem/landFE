@@ -3,21 +3,36 @@ import { createSlice } from '@reduxjs/toolkit'
 export const userSlide = createSlice({
   name: 'user',
   initialState: {
+    id: '',
     name: '',
     email: '',
+    password: '',
+    phone: '',
+    address: '',
+    role: '',
     access_Token: ''
   },
   reducers: {
     updateUser: (state,action) => {
-      const {fullname,email,access_Token} = action.payload;
-      state.name = fullname || email;
+      const {_id,fullname,email,password,phone,address,role,access_Token} = action.payload;
+      state.id = _id
+      state.name = fullname;
       state.email = email;
+      state.password = password;
+      state.phone = phone;
+      state.address = address;
+      state.role = role;
       state.access_Token = access_Token;
     },
     resetUser: (state) => {
+      state.id = '';
       state.name = '';
       state.email = '';
       state.access_Token = '';
+      state.phone = '';
+      state.address = '';
+      state.role = '';
+      state.password = '';
     }
   }
 })

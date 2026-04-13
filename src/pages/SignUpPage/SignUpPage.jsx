@@ -9,7 +9,7 @@ import Loading from "../../components/LoadingComponent/Loading";
 import { Link,useNavigate } from 'react-router-dom';
 import { useMutationHook } from "../../hooks/useMutationhook";
 import * as UserService from "../../services/UserService";
-import * as message from "../../components/Message/Message"
+import { useMessage } from "../../components/Message/Message";
 import {useState,useEffect} from 'react';
 export default function SignUpPage () {
   const [name,setName] = useState("");
@@ -18,6 +18,7 @@ export default function SignUpPage () {
   const [address,setAddress] = useState("");
   const [password,setPassword] = useState("");
   const [confirmPassword,setConfirmPassword] = useState("");
+  const message = useMessage();
   const navigate = useNavigate();
   const handleLogin = (e) => {
     e.preventDefault();

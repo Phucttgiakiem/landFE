@@ -4,11 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { StyleProvider } from '@ant-design/cssinjs';
+import { ConfigProvider } from "antd";
 import store from './redux/store'; // Assuming you have a Redux store set up
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Message } from './components/Message/Message';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const queryClient = new QueryClient();
 root.render(
@@ -17,7 +20,19 @@ root.render(
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <StyleProvider layer>
-            <App />
+            <ConfigProvider
+              theme={{
+                token: {
+                  colorSuccess: "#52c41a",
+                  colorError: "#ff4d4f",
+                  colorWarning: "#faad14",
+                },
+              }}
+            >
+              <Message>
+                <App />
+              </Message>
+            </ConfigProvider>
           </StyleProvider>
         </BrowserRouter>
         <ReactQueryDevtools initialIsOpen={false} />

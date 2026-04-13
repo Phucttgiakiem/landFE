@@ -40,12 +40,11 @@ export default function SignInPage  ()  {
   const {isPending,data,isSuccess} = mutation;
 
   useEffect(() => {
-    if(isSuccess){
+    if(isSuccess && data?.status !== "error"){
       navigate("/");
       localStorage.setItem("access_token",JSON.stringify(data?.access_Token));
       if(data?.access_Token){
         const decoded = jwtDecode(data?.access_Token);
-       // console.log("decoded",decoded);
         if(decoded?.id){
           handleGetDetailsUser(decoded?.id,data?.access_Token); 
         }
@@ -55,7 +54,6 @@ export default function SignInPage  ()  {
   const handleGetDetailsUser = async (id,token) => {
     const res = await UserService.getDetailsUser(id,token);
     dispatch(updateUser({...res?.data,access_Token: token}));
-    console.log("res get details user",res);
   }
   return (
     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center',background:'rgba(0,0,0,0.53)',height: '100vh'}}>
@@ -74,7 +72,7 @@ export default function SignInPage  ()  {
               <h3>Đăng nhập để tiếp tục</h3>
               <InputForm placeholder={"Nhập địa chỉ email"} value={email} handleOnChange={handleOnchangeEmail} prefix={<UserOutlined/>} size={"large"} TypePassword={false} style={{marginBottom: "16px"}}/>
               <InputForm placeholder={"Mật khẩu"} size={"large"} value={password} handleOnChange={handleOnchangePassword} prefix={<LockOutlined/>} TypePassword={true}/>
-              {data?.status === "ERR" && <span style={{ color: "red"}}>{data?.message}</span>}
+              {data?.status === "error" && <span style={{ color: "red"}}>{data?.message}</span>}
               <Loading isLoading={isPending}>  
                 <ButtonComponent 
                   disabled={!email.length || !password.length} 

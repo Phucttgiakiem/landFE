@@ -59,20 +59,23 @@ export default function HeaderComponent () {
     const handleNavigationLogin = () => {
         navigate('/sign-in')
     }
+    const handleMovetoHome = () => {
+        navigate('/');
+    }
     const handleLogout = async() => {
         await UserService.logoutUser();
         dispatch(resetUser());
     }
     const content = () => (
         <div>
-            <WrapperPopupitem>Thông tin cá nhân</WrapperPopupitem>
+            <WrapperPopupitem onClick={() => navigate('/profile-user')}>Thông tin cá nhân</WrapperPopupitem>
             <WrapperPopupitem onClick={()=> handleLogout()}>Đăng xuất</WrapperPopupitem>
         </div>
     )
     return (
         <>
             <WrapperHeader>
-                    <WrapperLogoHeader>
+                    <WrapperLogoHeader onClick={handleMovetoHome}>
                         <img src={logo} alt="logo" className="Image-logo"/>
                     </WrapperLogoHeader>
                     <WrapperMenuMobile>
@@ -89,7 +92,6 @@ export default function HeaderComponent () {
                             >
                                 <HeaderLink
                                     href="/"
-                                    
                                     >Nhà đất bán
                                 </HeaderLink>
                                 <WrapperHeaderSubMenu>
@@ -123,7 +125,7 @@ export default function HeaderComponent () {
                             </HeaderMenuItem>
                         </WrapperHeaderMenu>
                         {
-                            user?.name ? (
+                            user?.email ? (
                                 <Popover placement="bottomRight"content={content} arrow={mergedArrow} color="#02CBE0" 
                                     styles={{
                                         body: {
@@ -135,7 +137,7 @@ export default function HeaderComponent () {
                                             <UserOutlined />
                                         </span>
                                         <span>
-                                            {user?.name}
+                                            {user?.name.length ? user?.name : user?.email}
                                         </span>
                                     </WrapperUserInfo>
                                 </Popover>

@@ -31,34 +31,7 @@ export const WrapperSlider = styled.div`
         color: #ffffffff /* màu khi dot đang active */
     }
 `
-export const Arrow = styled.div`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(255, 255, 255, 1);
-  width: 30px;
-  height: 30px;
-  z-index: 3;
-  font-size: 1rem;
-  border-radius: 10%;
-  cursor: pointer;
-  
-  color: #000000ff; 
-  &.slick-prev {
-    left: 25px;
-  }
-  &.slick-next {
-    right: 25px;
-  }
-  &:before {
-    content: '';
-  }
-  
-  &:hover {
-    background-color: rgba(211, 211, 211, 0.8);
-    color: #ffffffff
-  }
-`
+
 export const WrapperSearch = styled.div`
   width: 40rem;
   height: 8rem;
@@ -224,22 +197,30 @@ export const WrapperContentHomepage = styled.div`
   }
 `
 export const WrapperLandslist = styled.div`
-  width:100%;
   margin-top:20px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, auto);
-  gap: 20px;
+  overflow-x: hidden;
+
+  .slick-track {
+    margin-left: 0 !important;
+  }
+  .slick-slide > div {
+    margin: 0 12px;
+  }
+
+  .slick-list {
+    width: 100%;
+    height: 24rem;
+    padding: 0;
+    margin: 0 -12px;
+    overflow: visible;
+  }
+  
   .image-land {
-    height: auto !important;
+    width: 100%;
     aspect-ratio: 16/9;
+    object-fit: cover;
   }
-  @media screen and (min-width: 768px) and (max-width: 991px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  @media screen and (max-width: 767px) {
-    grid-template-columns: repeat(1, 1fr);
-  }
+  
 `;
 export const WrapperPlacespecial = styled.div`
   width:100%;
