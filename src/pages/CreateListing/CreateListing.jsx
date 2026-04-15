@@ -26,8 +26,8 @@ export default function CreateListing() {
     const [listProvince,setListProvince] = useState([]);
     const [listCommune,setListCommune] = useState([]);
     const [formdata,setFormdata] = useState({
-        CityID: null,
-        CommuneID: null,
+        City:null,
+        Commune: null,
         Title: '',
         Description: '',
         Price: 0,
@@ -42,6 +42,7 @@ export default function CreateListing() {
         CatagoryProperty: '',
         Legal: '',
         User: '',
+        Type: '',
     });
     const user = useSelector(state => state.user);
     const [fileList, setFileList] = useState([]);
@@ -234,22 +235,23 @@ export default function CreateListing() {
     const handleChangeProvince = (value) => {
         setFormdata(prev => ({
             ...prev,
-            CityID: value,
-            CommuneID: null,   
+            City: value,
+            Commune: null,   
         }));
         if (!value) {
             setListCommune([]);
         }
-        if(errors.CityID){
+        if(errors.City){
             setErrors((prev) => {
                 const newErrors = {...prev};
-                delete newErrors.CityID;
+                delete newErrors.City;
                 return newErrors;
             });
         }
     };
     const validate = () => {
         let newErrors = {};
+        
         if(!formdata.Title.trim()){
             newErrors.Title = "Vui lòng nhập tên dự án";
         }
@@ -271,11 +273,11 @@ export default function CreateListing() {
         if(!formdata.numberhouse.trim()){
             newErrors.numberhouse = "Vui lòng nhập mã số thửa đất"
         }
-        if(!formdata.CityID){
-            newErrors.CityID = "Vui lòng chọn đơn vị hành chính tỉnh";
+        if(!formdata.City){
+            newErrors.City = "Vui lòng chọn đơn vị hành chính tỉnh";
         }
-        if(!formdata.CommuneID){
-            newErrors.CommuneID = "Vui lòng chọn đợn vị hành chính cấp địa phương";
+        if(!formdata.Commune){
+            newErrors.Commune = "Vui lòng chọn đợn vị hành chính cấp địa phương";
         }
         if(formdata.floor == null || formdata.floor <= 0){
             newErrors.floor = "Vui lòng nhập số tầng";
@@ -295,22 +297,37 @@ export default function CreateListing() {
         if(!formdata.Legal.trim()){
             newErrors.Legal = "Vui lòng chọn loại hợp đồng mua bán";
         }
+        if(!formdata.Type){
+            newErrors.Type = "Vui lòng chọn loại tin";
+        }
         return newErrors;
     }
     const handleChangeCommune = (value) => {
         setFormdata((prev) => ({
             ...prev,
-            CommuneID: value,
+            Commune: value,
         }))
-        if(errors.CommuneID){
+        if(errors.Commune){
             setErrors((prev) => {
                 const newErrors = {...prev};
-                delete newErrors.CommuneID;
+                delete newErrors.Commune;
                 return newErrors;
             });
         }
     }
-
+    const handleTypeLand = (value) => {
+        setFormdata((prev) => ({
+            ...prev,
+            Type:value
+        }))
+        if(errors.Type){
+            setErrors((prev) => {
+                const newErrors = {...prev};
+                delete newErrors.Type;
+                return newErrors;
+            })
+        }
+    }
     const uploadButton = (
         <div>
             <PlusOutlined />
@@ -352,8 +369,8 @@ export default function CreateListing() {
     }
     const resetInput = () => {
         setFormdata({
-        CityID: null,
-        CommuneID: null,
+        City: null,
+        Commune: null,
         Title: '',
         Description: '',
         Price: 0,
@@ -367,7 +384,9 @@ export default function CreateListing() {
         Toilet: 0,
         CatagoryProperty: '',
         Legal: '',
-        User: ''});
+        User: '',
+        Type:'',
+    });
 
         setFileList([]);
     }
@@ -390,9 +409,9 @@ export default function CreateListing() {
     },[]);
     useEffect(() => {
         const fetchdata = async () => {
-            if (formdata.CityID) {
+            if (formdata.City) {
                 const data = await axios.get(
-                    `https://production.cas.so/address-kit/2025-07-01/provinces/${formdata.CityID}/communes`
+                    `https://production.cas.so/address-kit/2025-07-01/provinces/${formdata.City.split('-')[0]}/communes`
                 );
                 const { communes } = data.data;
                 const list = communes.map((item) => {
@@ -405,7 +424,7 @@ export default function CreateListing() {
             }
         };
         fetchdata();
-    },[formdata.CityID]);
+    },[formdata.City]);
     useEffect(()=>{
         const fetchData = async () => {
             const res = await axios.get(
@@ -495,7 +514,7 @@ export default function CreateListing() {
                             }
                         </div>
                         <div>
-                            <span className="label">Giá (đơn vị: triệu đồng)</span>
+                            <span className="label">Giá (đơn vị: VND)</span>
                             <InputForm type="number" placeholder="Nhập giá bất động sản" size={"large"}
                             
                             defaultValue={formdata.Price}
@@ -577,10 +596,10 @@ export default function CreateListing() {
                         <div>
                             <span className="label">Tỉnh, thành phố</span>
                             <Select 
-                                value={formdata.CityID}
+                                value={formdata.City}
                                 placeholder="--- Chọn tỉnh, thành phố ---"
                                 options={listProvince.map((item) => ({
-                                    value: item.code,
+                                    value: `${item.code}-${item.name}`,
                                     label: item.name,
                                 }))}
                                 style={{ width: '100%' }}
@@ -588,9 +607,9 @@ export default function CreateListing() {
                                 onChange={handleChangeProvince}
                             />
                             {
-                                errors.CityID && (
+                                errors.City && (
                                     <span style={{ color: "red", marginBottom: 10 }}>
-                                        {errors.CityID}
+                                        {errors.City}
                                     </span>
                                 )
                             }
@@ -598,21 +617,21 @@ export default function CreateListing() {
                         <div>
                             <span className="label">Phường, xã</span>
                             <Select 
-                                value={formdata.CommuneID}
+                                value={formdata.Commune}
                                 placeholder="--- Chọn phường, xã ---"
                                 options={listCommune.map((item) => ({
-                                    value: item.code,
+                                    value: `${item.code}-${item.name}`,
                                     label: item.name,
                                 }))}
-                                disabled={!formdata.CityID}
+                                disabled={!formdata.City}
                                 style={{ width: '100%' }}
                                 size="large"
                                 onChange={handleChangeCommune}
                             />
                             {
-                                errors.CommuneID && (
+                                errors.Commune && (
                                     <span style={{ color: "red", marginBottom: 10 }}>
-                                        {errors.CommuneID}
+                                        {errors.Commune}
                                     </span>
                                 )
                             }
@@ -748,6 +767,26 @@ export default function CreateListing() {
                                         }}
                                         src={previewImage}
                                     />
+                                )
+                            }
+                        </div>
+                        <div>
+                            <span className="label">Chọn loại tin đăng</span>
+                            <Select 
+                                placeholder="--- Chọn loại tin ---"
+                                status={errors.Type ? "error" : ""}
+                                style={{ width: '100%' }}
+                                size="large"
+                                onChange={handleTypeLand}
+                            >
+                                <Select.Option value="normal">Tin thường</Select.Option>
+                                <Select.Option value="vip">Tin vip</Select.Option>
+                            </Select>
+                            {
+                                errors.Type && (
+                                    <span style={{ color: "red", marginBottom: 10 }}>
+                                        {errors.Type}
+                                    </span>
                                 )
                             }
                         </div>

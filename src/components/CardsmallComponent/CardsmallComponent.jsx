@@ -1,4 +1,5 @@
-import { Card,Skeleton } from "antd";
+import { Card,Skeleton, } from "antd";
+import { Link } from "react-router-dom";
 import { WrapperCardsmallTitle,CardsmallTitle,WrapperCardConfig,
     CardConfigPrice,CardConfigArea,SeparatorDot,
     WrapperCardLocation,WrapperCardContact,CardContactPublicInfo
@@ -9,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { formatPriceToString } from "../../utils";
 
-const CardsmallComponent = ({Title,Img,Price,Stretch,Area,createdAt,loading,Acreage,...rest}) => {
+const CardsmallComponent = ({Id,Title,Img,Price,Stretch,Area,createdAt,loading,Acreage,...rest}) => {
     
     return (
         <Card 
@@ -22,8 +23,10 @@ const CardsmallComponent = ({Title,Img,Price,Stretch,Area,createdAt,loading,Acre
             {
                 !loading && (
                     <>
-                         <WrapperCardsmallTitle>
-                            <CardsmallTitle>{Title}</CardsmallTitle>
+                        <WrapperCardsmallTitle>
+                            <Link to={`/lands-detail/${Id}`}>
+                                <CardsmallTitle>{Title}</CardsmallTitle>
+                            </Link>
                         </WrapperCardsmallTitle>
                         <WrapperCardConfig>
                             <CardConfigPrice>{formatPriceToString(Price)}/tháng</CardConfigPrice>

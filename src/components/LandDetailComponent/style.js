@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const WrapperSlider = styled.div`
-    width: 60%;
+    width: 100%;
     margin: 0;
     position: relative;
     @media screen and (max-width: 767px){
@@ -10,6 +10,50 @@ export const WrapperSlider = styled.div`
       }
     }
 `;
+export const SliderContent = styled.div`
+    width: 100%;
+    height: 30rem;
+    .loading-image {
+      width: 100%;
+      height: 100%;
+    }
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 0.5rem;
+    }
+`
+export const Sliderbottom = styled.div`
+    width: 100%;
+    height: 8rem;
+    margin-top:0.3rem;
+    & .img-listing {
+      height: 6rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      border-radius:0.8rem;
+    }
+
+    & .img-listing img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    & .slick-slide {
+      padding: 0 4px;
+    }
+
+    & .slick-track {
+      display: flex !important;
+      margin: 0;
+    }
+    & .slick-list {
+      overflow: hidden;
+    }
+`
 export const ImageSlider = styled.img`
     height: 30rem;
     border-radius: 8px;

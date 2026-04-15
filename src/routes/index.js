@@ -38,7 +38,7 @@ export const routes = [
         isShowSidebar: false
     },
     {
-        path: "/lands-detail",
+        path: "/lands-detail/:id",
         page: LandsDetailPage,
         isShowHeader: true,
         isShowSidebar:false

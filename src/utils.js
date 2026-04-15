@@ -17,6 +17,7 @@ export const formatPrice = (price) => {
   return Number(price).toLocaleString("vi-VN") + " VND";
 };
 export const formatPriceToString = (price) => {
+  price = Number(price);
   if (price >= 1000000000) {
     return (price / 1000000000) + " tỷ";
   } else if (price >= 1000000) {

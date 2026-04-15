@@ -1,5 +1,7 @@
 import { useSelector,useDispatch } from "react-redux";
 import { useState,useEffect } from "react";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import {WrapperHeadofHomepage,WrapperSlider,WrapperSearch,
     MenuItem,SearchboxContent,SearchboxHeader,Searchboxdropdown,
     WrapperSearchlist,MenuItemSearchleft,MenuItemSearchright,
@@ -18,46 +20,50 @@ import SliderEffectComponent from "../../components/SlickEffectComponent/SlickEf
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CardsmallComponent from "../../components/CardsmallComponent/CardsmallComponent";
 import CardPlaceComponent from "../../components/CardPlaceComponent/CardPlaceComponent";
-import ListCardLoadingComponent from "../../components/ListCardLoadingComponent/ListCardLoadingComponent";
 import * as HomeService from "../../services/HomeService";
 import { setData,setLoading,setError } from "../../redux/slides/HomeSlide";
-import { formatArea,buildMap,formatDate,formatacreage } from "../../utils";
+import {formatDate,formatacreage } from "../../utils";
 
 const HomePage = () => {
     const [activeMenu, setActiveMenu] = useState("sell");
-    const [communeMap, setCommuneMap] = useState({});
     const homeState = useSelector((state) => state.home);
-    const { featured, latest, cheap, countnews,isLoading } = homeState;
+    const { featured, latest, cheap, countnews, entities,loading } = homeState;
+
     const dispatch = useDispatch();
-    useEffect(() => {
-        const fetchAreaData = async () => {
-            try {
-                
-                const communes = await HomeService.getArea();
-                setCommuneMap(buildMap(communes));
-            } catch (error) {
-                console.error("Error fetching area data: ", error);
-            }
-        };
-        fetchAreaData();
-    }, []);
+    const getList = (ids, entities) => {
+            return ids.map(id => entities[id]).filter(Boolean)
+        }
+
+    const featuredls = getList(featured, entities)
+    const latestls = getList(latest, entities)
+    const cheapls = getList(cheap, entities)
     useEffect(() => {
         const fetchHomeData = async () => {
             try {
-                dispatch(setLoading(true));
+                dispatch(setLoading({
+                    featured: true,
+                    latest: true,
+                    cheap: true,
+                    countnews: true
+                }));
                 const res = await HomeService.getHome();    
-                console.log("images: ",buildingone);
+                
                 if(res && res.data){
                     dispatch(setData(res.data));
                 }
-                else dispatch(setLoading(false));
+                dispatch(setLoading({
+                    featured: false,
+                    latest: false,
+                    cheap: false,
+                    countnews: false
+                }));
             } catch (error) {
                 console.error("Error fetching home data: ", error);
                 dispatch(setError(error.message));
             }
         };
         fetchHomeData();
-    }, []);
+    }, [dispatch]);
     const styleitemslider = {
         display: "flex",
         "justify-content": "center",
@@ -378,7 +384,7 @@ const HomePage = () => {
             </WrapperHeadofHomepage>
             <WrapperContentHomepage>
                 {
-                    featured && featured.length > 0 && (
+                    featuredls && featuredls.length > 0 && (
                         <div>
                             <h2>Nổi bật</h2>
                             <WrapperLandslist className="slider-container">
@@ -421,25 +427,32 @@ const HomePage = () => {
                                     }}
                                 >
                                 {
-                                    isLoading
-                                        ? <ListCardLoadingComponent />
-                                        : featured.map((item, index) => (
-                                            <div key={item.id}>
+                                    loading?.featured
+                                        ? (
+                                             Array(5).fill(null).map((_, index) => (
+                                                <div key={index}>
+                                                    <CardsmallComponent loading={true} />
+                                                </div>
+                                                ))
+                                        )
+                                        : featuredls.map((item, index) => (
+                                            <div key={item._id}>
                                                 <CardsmallComponent 
-                                                loading={false}
-                                                Title={item.Title}
-                                                Price={item.Price}
-                                                Area={formatArea(communeMap, item.Address.CityID, item.Address.CommuneID)}
-                                                createdAt={formatDate(item.createdAt)}
-                                                Img={
-                                                    <img
-                                                    src={item?.images?.URL || ImageBuilding}
-                                                    alt={`imagebuilding${index}`}
-                                                    className="image-land"
-                                                    />
-                                                }
-                                                Acreage={formatacreage(item.horizontal, item.vertical)}
-                                                className="card-small-component"
+                                                    Id={item._id}
+                                                    loading={false}
+                                                    Title={item.Title}
+                                                    Price={item.Price}
+                                                    Area={item.Address.Commune.name+" / "+item.Address.City.name}
+                                                    createdAt={formatDate(item.createdAt)}
+                                                    Img={
+                                                        <img
+                                                        src={item?.images?.URL || ImageBuilding}
+                                                        alt={`imagebuilding${index}`}
+                                                        className="image-land"
+                                                        />
+                                                    }
+                                                    Acreage={formatacreage(item.horizontal, item.vertical)}
+                                                    className="card-small-component"
                                                 />
                                             </div>
                                             ))
@@ -450,7 +463,7 @@ const HomePage = () => {
                     )
                 }
                 {
-                    latest && latest.length > 0 && (
+                    latestls && latestls.length > 0 && (
                         <div>
                             <h2>Mới nhất</h2>
                             <WrapperLandslist className="slider-container">
@@ -493,15 +506,22 @@ const HomePage = () => {
                                         }}
                                     >
                                     {
-                                        isLoading
-                                        ? <ListCardLoadingComponent />
-                                        : latest.map((item, index) => (
-                                            <div key={item.id}>
+                                        loading.latest
+                                        ? (
+                                             Array(5).fill(null).map((_, index) => (
+                                                <div key={index}>
+                                                    <CardsmallComponent loading={true} />
+                                                </div>
+                                                ))
+                                        )
+                                        : latestls.map((item, index) => (
+                                            <div key={item._id}>
                                                 <CardsmallComponent 
+                                                Id={item._id}
                                                 loading={false}
                                                 Title={item.Title}
                                                 Price={item.Price}
-                                                Area={formatArea(communeMap, item.Address.CityID, item.Address.CommuneID)}
+                                                Area={item.Address.Commune.name+" / "+item.Address.City.name}
                                                 createdAt={formatDate(item.createdAt)}
                                                 Img={
                                                     <img
@@ -522,7 +542,7 @@ const HomePage = () => {
                     )
                 }
                 {
-                    cheap && cheap.length > 0 && (
+                    cheapls && cheapls.length > 0 && (
                         <div>
                             <h2>Đáng quan tâm</h2>
                             <WrapperLandslist className="slider-container">
@@ -565,22 +585,27 @@ const HomePage = () => {
                                         }}
                                     >
                                     {
-                                        isLoading ? <ListCardLoadingComponent />:
-                                        cheap.map((item,index) => (
-                                                <div key={item.id}>
-                                                    <CardsmallComponent 
-                                                        Title={item.Title}
-                                                        Price={item.Price}
-                                                        Area={formatArea(communeMap, item.Address.CityID, item.Address.CommuneID)}
-                                                        createdAt={formatDate(item.createdAt)}
-                                                        Img={<img src={item?.images?.URL || ImageBuilding} 
-                                                        alt={`imagebuilding${index}`} className="image-land"/>}
-                                                        className="card-small-component"
-                                                        Acreage={formatacreage(item.horizontal, item.vertical)}
-                                                    />
+                                        loading.cheap ? (
+                                             Array(5).fill(null).map((_, index) => (
+                                                <div key={index}>
+                                                    <CardsmallComponent loading={true} />
                                                 </div>
-                                            
-                                        
+                                                ))
+                                        ):
+                                        cheapls.map((item,index) => (
+                                            <div key={item._id}>
+                                                <CardsmallComponent 
+                                                    Id={item._id}
+                                                    Title={item.Title}
+                                                    Price={item.Price}
+                                                    Area={item.Address.Commune.name+" / "+item.Address.City.name}
+                                                    createdAt={formatDate(item.createdAt)}
+                                                    Img={<img src={item?.images?.URL || ImageBuilding} 
+                                                    alt={`imagebuilding${index}`} className="image-land"/>}
+                                                    className="card-small-component"
+                                                    Acreage={formatacreage(item.horizontal, item.vertical)}
+                                                />
+                                            </div>
                                     ))
                                     }
                                 </SliderEffectComponent>
