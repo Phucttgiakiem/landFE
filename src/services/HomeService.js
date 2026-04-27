@@ -4,8 +4,16 @@ export const getHome = async () => {
     const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/home/get-all`);
     return res;
 }
+export const getListingFilter = async (data) => {
+   const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/home/get-listing-filter`,{
+      params: {
+        ...data,
+      }
+   });
+   return res;
+}
 export const getListingRelated = async (data) => {
-    console.log("key: ",data);
+   // console.log("key: ",data);
     const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/home/get-listing-related`,
       {
         params: {

@@ -80,23 +80,34 @@ export default function CreateListing() {
             });
         }
     }
+    const normalizeNumber = (value) => {
+        
+        if (value === '' || value === null) return 0;
+
+        let num = Number(value);
+
+        // NaN hoặc <= 0 → 0
+        if (isNaN(num) || num <= 0 || !Number.isInteger(num)) return 0;
+
+        return num;
+    };
     const handleChangePrice = (value) => {
         setFormdata(prev => ({
             ...prev,
-            Price: value<0 ? 0 : value
+            Price: normalizeNumber(value)
         }))
-        if(errors.Price){
+        /* if(errors.Price){
             setErrors((prev) => {
                 const newErrors = {...prev};
                 delete newErrors.Price;
                 return newErrors;
             });
-        }
+        } */
     }
     const handleChangeLength = (value) => {
         setFormdata(prev => ({
             ...prev,
-            vertical: value<0 ? 0 : value
+            vertical: normalizeNumber(value)
         }))
         if(errors.vertical){
             setErrors((prev) => {
@@ -109,7 +120,7 @@ export default function CreateListing() {
     const handleChangeWidth = (value) => {
         setFormdata(prev => ({
             ...prev,
-            horizontal:value<0 ? 0 : value
+            horizontal:normalizeNumber(value)
         }))
         if(errors.horizontal){
             setErrors((prev) => {
@@ -122,7 +133,7 @@ export default function CreateListing() {
     const handleChangeFrontispiece = (value) => {
         setFormdata(prev => ({
             ...prev,
-            front_street: value<0 ? 0 : value
+            front_street: normalizeNumber(value)
         }))
         if(errors.front_street){
             setErrors((prev) => {
@@ -148,7 +159,7 @@ export default function CreateListing() {
     const handleChangeNumberFloor = (value) => {
         setFormdata(prev => ({
             ...prev,
-            floor:value<0 ? 0 : value
+            floor:normalizeNumber(value)
         }))
         if(errors.floor){
             setErrors((prev) => {
@@ -161,7 +172,7 @@ export default function CreateListing() {
     const handleChangeNumberBedroom = (value) => {
         setFormdata(prev => ({
             ...prev,
-            bedroom:value<0 ? 0 : value
+            bedroom:normalizeNumber(value)
         }))
         if(errors.bedroom){
             setErrors((prev) => {
@@ -174,7 +185,7 @@ export default function CreateListing() {
     const handleChangeNumberBathroom = (value) => {
         setFormdata(prev => ({
             ...prev,
-            bathroom: value<0 ? 0 : value
+            bathroom: normalizeNumber(value)
         }))
         if(errors.bathroom){
             setErrors((prev) => {
@@ -187,7 +198,7 @@ export default function CreateListing() {
     const handleChangeNumberToilet = (value) => {
         setFormdata(prev => ({
             ...prev,
-            Toilet:value<0 ? 0 : value
+            Toilet:normalizeNumber(value)
         }))
         if(errors.Toilet){
             setErrors((prev) => {
@@ -257,9 +268,6 @@ export default function CreateListing() {
         }
         if(!formdata.Description.trim()){
             newErrors.Description = "Vui lòng nhập mô tả dự án";
-        }
-        if(formdata.Price == null || formdata.Price <= 0){
-            newErrors.Price = "Vui lòng nhập giá tài sản";
         }
         if(formdata.vertical == null || formdata.vertical <= 0){
             newErrors.vertical = "Vui lòng nhập chiều dài"
@@ -514,7 +522,7 @@ export default function CreateListing() {
                             }
                         </div>
                         <div>
-                            <span className="label">Giá (đơn vị: VND)</span>
+                            <span className="label">Giá (đơn vị: VND) / (lưu ý: để giá là 0 tức là giá thỏa thuận)</span>
                             <InputForm type="number" placeholder="Nhập giá bất động sản" size={"large"}
                             
                             defaultValue={formdata.Price}
@@ -522,13 +530,13 @@ export default function CreateListing() {
                             min={0}
                             status={errors.Price ? "error" : ""}
                             TypePassword={false} handleOnChange={handleChangePrice}/>
-                            {
+                            {/* {
                                 errors.Price && (
                                     <span style={{ color: "red", marginBottom: 10 }}>
                                         {errors.Price}
                                     </span>
                                 )
-                            }
+                            } */}
                         </div>
                         <div>
                             <span className="label">Chiều dài (m)</span>

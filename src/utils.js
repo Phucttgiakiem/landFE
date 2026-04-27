@@ -17,7 +17,7 @@ export const formatPrice = (price) => {
   return Number(price).toLocaleString("vi-VN") + " VND";
 };
 export const formatPriceToString = (price) => {
-  price = Number(price);
+  price = Number.isNaN(price) !== "number" ?  Number(price) : price;
   if (price >= 1000000000) {
     return (price / 1000000000) + " tỷ";
   } else if (price >= 1000000) {
@@ -33,6 +33,12 @@ export const buildMap = (communes) => {
   });
   return communeMap;
 };
+export const formatNumberaddZero = (num) => {
+        num = Number(num);
+        if(num < 10) return `0${num}`;
+        return `${num}`;
+}
+export const formatNumberCodeCommuneZero = (num) => String(num).padStart(5, "0");
 export const formatArea = (communeMap, province, ward) => {
   const area = communeMap[`${province}_${ward}`];
   if (!area) return "";
@@ -77,4 +83,33 @@ export const formatacreage = (horizontal, vertical) => {
     return "N/A";
   }
   return horizontalNum * verticalNum;
+}
+// utils/query.js
+export const getNumber = (val) => {
+    return val != null ? Number(val) : null;
+};
+
+export const parseQuery = (search) => {
+    const params = new URLSearchParams(search);
+
+    return {
+        type: params.get("type") || "sell",
+
+        priceMin: getNumber(params.get("priceMin")),
+        priceMax: getNumber(params.get("priceMax")),
+
+        areaMin: getNumber(params.get("areaMin")),
+        areaMax: getNumber(params.get("areaMax")),
+    };
+};
+export const toSlug = (str) => {
+  return str
+    .normalize("NFD")                 // tách dấu
+    .replace(/[\u0300-\u036f]/g, "")  // xóa dấu
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")             // space -> -
+    .replace(/[^a-z0-9-]/g, "");      // bỏ ký tự lạ
 }

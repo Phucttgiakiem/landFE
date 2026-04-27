@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 export const Listpanel = styled.div`
   width: calc(100% - 280px);
+  position: absolute;
+  z-index:4;
   height:max-content;
   margin:12rem auto 0;
   @media screen and (max-width: 1199px){

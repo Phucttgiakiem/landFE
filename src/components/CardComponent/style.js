@@ -64,13 +64,23 @@ export const CardLocation = styled.div`
 
 `
 export const CardDescription = styled.div`
+    position: relative;
     margin-top: 1rem;
     font-size: 1rem;
     color: rgba(174, 174, 174, 1);
-    @media screen and (max-width:1199px) {
-       display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    } 
+    line-height: 1.5;
+    max-height: calc(1.5em * 3); 
+    overflow: hidden;
+
+    &::after {
+        content: "...";
+        position: absolute;
+        bottom: 0;
+        right: 0;              
+
+        white-space: nowrap;   
+
+        padding-left: 10px;
+        background: linear-gradient(to right, transparent, white 50%);
+    }
 `

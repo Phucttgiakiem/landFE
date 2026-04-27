@@ -3,11 +3,13 @@ import  counterSlice  from './slides/counterSlide'
 import userReducer from './slides/userSlide'
 import listingReducer from './slides/ListingSlide'
 import homeReducer from './slides/HomeSlide'  
+import CategoriReducer from './slides/CategorySlide'
 export default configureStore({
   reducer: {
     counter: counterSlice,
     user: userReducer,
     listing: listingReducer,
-    home: homeReducer
+    home: homeReducer,
+    Category: CategoriReducer
   },
 })

@@ -21,12 +21,6 @@ const initialState = {
         limit: 6,
         total: 0,
         totalPage: 0,
-        query: {
-            keyword: "",
-            city: "",
-            communes: [],
-            price: null,
-        }
     },
     loading: {
         featured: false,
@@ -73,16 +67,30 @@ export const homeSlide = createSlice({
             state.related.totalPage = totalPage
             state.related.page = pageCurrent
         },
+        setFiltered: (state,action) => {
+            const {data,total,totalPage,pageCurrent} = action.payload;
+
+            state.filtered.items = data;
+            state.filtered.total = total
+            state.filtered.totalPage = totalPage
+            state.filtered.page = pageCurrent
+        },
         setLoadingRelated: (state,action) => {
             state.related.isLoading = action.payload
+        },
+        setLoadingFiltered: (state,action) => {
+            state.filtered.isLoading = action.payload
         },
         setError: (state, action) => {
             state.error = action.payload;
         },
         setPageRelated: (state,action) =>{
             state.related.page = action.payload
+        },
+        setPageFiltered: (state,action) => {
+            state.filtered.page = action.payload
         }
     }
 })
-export const {setLoading,setEntities,setData,setRelated,setError,setLoadingRelated,setPageRelated } = homeSlide.actions
+export const {setLoading,setEntities,setData,setRelated,setError,setLoadingRelated,setLoadingFiltered,setPageRelated,setFiltered,setPageFiltered } = homeSlide.actions
 export default homeSlide.reducer

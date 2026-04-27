@@ -34,7 +34,7 @@ export const WrapperSearch = styled(Row)`
   padding: 0 20px;
   background-color: white;
   position: absolute;
-  z-index: 4;
+  z-index: 9;
   top: 0;
   right: 0;
   left: 0;
@@ -61,17 +61,37 @@ export const WrapperInputsearch = styled.div`
   border-radius: 8px;
   display: flex;
   flex-direction: row;
- 
+  justify-content: space-between;
+`
+export const Featureanother = styled.div`
+  display:flex;
+  flex-direction:row;
+`
+export const WrapperInputWithClear = styled.div`
+  
+  position: relative;
+  height:60%;
+  width: 100%;
+  margin: auto;
+  box-sizing: border-box;
+  & .btn-clears {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0.5rem;
+    font-size: 1.1rem;
+  }
 `
 export const InputSearch = styled.input`
   border:none;
-  height:60%;
+  height: 100%;
+  width: 100%;
   font-size:1rem;
-  flex-grow:1;
-  margin: auto 5px;
+  margin: auto 0;
   outline:none;
   background-color:transparent;
-
+  box-sizing: border-box;
+  padding: 0 40px 0 5px;
 `
 export const InputNameCity = styled.div`
   height:60%;
@@ -98,7 +118,7 @@ export const Itemlocation = styled(Col)`
   }
 `
 export const BtnArrowDown = styled.span`
-  margin: 1rem;
+  margin: 0.5rem 0 0.5rem 0.5rem;
   display:flex; 
   alignItems:center;
   transition: transform 0.3s ease; 
@@ -112,7 +132,7 @@ export const BtnArrowDown = styled.span`
   }
   
 `
-export const WrapperListcommune = styled.ul`
+export const WrapperList = styled.ul`
   height: 100%;
   list-style: none;
   padding: 0;
@@ -121,7 +141,7 @@ export const WrapperListcommune = styled.ul`
   flex-direction: row;
   flex-wrap: wrap;
 `
-export const Itemlistcommune = styled.span`
+export const Itemlist = styled.span`
   height: 80%;
   width: max-content;
   padding: 0 1rem;

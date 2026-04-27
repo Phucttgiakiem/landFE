@@ -85,7 +85,7 @@ export const WrapperHeaderSubMenu = styled.ul`
     position: absolute;
     display:none;
     width: max-content;
-    top: calc(100% + 0.3rem);
+    top: calc(100% + 0.1rem);
     padding: 0;
     list-style: none;
     background-color: #02CBE0;
@@ -109,7 +109,7 @@ export const HeaderMenuItemsubMenu = styled.li`
       border-bottom-right-radius: 8px;
     }
     &:hover {
-      background-color: rgba(54, 201, 217, 1);
+      background-color: rgb(153, 222, 230);
     }
     &:active {
       background-color: rgba(0, 166, 185, 1)

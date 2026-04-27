@@ -42,6 +42,24 @@ export const FilterPersonalpageContent = styled.div`
     overflow-y: auto;
     overflow-x: hidden;
 `
+export const FilterEnhancepageFooter = styled.div`
+    width: 100%;
+    height: 10%;
+    display: flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    padding: 0 20px;
+    box-sizing:border-box;
+    .btn-apply {
+        color: #fff;
+        background-color:#02CBE0 !important;
+        border:none;
+    }
+    .btn-apply:active {
+        background-color:#49f5f5 !important;
+    }
+`
 export const FilterPersonalItem = styled.div`
     width: 100%;
     height: max-content;
@@ -72,11 +90,11 @@ export const DetailTypeListingWrapper = styled.div`
     height: 150px;
     display: flex;
     flex-direction: column;
-    gap: 5px;
     overflow-y: auto;
     border: 1px solid #d9d9d9;
     border-radius: 6px;
     background-color: white;
+    
     ul {
         width: 100%;
         flex: 1;
@@ -114,4 +132,41 @@ export const DetailTypeListingWrapper = styled.div`
             }
         }
     }
+`
+export const WrapperInputSearch = styled.div`
+    width: 100%;
+    position: relative;
+`
+export const Wrapperlistselect = styled.ul`
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display:flex;
+    flex-direction:row;
+    gap: 5px;
+`
+export const Listselectitem = styled.li`
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 20px;
+    border: 2px solid #d9d9d9;
+    border-radius: 100%;
+    color: #d9d9d9;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    cursor: pointer;
+    &:not(.active):hover {
+        color: #02CBE0;
+        background-color: #d9d9d9;
+    }
+
+    &.active {
+        color: white;
+        background-color: #02CBE0;
+        border-color: #02CBE0;
+    }
+    
 `

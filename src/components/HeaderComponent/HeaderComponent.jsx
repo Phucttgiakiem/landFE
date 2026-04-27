@@ -1,5 +1,7 @@
-
-import { useState,useMemo} from "react";
+import { useState,useMemo,useEffect} from "react";
+import { useNavigate,useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {Spin} from 'antd';
 import { WrapperHeader, WrapperLogoHeader,WrapperHeaderMenu,WrapperHeaderSubMenu,
     HeaderMenuItem,HeaderLink,HeaderLinkSubMenu,HeaderMenuItemsubMenu,
     WrapperHeaderAccount,WrapperMenuMobile,WrapperAction,Backgroundfaded,
@@ -10,11 +12,12 @@ import { WrapperHeader, WrapperLogoHeader,WrapperHeaderMenu,WrapperHeaderSubMenu
 import { CloseCircleOutlined, DownOutlined, EuroOutlined, HomeOutlined, MenuOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import logo from '../../assets/images/logo.png';
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import { Popover } from "antd";
 import * as UserService from "../../services/UserService";
+import * as CategoriesService from "../../services/CategoriesService";
 import { resetUser } from "../../redux/slides/userSlide";
+import {setCategories,setLoading} from "../../redux/slides/CategorySlide";
+import { useFilters } from "../../hooks/useFiltershook";
 const menuData = [
   {
     title: "Nhà đất bán",
@@ -34,12 +37,13 @@ const menuData = [
 ];
 
 export default function HeaderComponent () {
-    const [activeMenu, setActiveMenu] = useState("sell");
     const [openIndex, setOpenIndex] = useState(null);
     const [itemActive, setItemActive] = useState(null);
     const [openMenuMobile, setOpenMenuMobile] = useState(false);
     const dispatch = useDispatch();
     const user = useSelector(state => state.user);
+    const {CategoriItems,isLoading} = useSelector(state => state.Category);
+    const location = useLocation();
     const navigate = useNavigate();
     const [arrow, setArrow] = useState('Show');
     const mergedArrow = useMemo(() => {
@@ -72,6 +76,20 @@ export default function HeaderComponent () {
             <WrapperPopupitem onClick={()=> handleLogout()}>Đăng xuất</WrapperPopupitem>
         </div>
     )
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                dispatch(setLoading(true));
+                const {data} = await CategoriesService.getCategory();
+                dispatch(setCategories({...data}))
+                dispatch(setLoading(false));
+            }catch(e){
+                dispatch(setLoading(false));
+                console.log(e);
+            }
+        }
+        fetchData();
+    },[dispatch])
     return (
         <>
             <WrapperHeader>
@@ -83,46 +101,55 @@ export default function HeaderComponent () {
                     </WrapperMenuMobile>
                     <WrapperAction>
                         <WrapperHeaderMenu>
-                            <HeaderMenuItem
-                                $active={activeMenu === "sell"}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setActiveMenu("sell");
-                                    }}
-                            >
-                                <HeaderLink
-                                    href="/"
-                                    >Nhà đất bán
-                                </HeaderLink>
-                                <WrapperHeaderSubMenu>
-                                    <HeaderMenuItemsubMenu><HeaderLinkSubMenu href="/">Bán căn hộ chung cư</HeaderLinkSubMenu></HeaderMenuItemsubMenu>
-                                    <HeaderMenuItemsubMenu><HeaderLinkSubMenu href="/">Bán nhà riêng</HeaderLinkSubMenu></HeaderMenuItemsubMenu>
-                                    <HeaderMenuItemsubMenu><HeaderLinkSubMenu href="/">Bán nhà mặt phố</HeaderLinkSubMenu></HeaderMenuItemsubMenu>
-                                    <HeaderMenuItemsubMenu><HeaderLinkSubMenu href="/">Bán Đất nền dự án</HeaderLinkSubMenu></HeaderMenuItemsubMenu>
-                                    <HeaderMenuItemsubMenu><HeaderLinkSubMenu href="/">Đất thổ cư</HeaderLinkSubMenu></HeaderMenuItemsubMenu>
-                                    <HeaderMenuItemsubMenu><HeaderLinkSubMenu href="/">Trang trại, khu nghỉ dưỡng</HeaderLinkSubMenu></HeaderMenuItemsubMenu>
-                                    <HeaderMenuItemsubMenu><HeaderLinkSubMenu href="/">Nhà trọ, phòng trọ</HeaderLinkSubMenu></HeaderMenuItemsubMenu>
-                                </WrapperHeaderSubMenu> 
-                            </HeaderMenuItem>
-                            <HeaderMenuItem
-                                $active={activeMenu === "rent"}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setActiveMenu("rent")}}
-                            >
-                                <HeaderLink
-                                    href="/"
-                                    >
-                                    Nhà đất cho thuê
-                                </HeaderLink>
-                                <WrapperHeaderSubMenu>
-                                    <HeaderMenuItemsubMenu><HeaderLinkSubMenu href="/">Cho thuê căn hộ chung cư</HeaderLinkSubMenu></HeaderMenuItemsubMenu>
-                                    <HeaderMenuItemsubMenu><HeaderLinkSubMenu href="/">Cho thuê chung cư mini, căn hộ dịch vụ</HeaderLinkSubMenu></HeaderMenuItemsubMenu>
-                                    <HeaderMenuItemsubMenu><HeaderLinkSubMenu href="/">Cho thuê nhà biệt thự liền kề</HeaderLinkSubMenu></HeaderMenuItemsubMenu>
-                                    <HeaderMenuItemsubMenu><HeaderLinkSubMenu href="/">Cho thuê nhà mặt phố</HeaderLinkSubMenu></HeaderMenuItemsubMenu>
-                                    <HeaderMenuItemsubMenu><HeaderLinkSubMenu href="/">Cho thuê nhà trọ, phòng trọ</HeaderLinkSubMenu></HeaderMenuItemsubMenu>
-                                </WrapperHeaderSubMenu> 
-                            </HeaderMenuItem>
+                            {
+                                isLoading ? <Spin /> : (
+                                    <>
+                                            {
+                                                CategoriItems[0] 
+                                                    && 
+                                                    <HeaderMenuItem
+                                                        $active={location.pathname.includes("Nha-dat-cho-thue")}
+                                                    >
+                                                        <HeaderLink
+                                                            href={`/listing/${CategoriItems[0].TypeSlug}`}
+                                                            >{CategoriItems[0]._id}
+                                                        </HeaderLink>
+                                                        <WrapperHeaderSubMenu>
+                                                            {
+                                                                CategoriItems[0].items.map((vl,index)=>(
+                                                                <HeaderMenuItemsubMenu key={index}>
+                                                                        <HeaderLinkSubMenu href={`/listing/${CategoriItems[0].TypeSlug}/${vl.NameSlug}`}>{vl.Name}</HeaderLinkSubMenu>
+                                                                </HeaderMenuItemsubMenu> 
+                                                                ))
+                                                            }
+                                                        </WrapperHeaderSubMenu>
+                                                    </HeaderMenuItem>
+                                            }
+                                            {
+                                                CategoriItems[1] 
+                                                    && 
+                                                    <HeaderMenuItem
+                                                        $active={location.pathname.includes("Nha-dat-ban")}
+                                                    >
+                                                        <HeaderLink
+                                                            href={`/listing/${CategoriItems[1].TypeSlug}`}
+                                                            >{CategoriItems[1]._id}
+                                                        </HeaderLink>
+                                                        <WrapperHeaderSubMenu>
+                                                            {
+                                                                CategoriItems[1].items.map((vl,index)=>(
+                                                                <HeaderMenuItemsubMenu key={index}>
+                                                                        <HeaderLinkSubMenu  href={`/listing/${CategoriItems[1].TypeSlug}/${vl.NameSlug}`}>{vl.Name}</HeaderLinkSubMenu>
+                                                                </HeaderMenuItemsubMenu> 
+                                                                ))
+                                                            }
+                                                        </WrapperHeaderSubMenu>
+                                                    </HeaderMenuItem>
+                                            }
+                                    </>
+                                )
+                            }
+                            
                         </WrapperHeaderMenu>
                         {
                             user?.email ? (

@@ -362,7 +362,7 @@ export default function LandsDetailPage () {
                                     </WrapperSimilarLands>
                                 {
                                     total > limit && 
-                                   <Pagination
+                                    <Pagination
                                         align="center"
                                         current={page}
                                         total={total}

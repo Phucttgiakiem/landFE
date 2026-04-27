@@ -26,6 +26,18 @@ export const routes = [
         isShowSidebar: false
     },
     {
+        path: "/listing/:type",
+        page: ListingPage,
+        isShowHeader: true,
+        isShowSidebar: false
+    },
+    {
+        path: "/listing/:type/:category",
+        page: ListingPage,
+        isShowHeader: true,
+        isShowSidebar: false
+    },
+    {
         path: "/sign-in",
         page: SignInPage,
         isShowHeader: false,
