@@ -360,6 +360,8 @@ export default function LandsDetailPage () {
                                         
                                         
                                     </WrapperSimilarLands>
+                                {
+                                    total > limit && 
                                    <Pagination
                                         align="center"
                                         current={page}
@@ -369,6 +371,8 @@ export default function LandsDetailPage () {
                                             dispatch(setPageRelated(page));
                                         }}
                                     />
+                                }
+                                   
                     </div>
                 </Col>
             </Row>
