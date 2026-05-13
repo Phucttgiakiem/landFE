@@ -53,7 +53,6 @@ export const homeSlide = createSlice({
             save(featured)
             save(latest)
             save(cheap)
-
             const sortls = [...countnews].sort((a, b) => Number(b.CityID) - Number(a.CityID));
             state.countnews = sortls;
             state.featured = featured.map(i => i._id);
@@ -75,6 +74,12 @@ export const homeSlide = createSlice({
             state.filtered.totalPage = totalPage
             state.filtered.page = pageCurrent
         },
+        setUpdatelike: (state,action) => {
+            const {idListing,status} = action.payload;
+            if(state.entities[idListing]){
+                state.entities[idListing].isFavorite = status;
+            }
+        },
         setLoadingRelated: (state,action) => {
             state.related.isLoading = action.payload
         },
@@ -92,5 +97,9 @@ export const homeSlide = createSlice({
         }
     }
 })
-export const {setLoading,setEntities,setData,setRelated,setError,setLoadingRelated,setLoadingFiltered,setPageRelated,setFiltered,setPageFiltered } = homeSlide.actions
+export const {
+    setLoading,setEntities,setData,
+    setRelated,setError,setLoadingRelated,
+    setLoadingFiltered,setPageRelated,setFiltered,
+    setPageFiltered,setUpdatelike } = homeSlide.actions
 export default homeSlide.reducer

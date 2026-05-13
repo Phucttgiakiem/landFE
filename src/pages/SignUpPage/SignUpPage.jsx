@@ -1,5 +1,7 @@
-import { WrapperContainerLeft,WrapperContainerRight,WrapperAnotherSignin,WrapperSignup,Signupcontainer } from "./style";
+import { WrapperContainerLeft,WrapperContainerRight,WrapperAnotherSignin,WrapperSignup,Signupcontainer,WrapperTypeUser } from "./style";
 import {IdcardOutlined,LockOutlined} from '@ant-design/icons';
+import { faUsers,faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import logo from "../../assets/images/real_state.png";
 import backgroundland from "../../assets/images/building_home.jpg";
 import GoogleIcon from "../../assets/images/google.png";
@@ -18,6 +20,7 @@ export default function SignUpPage () {
   const [address,setAddress] = useState("");
   const [password,setPassword] = useState("");
   const [confirmPassword,setConfirmPassword] = useState("");
+  const [typeuser,setTypeuser] = useState(null);
   const message = useMessage();
   const navigate = useNavigate();
   const handleLogin = (e) => {
@@ -51,6 +54,7 @@ export default function SignUpPage () {
           confirmPassword,
           phone,
           address,
+          typeuser
         }
       );
     }
@@ -89,13 +93,23 @@ export default function SignUpPage () {
                       <InputForm placeholder={"Nhập địa chỉ"} size={"large"} prefix={<IdcardOutlined />} TypePassword={false} style={{marginRight: '10px'}} value={address} handleOnChange={handleOnChangeAddress}/>
                       <InputForm placeholder={"Nhập password"} size={"large"} prefix={<LockOutlined />} TypePassword={true} style={{marginRight: '10px'}} value={password} handleOnChange={handleOnChangePassword}/>
                       <InputForm placeholder={"Nhập lại password"} size={"large"} prefix={<LockOutlined />} TypePassword={true} style={{marginRight: '10px'}} value={confirmPassword} handleOnChange={handleOnChangeConfirmPassword}/>
+                      <WrapperTypeUser>
+                          <div className={`btn-choosetype ${typeuser === "sell-user" ? "active" : ""}`} onClick={()=> setTypeuser(prev => prev === "sell-user" ? null : "sell-user") }>
+                            <FontAwesomeIcon icon={faUsers} />
+                            <span>Bên bán</span>
+                          </div>
+                          <div className={`btn-choosetype ${typeuser === "user" ? "active" : ""}`} onClick={() => setTypeuser(prev => prev === "user" ? null : "user")}>
+                            <FontAwesomeIcon icon={faUser} />
+                            <span>Khách</span>
+                          </div>
+                      </WrapperTypeUser>
                   </Signupcontainer>
                 </WrapperSignup>
                 {data?.status === "ERR" && <span style={{ color: "red"}}>{data?.message}</span>}
                 <Loading isLoading={isPending}> 
                   <ButtonComponent 
                     disabled={!name.length || !email.length || !phone.length || !address.length || !password.length || !confirmPassword.length}
-                    className={`btn-login ${!name.length || !email.length || !phone.length || !address.length || !password.length || !confirmPassword.length ?'disabled' : 'active'}`} 
+                    className={`btn-login ${!name.length || !email.length || !phone.length || !address.length || !password.length || !confirmPassword.length || !typeuser ?'disabled' : 'active'}`} 
                     size="large" 
                     textButton={"Đăng ký"} 
                     styleButton={{width:"100%"}}

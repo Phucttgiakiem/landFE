@@ -1,106 +1,90 @@
-import { WrapperSidebar, UserSection,Listfunction,SubMenufunction } from './style';
-import { PieChartOutlined,MenuOutlined,SettingOutlined,DownOutlined } from '@ant-design/icons';
-import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import { WrapperSidebar, UserSection,Listfunction } from './style';
+import { DownOutlined } from '@ant-design/icons';
+import { useNavigate,useLocation } from "react-router-dom";
 import { useState } from 'react';
-const MenuUser = [
-    {
-        id:1,
-        title: "Tổng quan",
-        icon: <PieChartOutlined />,
-        link: "/profile-user"
-    },
-    {
-        id:2,
-        title: "Quản lý tin đăng",
-        icon: <MenuOutlined />,
-        link: "/manage-listing"
-    },
-    {
-        id:3,
-        title: "Quản lý khách hàng",
-        icon: <FontAwesomeIcon icon={faUserGroup}/>,
-        link: "/profile-user"
-    },
-    {
-        id:4,
-        title: "Tài khoản",
-        icon: <SettingOutlined />,
-        children: [
-            {id:4.1,title:"Cài đặt tài khoản",link: "/profile-user"},
-            {id:4.2,title:"Đổi mật khẩu",link: "/Change-password"}
-        ]
-    },
-]
-export default function SidebarComponent() {
-    const [openMenuId, setOpenMenuId] = useState(null);
-    const [selectedSubId, setSelectedSubId] = useState(null);
-    const navigate = useNavigate();
+import { useSelector } from "react-redux";
+import {MenuSidebar} from '../../constant/MenuOption';
+import { filterMenu } from './filterMenu';
 
+const SidebarItem = ({item,level = 0}) => {
+    const [open,setOpen] = useState(false);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const isActive = item.path && location.pathname === item.path;
+    const handleClick = () => {
+        if(item.children){
+            setOpen(prev => !prev);
+        }else if (item.path){
+            navigate(item.path);
+        }
+    }
+    return (
+        <div>
+            <div
+            onClick={handleClick}
+            style={{
+                boxSizing: "border-box",
+                height: "4rem",
+                padding: "10px 20px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                background: isActive ? "#02CBE0" : "",
+                color: isActive ? "#fff" : "#000",
+                borderTop: isActive ? "1px solid #ccc" : "none",
+                borderBottom: isActive ? "1px solid #ccc" : "none",
+                borderRight: isActive ? "5px solid #fff" : "none",
+                gap:10
+            }}
+            >
+            <span
+                style={{
+                width: 30,           
+                display: "flex",
+                justifyContent: "center",
+                fontSize: 20
+                }}
+            >
+                {item.icon}
+            </span>
+            <span style={{ flex: 2 }}>
+                {item.label}
+            </span>
+            {item.children && (
+                <span className={`arrow ${open ? "open" : ""}`}>
+                <DownOutlined />
+                </span>
+            )}
+            </div>
+
+            {item.children && open && (
+                <div>
+                    {item.children.map(child => (
+                        <SidebarItem key={child.label} item={child} level={level + 1} />
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
+export default function SidebarComponent() { 
+    const user = useSelector(state => state.user);
+    const filteredMenu = filterMenu(MenuSidebar, user.role);
     return (
         <WrapperSidebar>
-            <div>
-                    <UserSection>
-                        <span>
-                            <img src="./user.png" alt="User Avatar" />
-                        </span>
-                        <h3>Ten nguoi dung</h3>
-                    </UserSection>
-                    <Listfunction>
-                        {
-                            MenuUser.map((item) => (
-                                <li key={item.id}>
-                                    <div
-                                        onClick={() => {
-                                            if (item.children) {
-                                                //chỉ mở submenu
-                                                setOpenMenuId(openMenuId === item.id ? null : item.id);
-                                                setSelectedSubId(null); // reset submenu
-                                            } else {
-                                                //menu thường thì navigate
-                                                setOpenMenuId(item.id);
-                                                setSelectedSubId(null);
-                                                navigate(item.link);
-                                            }
-                                        }}
-                                        className={`${openMenuId === item.id ? "selected" : ""}
-                                            ${item.children ? "has-submenu" : "no-submenu"}
-                                            `}
-                                    >
-                                        <span>
-                                            {item.icon}
-                                        </span>
-                                        <span>{item.title}</span>
-                                        {item?.children && (<span className={`down_submenu ${
-                                            openMenuId === item.id ? "rotate" : ""
-                                        }`}><DownOutlined /></span>)}
-                                    </div>
-                                    {
-                                        item?.children && openMenuId === item.id &&
-                                        <SubMenufunction>
-                                            {
-                                                item.children.map((value) => (
-                                                    <li
-                                                        key={value.id}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation(); //QUAN TRỌNG
-                                                            setSelectedSubId(value.id);
-                                                            navigate(value.link);
-                                                        }}
-                                                        className={selectedSubId === value.id ? "selected" : ""}
-                                                    >
-                                                        {value.title}
-                                                    </li>
-                                                ))
-                                            }
-                                        </SubMenufunction>
-                                    }
-                                </li>
-                            ))
-                        }
-                    </Listfunction>
-            </div>
+            <UserSection>
+                <span>
+                    <img src="./user.png" alt="User Avatar" />
+                </span>
+                <h3>{user?.name}</h3>
+            </UserSection>
+            <Listfunction>
+                {
+                    filteredMenu.map(item => (
+                        <SidebarItem key={item.label} item={item}/>
+                    ))
+                }
+            </Listfunction>
         </WrapperSidebar>
-    );
+    )
 }

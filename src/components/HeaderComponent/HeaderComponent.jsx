@@ -68,11 +68,13 @@ export default function HeaderComponent () {
     }
     const handleLogout = async() => {
         await UserService.logoutUser();
+        localStorage.removeItem("access_token");
         dispatch(resetUser());
+        navigate("/");
     }
     const content = () => (
         <div>
-            <WrapperPopupitem onClick={() => navigate('/profile-user')}>Thông tin cá nhân</WrapperPopupitem>
+            <WrapperPopupitem onClick={() => navigate('/Dashboard')}>Thông tin cá nhân</WrapperPopupitem>
             <WrapperPopupitem onClick={()=> handleLogout()}>Đăng xuất</WrapperPopupitem>
         </div>
     )

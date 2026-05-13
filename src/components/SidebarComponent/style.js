@@ -29,68 +29,19 @@ export const UserSection = styled.div`
         }
     }
 `;
-export const Listfunction = styled.ul`
+export const Listfunction = styled.div`
     margin: 1rem 0;
     padding: 0;
     list-style:none;
     height: auto;
     overflow: visible;
-    li {
-        display: block;
-        height: auto;
-        span:first-child {
-            display:block;
-            width:2.5rem;
-            height: 2.5rem;
-            line-height: 2.5rem;
-            text-align:center;
-            font-size: 1.3rem;
-        }
-        div {
-            box-sizing: border-box;
-            padding: 0 20px;
-            display:flex;
-            flex-direction:row;
-            align-items:center;
-            gap:10px;
-            width: 100%;
-            height: 3rem;
-            span:nth-child(2){
-                flex-grow: 1;
-            }
-            .down_submenu svg{
-                font-size: 1rem;
-                transform: rotate(-90deg);
-                transition: transform 0.3s ease;
-            }
-            .down_submenu.rotate svg {
-                transform: rotate(0deg);
-            }
-        }
+    .arrow {
+        display: inline-block;
+        transition: transform 1s ease;
     }
-    li > div:hover {
-        background-color: rgba(233, 233, 233, 1);
-        cursor: pointer;
+    .arrow.open {
+        transform: rotate(180deg); 
     }
-    /* ============================= */
-  /* MENU KHÔNG CÓ SUBMENU */
-  /* ============================= */
-  li > div.no-submenu.selected {
-    background-color: rgba(235, 235, 235, 1);
-    color: #02CBE0;
-    border-left: 4px solid #02CBE0;
-    padding-left: 16px;
-  }
-
-  /* ============================= */
-  /* MENU CÓ SUBMENU (CHỈ ĐỔI MÀU CHỮ) */
-  /* ============================= */
-  li > div.has-submenu.selected {
-    background-color: transparent;
-    border-left: none;
-    font-weight: normal;
-    color: #02CBE0;
-  }
 `
 export const SubMenufunction = styled.ul`
     list-style: none;

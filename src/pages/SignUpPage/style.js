@@ -66,12 +66,42 @@ export const Signupcontainer = styled.div`
     overflow-y: auto;
     overflow-x: hidden;
     position: relative;
+    
     &::-webkit-scrollbar {
         width: 5px;
     }
     &::-webkit-scrollbar-thumb {
         background-color: rgba(0,0,0,0.2);
         border-radius: 10px;
+    }
+`
+export const WrapperTypeUser = styled.div`
+    width:100%;
+    height: 20rem;
+    padding: 1rem 0;
+    display: flex;
+    flex-direction:row;
+    justify-content:center;
+    gap:20px;
+    .btn-choosetype {
+        width: 5rem;
+        height: 5rem;
+        display:flex;
+        flex-direction: column;
+        justify-content:center;
+        align-items:center;
+        border-radius: 20px;
+        border: 1px solid #d9d9d9;
+        gap: 10px;
+        background-color:#fff;
+        cursor:pointer;
+        &:not(.active):hover {
+            box-shadow: 3px 3px 5px rgba(0,0,0,0.3), -3px -3px 5px rgba(0,0,0,0.1) 
+        }
+    }
+    .active {
+        border-color: rgba(0, 166, 185, 1);
+        box-shadow:tranparent;
     }
 `
 export const WrapperRememberandForgot = styled.div`

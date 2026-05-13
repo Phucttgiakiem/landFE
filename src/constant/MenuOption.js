@@ -1,3 +1,7 @@
+import { PieChartOutlined,MenuOutlined,SettingOutlined,RiseOutlined } from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserGroup } from '@fortawesome/free-solid-svg-icons';
+
 export const listPricesell = [
     {key:'all',label: "Tất cả các giá", min:null,max:null },
     {key:"under - 500",label: "Dưới 500 triệu",min: 0, max: 500 },
@@ -39,4 +43,64 @@ export const listacreage = [
     {key:"250 - 300",label: "250 - 300 m²",min:250,max:300},
     {key:"300 - 500",label: "300 - 500 m²",min:300,max:500},
     {key:"over - 500",label: "Trên 500 m²",min:500,max:null},
+]
+export const MenuSidebar = [
+    {
+        label: "Dashboard",
+        path: "/Dashboard",
+        icon: <PieChartOutlined />,
+        roles: ["user","sell-user","admin"]
+    },
+    {
+        label: "Quản lý tin đăng",
+        path: "/manage-listing",
+        icon: <MenuOutlined/>,
+        roles: ["sell-user","admin"]
+    },
+    {
+        label: "Quản lý hợp đồng",
+        path: "/Contract",
+        icon : <FontAwesomeIcon icon={faUserGroup}/>,
+        roles: ["sell-user","admin"]
+    },
+    {
+        label: "Lịch sử thuê, mua",
+        path: "/Contract-history",
+        icon : <FontAwesomeIcon icon={faUserGroup}/>,
+        roles: ["user"]
+    },
+    {
+        label: "Tài khoản",
+        icon: <SettingOutlined />,
+        roles: ["user","sell-user","admin"],
+        children: [
+            {
+                label: "Thông tin cá nhân",
+                path: "/profile-user",
+                roles: ["user","sell-user","admin"],
+            },
+            {
+                label: "Đổi mật khẩu",
+                path: "/Change-password",
+                roles: ["user","sell-user","admin"]
+            },
+            {
+                label: "Quản lý người dùng",
+                path: "/manage-listing123456",
+                roles: ["admin"],
+            }
+        ],
+    },
+    {
+        label: "Thống kê",
+        icon: <RiseOutlined/>,
+        roles: ["sell-user","admin"],
+        children: [
+            {
+                label: "Thống kê doanh thu",
+                path: "/Profit",
+                roles: ["admin","sell-user"]
+            }
+        ]
+    }
 ]

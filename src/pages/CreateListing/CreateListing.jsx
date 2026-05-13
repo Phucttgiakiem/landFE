@@ -209,6 +209,7 @@ export default function CreateListing() {
         }
     }
     const handleChangeTypeRealEstate = (value) => {
+        console.log("selected value: ", value);
         setFormdata(prev => ({
             ...prev,
             CatagoryProperty:value
@@ -440,26 +441,15 @@ export default function CreateListing() {
             );
                 const apiData = res.data.data;
 
-                // Group theo Type
-                const grouped = apiData.reduce((acc, item) => {
-                if (!acc[item.Type]) {
-                    acc[item.Type] = [];
-                }
-                acc[item.Type].push(item);
-                return acc;
-                }, {});
+                const formattedOptions = apiData.map(group => ({
+                label: group._id, // Nhà đất bán / Nhà đất cho thuê
+                options: group.items.map(item => ({
+                    label: item.Name,
+                    value: item._id
+                }))
+            }));
 
-                // Convert sang format AntD Select
-                const formattedOptions = Object.entries(grouped).map(
-                    ([groupName, items]) => ({
-                        label: groupName,
-                        options: items.map(item => ({
-                        label: item.Name,
-                        value: item._id   // nên dùng id làm value
-                        }))
-                    })
-                );
-                setTypeListing(formattedOptions);
+            setTypeListing(formattedOptions);
         }
         fetchData();
     },[]);

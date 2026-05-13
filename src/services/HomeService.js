@@ -1,7 +1,13 @@
 import axios from "axios";
-
-export const getHome = async () => {
-    const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/home/get-all`);
+export const axiosJWT = axios.create();
+export const getHome = async (access_token) => {
+    const res = await axiosJWT.get(`${process.env.REACT_APP_URL_BACKEND}/home/get-all`,
+      {
+            headers: {
+                authorization: `Bearer ${access_token}`,
+            },
+        }
+    );
     return res;
 }
 export const getListingFilter = async (data) => {

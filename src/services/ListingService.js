@@ -7,9 +7,9 @@ export const createListing = async (data) => {
 }
 export const updateListing = async (id,data) => {
     //console.log(Object.fromEntries(data.entries()));
-    const dt = Object.fromEntries(data.entries());
+    //const dt = Object.fromEntries(data.entries());
     const res = await axios.put(`${process.env.REACT_APP_URL_BACKEND}/Listing/update-listing/${id}`,data);
-    console.log("res",res);
+   // console.log("res",res);
     return res;
 }
 export const softDeleteListing = async (data) => {

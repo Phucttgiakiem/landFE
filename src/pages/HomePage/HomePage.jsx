@@ -21,12 +21,14 @@ import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CardsmallComponent from "../../components/CardsmallComponent/CardsmallComponent";
 import CardPlaceComponent from "../../components/CardPlaceComponent/CardPlaceComponent";
 import * as HomeService from "../../services/HomeService";
-import { setData,setLoading,setError } from "../../redux/slides/HomeSlide";
+import { setData,setLoading,setError,setUpdatelike } from "../../redux/slides/HomeSlide";
 import {formatDate,formatacreage } from "../../utils";
 
 const HomePage = () => {
     const [activeMenu, setActiveMenu] = useState("sell");
     const homeState = useSelector((state) => state.home);
+    const user = useSelector((state) => state.user);
+   // console.log(user);
     const { featured, latest, cheap, countnews, entities,loading } = homeState;
 
     const dispatch = useDispatch();
@@ -37,6 +39,9 @@ const HomePage = () => {
     const featuredls = getList(featured, entities)
     const latestls = getList(latest, entities)
     const cheapls = getList(cheap, entities)
+    const handleUpdatelikeitem = (idproperty,status) =>{
+        dispatch(setUpdatelike({idListing:idproperty,status}))
+    }
     useEffect(() => {
         const fetchHomeData = async () => {
             try {
@@ -46,7 +51,7 @@ const HomePage = () => {
                     cheap: true,
                     countnews: true
                 }));
-                const res = await HomeService.getHome();    
+                const res = await HomeService.getHome(user?.access_Token);    
                 
                 if(res && res.data){
                     dispatch(setData(res.data));
@@ -63,7 +68,7 @@ const HomePage = () => {
             }
         };
         fetchHomeData();
-    }, [dispatch]);
+    }, [dispatch,user?.access_Token]);
     const styleitemslider = {
         display: "flex",
         "justify-content": "center",
@@ -442,8 +447,11 @@ const HomePage = () => {
                                                     loading={false}
                                                     Title={item.Title}
                                                     Price={item.Price}
+                                                    likeCard={item.isFavorite}
                                                     Area={item.Address.Commune.name+" / "+item.Address.City.name}
+                                                    Login={user}
                                                     createdAt={formatDate(item.createdAt)}
+                                                    handlelike={handleUpdatelikeitem}
                                                     Img={
                                                         <img
                                                         src={item?.images?.URL || ImageBuilding}
