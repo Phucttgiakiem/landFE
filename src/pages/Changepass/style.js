@@ -7,6 +7,11 @@ export const WrapperChangePass = styled.div`
     padding: 20px;
     background-color: #e3e3e3;
     min-height: calc(100vh - 90px);
+    @media screen and (max-width: 1199px) {
+        width: 100%;
+        margin-left: 0;
+        min-height: 100vh;
+    }
 `;
 export const ChangePassContainer = styled.div`
     width: 100%;
@@ -17,6 +22,10 @@ export const ChangePassContainer = styled.div`
     display: flex;
     flex-direction: column;
     padding: 20px;
+    @media screen and (max-width: 1199px) {
+        margin-top: 6.5rem;
+        min-height:calc(100vh - 6.5rem - 40px)
+    }
 `;
 export const ChangePassTitle = styled.span`
     font-size: 1.5rem;

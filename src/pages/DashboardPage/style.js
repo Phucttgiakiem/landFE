@@ -7,6 +7,11 @@ export const WrapperDashboard = styled.div`
     padding: 20px;
     background-color: #e3e3e3;
     min-height: calc(100vh - 90px);
+    @media screen and (max-width: 1199px) {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 6.2rem;
+    }
 `;
 export const DashboardContainer = styled.div`
     width: 100%;
@@ -16,7 +21,6 @@ export const DashboardContainer = styled.div`
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    
 `
 export const DashboardHeader = styled.div`
     width: 100%;

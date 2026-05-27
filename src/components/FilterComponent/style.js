@@ -2,23 +2,46 @@ import styled from 'styled-components';
 export const WrapperFilter = styled.div`
     width: calc(100% - 280px);
     height: max-content;
-    margin: 0 140px;
-    padding: 22px 0;
-    position: absolute;
-    z-index: 5;
-    top: 6rem;
-    left: 0;
+    margin: 0 140px 20px 140px;
     display: flex;
     flex-direction: row;
     gap: 0.3rem;
     box-sizing: border-box;
-    border-bottom: 1px solid #b7b7b7ff;
+    .filter-dropdown {
+        position: relative;
+        min-width: 140px;
+        flex: 1;
+    }
+    .filter-dropdown > button{
+        width: 100%;
+    }
     @media screen and (min-width: 768px) and (max-width: 1199px) {
         width: calc(100% - 80px);
-        margin: 0 40px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        margin: 0 40px 20px 40px;
+        .filter-dropdown > button > .hide-icon-tablet {
+            display: none;
+        }
     }
     @media screen and (max-width: 767px) {
-        display:none;
+        width: calc(100% - 40px);
+        margin: 0;
+
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+
+        & > * {
+            display: none;
+        }
+
+        & > *:first-child,
+        & > *:last-child {
+            display: flex;
+            width: 100%;
+            min-width: 0;
+        }
     }
 `
 export const CounterFilter = styled.span`

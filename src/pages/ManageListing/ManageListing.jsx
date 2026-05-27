@@ -1,14 +1,15 @@
 import { WrapperManageListing,ManageListingContainer,
     ManageListingHeader,ManageListingHeaderContent,SearchContainer
-    ,SearchButton,TabsContainer,TabButton,ManageListingBody } from "./style";
+    ,SearchButton,TabsContainer,TabButton,ManageListingBody,Selectownerproperty,WrapperCreateandtrash } from "./style";
 import {SearchOutlined,RestOutlined} from '@ant-design/icons';
-import { Table,Space,Badge} from "antd";
+import { Table,Space,Badge,Select} from "antd";
 import { useNavigate,Link } from "react-router-dom";
 import {useEffect,useState} from "react";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import {useMessage} from "../../components/Message/Message";
 import { useMutationHook } from "../../hooks/useMutationhook";
 import * as ListingService from "../../services/ListingService";
+import {getAllowner} from "../../services/UserService";
 import {formatDateVN,formatPrice} from "../../utils";
 import { useSelector,useDispatch } from "react-redux";
 import {setListings,setPage,setSort,setFilter,setcountdeleted,setFilterClean} from "../../redux/slides/ListingSlide";
@@ -68,26 +69,30 @@ const tabsData = [
         }
     }
 ]
-const getColumns = (handleDelete) => [
+const getColumns = (handleDelete,iduser) => [
     {
         title: 'Tên bất động sản',
         dataIndex: 'Title',
+        width:400,
     },
     {
         title: 'Giá',
         dataIndex: 'Price',
         render: (value) => formatPrice(value),
-        sorter: true
+        sorter: true,
+        width:200,
     },
     {
         title: 'Ngày tạo',
         dataIndex: 'createdAt',
         render: (value) => formatDateVN(value),
-        sorter: true
+        sorter: true,
+        width:180
     },
     {
         title: 'Trạng thái',
-        dataIndex: 'approval_status',    
+        dataIndex: 'approval_status',
+        width:150    
     },
     {
         title: 'Hành động',
@@ -95,10 +100,11 @@ const getColumns = (handleDelete) => [
         key: 'x',
         render: (_, record) => 
             <Space>
-                <span style={{cursor: 'pointer'}} onClick={() => handleDelete(record._id)}>Delete</span>
+                {record?.User === iduser && <span style={{cursor: 'pointer'}} onClick={() => handleDelete(record._id)}>Delete</span>}
                 <Link to={`/Edit-listing/${record._id}`}>Edit</Link>
                 <Link to={`/Detail-listing/${record._id}`} state={{ from: "listings" }}>Detail</Link>
-            </Space>
+            </Space>,
+        width:210
         
     }
 ]
@@ -107,6 +113,8 @@ export default function ManageListing() {
     const [activeTab, setActiveTab] = useState('all');
     const [keywordfind,setKeywordfind] = useState("");
     const [loading,setLoading] = useState(false);
+    const [listowner,setListowner] = useState([]);
+    const [selectedowner,setSelectedowner] = useState("");
     const Listing = useSelector(state => state.listing);
     const user = useSelector(state => state.user);
     const dispatch = useDispatch();
@@ -167,7 +175,7 @@ export default function ManageListing() {
             }
         ]
     }
-    const columns = getColumns(handleDelete);
+    const columns = getColumns(handleDelete,user?.id);
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -180,7 +188,7 @@ export default function ManageListing() {
                 "filter",
                 JSON.stringify({
                     ...Listing.filter,
-                    User: user.id
+                    User: selectedowner.split("-")[0] || user.id 
                 })
             );
             searchParams.append("sort",
@@ -237,7 +245,19 @@ export default function ManageListing() {
     }, []);
     useEffect (() =>{
         fetchData();
-    },[Listing?.page,Listing?.filter,Listing?.sort])
+    },[Listing?.page,Listing?.filter,Listing?.sort,selectedowner]);
+    useEffect (() => {
+        const fetchData = async () => {
+            try {
+                const response = await getAllowner(user?.access_Token);
+                setListowner(response.owner);
+                setSelectedowner(`${user?.id}-${user?.role}`)
+            }catch(e){
+                console.log(e)
+            }
+        }
+        fetchData();
+    },[user?.id,user?.role])
     const handleTableChange = (pagination,filters, sorter) => {
         dispatch(setPage({pageCurrent: pagination.current}));
         dispatch(setSort({
@@ -270,20 +290,44 @@ export default function ManageListing() {
                                     onChange={(e) => setKeywordfind(e.target.value)}
                                     />
                             </SearchContainer>
-                            <Badge count={Listing.itemdeleted} className="btn-trash">
+                            {
+                                user?.role === "admin" &&
+                                <Selectownerproperty>
+                                    <Select
+                                        placeholder="Chọn tên người đăng bài đăng"
+                                        className="select-owner"
+                                        variant="underlined"
+                                        value={selectedowner}
+                                        options={
+                                            listowner.map(item => (
+                                                {value:item._id+"-"+item.role,label:item.fullname+" - "+item.phone}
+                                            ))
+                                        }
+                                        onChange={value => value === undefined ? setSelectedowner(`${user?.id}-${user?.role}`) : setSelectedowner(value)}
+                                        allowClear
+                                    />
+                                </Selectownerproperty>
+                            }
+                            
+                            <WrapperCreateandtrash>
+                                {
+                                selectedowner.split("-")[0] === user?.id && 
+                                    <Badge count={Listing.itemdeleted} className="btn-trash">
+                                        <ButtonComponent 
+                                            size="large" 
+                                            textButton={<RestOutlined style={{fontSize: 24}}/>}
+                                            onClick={() => { navigate('/Delete-listing')}}    
+                                        />
+                                    </Badge>
+                                }
                                 <ButtonComponent 
+                                    textButton="Tạo mới" 
                                     size="large" 
-                                    textButton={<RestOutlined style={{fontSize: 24}}/>}
-                                    onClick={() => { navigate('/Delete-listing')}}    
+                                    color="danger" 
+                                    variant="solid"
+                                    onClick={() => navigate('/create-listing')}    
                                 />
-                            </Badge>
-                            <ButtonComponent 
-                                textButton="Tạo mới" 
-                                size="large" 
-                                color="danger" 
-                                variant="solid" 
-                                onClick={() => navigate('/create-listing')}    
-                            />
+                            </WrapperCreateandtrash>
                         </ManageListingHeaderContent>
                         
                     </ManageListingHeader>
@@ -303,24 +347,32 @@ export default function ManageListing() {
                             </TabButton>
                         ))}
                     </TabsContainer>
+                   
                     <div style={{margin: ' 10px 20px'}}>
-                        <ButtonComponent 
-                            textButton="Xóa tin đã chọn" 
-                            size="large"
-                            color="danger" 
-                            variant="outlined"
-                            onClick={handleDeleteSelected}
-                            />
+                            {
+                                selectedowner.split("-")[0] === user?.id && (
+                                    <ButtonComponent 
+                                        textButton="Xóa tin đã chọn" 
+                                        size="large"
+                                        color="danger" 
+                                        variant="outlined"
+                                        onClick={handleDeleteSelected}
+                                        />
+                                )
+                        }
                     </div>
+                        
+                    
                     <ManageListingBody>
                         <Table 
-                            rowSelection={rowSelection}
+                            rowSelection={selectedowner.split("-")[0] === user?.id && rowSelection}
                             columns={columns} 
                             rowKey={record => record._id} 
                             dataSource={Listing.listings.active} 
                             loading={loading} 
                             pagination={{current: Listing?.page,pageSize:Listing?.limit,total: Listing.total}} 
                             onChange={handleTableChange}    
+                            scroll={{ x: 1000 }}
                         />
                     </ManageListingBody>
                 </ManageListingContainer>

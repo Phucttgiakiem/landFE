@@ -7,6 +7,11 @@ export const WrapperDeletedListing = styled.div`
     padding: 20px;
     background-color: #e3e3e3;
     min-height: calc(100vh - 90px);
+    @media screen and (max-width: 1199px) {
+        width: 100%;
+        margin-left: 0;
+        min-height: 100vh;
+    }
 `;
 export const DeletedListingContainer = styled.div`
     width: 100%;
@@ -16,12 +21,16 @@ export const DeletedListingContainer = styled.div`
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    
+    @media screen and (max-width: 1199px) {
+        margin-top: 6.5rem;
+        min-height:calc(100vh - 6.5rem - 40px)
+    }
 `
 export const DeletedListingHeader = styled.div`
     width: 100%;
     display: flex;
-    flex-direction: column;
+    align-items:center;
+    flex-direction: row;
     margin-bottom: 20px;
     h2 {
         margin: 0;

@@ -7,6 +7,10 @@ export const WrapperCreateContract = styled.div`
     padding: 20px;
     background-color: #e3e3e3;
     min-height: calc(100vh - 90px);
+    @media screen and (max-width: 1199px) {
+        width: 100%;
+        margin-left: 0;
+    }
 `
 export const CreateContractContainer = styled.div`
     width: 100%;

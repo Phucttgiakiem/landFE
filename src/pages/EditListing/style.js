@@ -7,6 +7,11 @@ export const WrapperEditListing = styled.div`
     padding: 20px;
     background-color: #e3e3e3;
     min-height: calc(100vh - 90px);
+    @media screen and (max-width: 1199px) {
+        width: 100%;
+        margin-left: 0;
+        min-height: 100vh;
+    }
 `
 export const EditListingContainer = styled.div`
     width: 100%;
@@ -16,6 +21,10 @@ export const EditListingContainer = styled.div`
     border-radius: 8px;
     display: flex;
     flex-direction: column;
+    @media screen and (max-width: 1199px) {
+        margin-top: 6.5rem;
+        min-height:calc(100vh - 6.5rem - 40px)
+    }
 `
 export const EditListingHeader = styled.div`
     width: 100%;
@@ -23,11 +32,19 @@ export const EditListingHeader = styled.div`
     flex-direction: row;
     align-items: center;
     margin-bottom: 20px;
+    box-sizing: border-box;
     border-bottom: 1px solid #e3e3e3;
     h2 {
         width: max-content;
         margin: 0;
         padding: 20px;
+    }
+    @media screen and (max-width: 1199px){
+        padding: 20px;
+        gap: 20px;
+        h2 {
+            padding: 0;
+        }
     }
 `
 export const EditListingBody = styled.div`

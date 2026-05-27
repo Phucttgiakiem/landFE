@@ -5,6 +5,9 @@ export const WrapperHeadofHomepage = styled.div`
     margin:0;
     padding:0;
     position:relative;
+    @media screen and (max-width: 1199px) {
+      margin-top:6rem;
+    }
 `
 export const WrapperSlider = styled.div`
     width:100%;
@@ -138,44 +141,70 @@ export const SearchboxHeader = styled.div`
 `
 export const Searchboxdropdown = styled.div`
   width: calc(40rem - 48px);
-  height: 15rem;
-  overflow-y:auto;
-  background-color:#fff;
-  margin-top:0.5rem;
-  border-radius:10px;
-  display:none;
+  max-height: 15rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #fff;
+  margin-top: 0.5rem;
+  border-radius: 10px;
+
+  padding: 0.5rem 0;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
   &::-webkit-scrollbar {
     width: 0.4rem;
-    height: 8px;
   }
+
   &::-webkit-scrollbar-thumb {
     background-color: rgba(200, 200, 200, 1);
     border-radius: 6px;
   }
-  &::-webkit-scrollbar-track {
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
-    margin: 0.5rem 0px;
-    }
-`
-export const WrapperSearchlist = styled.ul`
-  width:100%;
-  padding: 10px;
-  display:flex;
-  flex-direction:column;
 
-  li {
-    list-style:none;
-    padding:8px 12px;
-    cursor:pointer;
-    display:flex;
-    flex-direction: row;
-    align-items: center;
+  &::-webkit-scrollbar-track {
+    background: transparent;
   }
-  li:hover {
-    background-color:rgba(218, 218, 218, 1);
+`;
+
+export const SearchItem = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  box-sizing:border-box;
+  transition: background-color 0.2s ease;
+  &:hover {
+    background-color: rgba(240, 240, 240, 1);
   }
-`
+`;
+
+export const SearchIconWrapper = styled.div`
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.15rem;
+  .icon-searchitem {
+    font-size: 1rem;
+    color: #32c5d2;
+  }
+`;
+
+export const SearchContent = styled.div`
+  flex: 1;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #222;
+  word-break: break-word;
+`;
+
+export const EmptySearch = styled.div`
+  padding: 1rem;
+  font-size: 0.95rem;
+  color: #777;
+`;
 export const MenuItemSearchleft = styled.div`
   margin-right: 10px;
   .icon-searchitem {
@@ -215,10 +244,17 @@ export const WrapperLandslist = styled.div`
     overflow: visible;
   }
   
-  .image-land {
+  .image-land{
     width: 100%;
     aspect-ratio: 16/9;
     object-fit: cover;
+    display: block;
+  }
+
+  .no-image{
+      object-fit: contain;
+      padding: 20px;
+      background: #f5f5f5;
   }
   
 `;

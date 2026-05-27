@@ -38,9 +38,12 @@ export const homeSlide = createSlice({
         setLoading: (state, action) => {
              Object.assign(state.loading, action.payload)
         },   
-        setEntities: (state,action) => {
+        setEntities: (state, action) => {
             action.payload.forEach(item => {
-                state.entities[item._id] = item
+                state.entities[item._id] = {
+                    ...state.entities[item._id],
+                    ...item
+                }
             })
         },
         setData: (state, action) => {
@@ -80,6 +83,16 @@ export const homeSlide = createSlice({
                 state.entities[idListing].isFavorite = status;
             }
         },
+        setUpadtelikeRelated: (state,action) => {
+            const {idListing,status} = action.payload;
+            const arr = state.related.items;
+            for(const item of arr){
+                if(item._id === idListing){
+                    item.isFavorite = status;
+                    break;
+                }
+            }
+        },
         setLoadingRelated: (state,action) => {
             state.related.isLoading = action.payload
         },
@@ -101,5 +114,5 @@ export const {
     setLoading,setEntities,setData,
     setRelated,setError,setLoadingRelated,
     setLoadingFiltered,setPageRelated,setFiltered,
-    setPageFiltered,setUpdatelike } = homeSlide.actions
+    setPageFiltered,setUpdatelike,setUpadtelikeRelated } = homeSlide.actions
 export default homeSlide.reducer

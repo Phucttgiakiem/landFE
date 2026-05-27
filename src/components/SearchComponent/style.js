@@ -1,43 +1,11 @@
 import { Row,Col } from "antd";
 import styled from 'styled-components';
-export const WrapperArea = styled.div`
-  width: 100%;
-  display:none;
-  padding:0px;
-  margin: 20px 0 20px ;
-  height: 25rem;
-  overflow-y: auto;
-  overflow-x: hidden;
-  &.show {
-    display: block;
-  }
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
 
-  &::-webkit-scrollbar-track {
-    background: transparent;
-    margin-bottom: 2px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #ccccccff;
-    border-radius: 8px;
-  }
-  &::-webkit-scrollbar-button {
-    display: none; /* cái nút trên/dưới */
-  }
-`
 export const WrapperSearch = styled(Row)`
   width: calc(100% - 240px);
   margin: 1.2rem auto 5px;
   padding: 0 20px;
   background-color: white;
-  position: absolute;
-  z-index: 9;
-  top: 0;
-  right: 0;
-  left: 0;
   &.active {
     box-shadow: 0.15rem 0.15rem 5px rgba(98, 98, 98, 1), 
                 -0.15rem 0.15rem 5px rgba(98,98,98,1);
@@ -49,7 +17,7 @@ export const WrapperSearch = styled(Row)`
   }
   
   @media screen and (max-width:767px){
-    display:none;
+    width:100%;
   }
   
 `
@@ -62,6 +30,11 @@ export const WrapperInputsearch = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  @media screen and (max-width:767px) {
+    .btn-search-property {
+      display:none;
+    }
+  }
 `
 export const Featureanother = styled.div`
   display:flex;
@@ -80,6 +53,11 @@ export const WrapperInputWithClear = styled.div`
     transform: translateY(-50%);
     right: 0.5rem;
     font-size: 1.1rem;
+  }
+  @media screen and (max-width:767px){
+    & .btn-clears { 
+      right: 0.9rem;
+    }
   }
 `
 export const InputSearch = styled.input`

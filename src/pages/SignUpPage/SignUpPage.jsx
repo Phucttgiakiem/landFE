@@ -1,4 +1,4 @@
-import { WrapperContainerLeft,WrapperContainerRight,WrapperAnotherSignin,WrapperSignup,Signupcontainer,WrapperTypeUser } from "./style";
+import { WrapperContainerLeft,WrapperContainerRight,WrapperAnotherSignin,WrapperSignup,Signupcontainer,WrapperTypeUser,WrapperSignUpPage } from "./style";
 import {IdcardOutlined,LockOutlined} from '@ant-design/icons';
 import { faUsers,faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -72,7 +72,7 @@ export default function SignUpPage () {
     },[isSuccess,isError]);
   return (
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center',background:'rgba(0,0,0,0.53)',height: '100vh'}}>
-        <div style={{display:'flex',flexDirection:'row',width: '1000px', height: '600px', borderRadius: '6px',backgroundColor: '#fff', overflow: 'hidden'}}>
+        <WrapperSignUpPage>
           <WrapperContainerLeft>
               <img src={backgroundland} alt="background land" style={{width: '100%',height:"100%", objectFit:'fill'}}/>
               <img src={logo} alt="logo" style={{position: 'absolute', top: '20px', left: '20px', width: '120px'}}/>
@@ -116,7 +116,7 @@ export default function SignUpPage () {
                     onClick={handleSignUp}
                     />
                 </Loading>
-                <WrapperAnotherSignin>
+                {/* <WrapperAnotherSignin>
                     <div></div>
                     <div>
                         <div className="another_option">Hoặc</div>
@@ -126,13 +126,13 @@ export default function SignUpPage () {
                   leftIcon={<img src={GoogleIcon} alt="icon-google" width="16" height="16" 
                   style={{display:"flex",flexDirection:"column",alignItems:'center'}} />} 
                   textButton={"Đăng ký tài khoản với Google"} 
-                  styleButton={{width:"100%", marginTop:"1rem", display:"flex",flexDirection:"row",alignItems:"center"}}/>
+                  styleButton={{width:"100%", marginTop:"1rem", display:"flex",flexDirection:"row",alignItems:"center"}}/> */}
             </div>
             <div className="signup_member">
                 <span>Bạn là thành viên? <Link rel="icon" onClick={(e) => handleLogin(e)} >Đăng nhập</Link> Tại đây</span>
             </div>
           </WrapperContainerRight>
-        </div>
+        </WrapperSignUpPage>
       </div>
     );
   }

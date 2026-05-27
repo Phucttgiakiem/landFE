@@ -17,7 +17,7 @@ export const createContract = async (data) => {
 }
 export const getAllContract = async (searchParams,user,role) => {
     const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/Contract/getAllContract?${searchParams.toString()}&user=${user}&role=${role}`);
-    console.log("data: ",res.data);
+    //console.log("data: ",res.data);
     return res.data;
 }
 export const getContractById = async (idcontract,iduser) => {

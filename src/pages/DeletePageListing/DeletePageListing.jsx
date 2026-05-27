@@ -2,7 +2,7 @@ import {useEffect,useState} from 'react'
 import { useSelector,useDispatch } from 'react-redux';
 import { SearchOutlined,WarningTwoTone } from '@ant-design/icons';
 import { Table,Space,Select,Modal,Button,Flex, Spin } from "antd";
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import {useMessage} from "../../components/Message/Message";
 import { useMutationHook } from "../../hooks/useMutationhook";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
@@ -12,43 +12,51 @@ import { WrapperDeletedListing, DeletedListingContainer, DeletedListingHeader, D
     SearchContainer, SearchButton,DeletedListingBody
 } from './style'
 
-const getColumns  = (handleRestoreorDelete) => [
+const getColumns  = (openConfirmModal) => [
     {
         title: 'Tên bất động sản',
         dataIndex: 'Title',
+        width:400
     },
     {
         title: 'Ngày tạo',
         dataIndex: 'createdAt',
-        sorter: true
+        sorter: true,
+        width:150
     },
     {
         title: 'Ngày xóa',
         dataIndex: 'deletedAt',
-        sorter: true
+        sorter: true,
+        width:150
     },
     {
         title: 'Hành động',
         dataIndex: '',
         key: 'x',
+        width:200,
         render: (_, record) => 
             <Space>
-                <span style={{cursor: 'pointer'}} onClick={() => handleRestoreorDelete(record._id, "Khôi phục")}>Restore</span>
-                <Link to={`/Detail-listing/${record._id}`} state={{ from: "trash" }}>Detail</Link>
-                <Link to={`/Edit-listing/${record._id}`}>Delete</Link>
+                <span style={{cursor: 'pointer'}} onClick={() => openConfirmModal(record._id, "Khôi phục")}>Restore</span>
+                <span style={{cursor: 'pointer'}} onClick={() => openConfirmModal(record._id,"Xóa")}>Delete</span>
             </Space>
         
     }
 ]
 export default function DeleteListingPage() {
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [selectedAction,setSelectedAction] = useState(null);
+    const [pendingData,setPendingData] = useState({
+        ids: [],
+        action: ""
+    })
     const [loading,setLoading] = useState(false);
     const [loadingModal,setLoadingModal] = useState(false);
     const [confirmModal, setConfirmModal] = useState(false);
-    const [typeAction,setTypeAction] = useState(null);
     const Listing = useSelector(state => state.listing);
     const user = useSelector(state => state.user);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const message = useMessage();
     const mutation = useMutationHook(
                 ({ arrid, action }) => {
@@ -61,48 +69,51 @@ export default function DeleteListingPage() {
                     onSuccess: () => {
                         setConfirmModal(false);
                         setLoadingModal(false);
-                        message.success(`Thao tác ${typeAction} thành công`);
+                        message.success(`Thao tác ${pendingData.action} thành công`);
                         setSelectedRowKeys([]);
-                        setTypeAction("");
+                        setPendingData({
+                            ids: [],
+                            action: ""
+                        })
                         fetchData();
                     },
                     onError: () => {
                         setConfirmModal(false);
                         setLoadingModal(false);
-                        message.error(`Thao tác ${typeAction} thất bại`);
-                        setTypeAction("");
+                        message.error(`Thao tác ${pendingData.action} thất bại`);
+                        setPendingData({
+                            ids: [],
+                            action: ""
+                        })
                     }
                 }
             );
     const onSelectChange = (newSelectedRowKeys) => {
         setSelectedRowKeys(newSelectedRowKeys);
     }
-    const handleRestoreorDelete = (arrId,typeAc) => {
-        setLoading(true);
-        const payload = {
-            arrid: Array.isArray(arrId) ? arrId : [arrId],
-            action: typeAction  || typeAc
-        };
-        if(typeAc) {
-            setTypeAction(typeAc);
-        }
-        mutation.mutate(payload);
-    }
+    const executeAction = (ids, action) => {
+        mutation.mutate({
+            arrid: ids,
+            action
+        });
+    };
+    const openConfirmModal = (ids, action) => {
+        setPendingData({
+            ids:Array.isArray(ids) ? ids : [ids],
+            action
+        });
+        setConfirmModal(true);
+    };
     const handleActionSelected = () => {
-        if(typeAction === null || typeAction === "") {
+        if(!selectedAction) {
             message.warning("Vui lòng chọn hành động để áp dụng");
             return;
         }
         if(selectedRowKeys.length === 0) {
-            message.warning("Vui lòng chọn ít nhất một tin đăng để "+typeAction);
+            message.warning("Vui lòng chọn ít nhất một tin đăng để "+selectedAction);
             return;
         }  
-        if(typeAction === "Xóa") {
-            setConfirmModal(true);
-            return;
-        }else {
-            handleRestoreorDelete(selectedRowKeys);
-        }
+        openConfirmModal(selectedRowKeys, selectedAction);
     }
     const rowSelection = {
         selectedRowKeys,
@@ -127,7 +138,7 @@ export default function DeleteListingPage() {
             }
         ]
     };
-    const columns = getColumns(handleRestoreorDelete);
+    const columns = getColumns(openConfirmModal);
     const fetchData = async () => {
             try {
                 setLoading(true);
@@ -178,7 +189,7 @@ export default function DeleteListingPage() {
                 closable={false}
                 width={500}
                 footer={
-                    <div style={{ display: !loadingModal ? 'flex' : 'none', justifyContent: 'center', gap: '10px' }}>
+                    !loadingModal && (<div style={{ display:'flex', justifyContent: 'center', gap: '10px' }}>
                         <Space>
                             <Button 
                                 size="large" 
@@ -188,12 +199,13 @@ export default function DeleteListingPage() {
                             <Button 
                                 size="large" 
                                 type="primary" 
-                                danger 
-                                onClick={() => { setLoadingModal(true); handleRestoreorDelete(selectedRowKeys,"Xóa")}}>
+                                danger={pendingData.action === "Xóa"}
+                                onClick={() => { setLoadingModal(true); executeAction(pendingData.ids,pendingData.action)}}>
                                     Xác nhận
                             </Button>
                         </Space>
                     </div>
+                    )
                 }
             >
                 <Space  style={{ display:'flex',flexDirection: 'column',minHeight:200,justifyContent: 'center' }} align="center">
@@ -201,7 +213,9 @@ export default function DeleteListingPage() {
                         !loadingModal ? (
                             <>
                                 <WarningTwoTone twoToneColor="#eb2f2f" style={{ fontSize: '40px' }} />
-                                <p style={{ textAlign: 'center',fontSize:"20px" }}>Việc này sẽ xóa bài đăng của bạn vĩnh viễn, bạn có chắc chắn muốn xóa không?</p>
+                                <p style={{ textAlign: 'center',fontSize:"20px" }}>{pendingData.action === "Xóa" 
+                                ? "Việc này sẽ xóa vĩnh viễn bài đăng, bạn có chắc không?" 
+                                : "Bạn có chắc muốn khôi phục bài đăng này không?"}</p>
                             </>
                         ): (
                             <Flex gap="middle" vertical>
@@ -217,6 +231,13 @@ export default function DeleteListingPage() {
                 <DeletedListingContainer>
                     <DeletedListingHeader>
                         <h2>Danh sách đã xóa</h2>
+                        <ButtonComponent 
+                            textButton={"Quay lại"} 
+                            size="large" 
+                            color="cyan" 
+                            variant="solid" 
+                            onClick={() => navigate('/manage-listing')}
+                        />
                     </DeletedListingHeader>
                     <DeletedListingHeaderContent>
                         <SearchContainer>
@@ -228,7 +249,7 @@ export default function DeleteListingPage() {
                     </DeletedListingHeaderContent>
                     <div style={{margin: ' 10px 20px', display: 'flex', gap: '10px'}}>
                         <Select
-                            value={typeAction}
+                            value={selectedAction}
                             placeholder="--- lựa chọn ---"
                             style={{ width: 180 }}
                             options={[
@@ -236,7 +257,7 @@ export default function DeleteListingPage() {
                                 { value: 'Khôi phục', label: 'Khôi phục' },
                             ]}
                             size="large"
-                            onChange={(value) => setTypeAction(value)}
+                            onChange={(value) => setSelectedAction(value)}
                         />
                         <ButtonComponent 
                             textButton="Áp dụng" 
@@ -254,7 +275,8 @@ export default function DeleteListingPage() {
                             dataSource={Listing.listings.deleted} 
                             loading={loading} 
                             pagination={{current: Listing?.page,pageSize:Listing?.limit,total: Listing.totalPage}} 
-                            onChange={handleTableChange}    
+                            onChange={handleTableChange} 
+                            scroll={{ x: 900 }}   
                         />
                     </DeletedListingBody>
                 </DeletedListingContainer>

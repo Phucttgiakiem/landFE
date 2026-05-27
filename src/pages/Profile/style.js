@@ -7,6 +7,11 @@ export const WrapperProfile = styled.div`
     padding: 20px;
     background-color: #e3e3e3;
     min-height: calc(100vh - 90px);
+    @media screen and (max-width: 1199px) {
+        width: 100%;
+        margin-left: 0;
+        min-height: 100vh;
+    }
 `
 export const ProfileContainer = styled.div`
     width: 100%;
@@ -15,6 +20,10 @@ export const ProfileContainer = styled.div`
     background-color: #fff;
     border-radius: 8px;
     padding: 20px;
+    @media screen and (max-width: 1199px) {
+        margin-top: 6.5rem;
+        min-height:calc(100vh - 6.5rem - 40px)
+    }
 `;
 export const ProfileTitle = styled.span`
     font-size: 1.5rem;
@@ -25,29 +34,30 @@ export const ProfileTitle = styled.span`
 export const ProfileContent = styled.div`
     width: 100%;
     height: 100%;
-    div {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 1rem;
-        div {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: center;
-            span {
-                font-weight: 500;
-                margin-bottom: 0.5rem;
-                margin: 0;
-            }
-            span:last-child {
-                margin-left: 0.5rem;
-            }
-            svg {
-                font-size: 1.2rem;
-            }
-        }    
-    }
 `;
+export const PanelField = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 1rem;
+    & > div {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        span {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            margin: 0;
+        }
+        span:last-child {
+            margin-left: 0.5rem;
+        }
+        svg {
+            font-size: 1.2rem;
+        }
+    }
+`
 export const ProfileFooter = styled.div`
     width: 100%;
     height: max-content;

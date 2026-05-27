@@ -7,7 +7,7 @@ import FilterComponent from '../../components/FilterComponent/FilterComponent';
 import ListCardLoadingMediumComponent from '../../components/ListCardLoadingComponent/ListCardLoadingMediumComponent';
 import { CardComponent } from '../../components/CardComponent/CardComponent';
 import { Pagination } from 'antd';
-import {Listpanel} from "./style";
+import {Listpanel,Wrapperproperty} from "./style";
 import * as HomeService from '../../services/HomeService';
 import {setFiltered,setPageFiltered,setLoadingFiltered} from '../../redux/slides/HomeSlide';
 
@@ -31,8 +31,6 @@ const ListingPage = () => {
         iserror: null,
         items: []
     });
-    
-    console.log("query: ",query);
     const dispatch = useDispatch();
     
     const parseNumber = (val) => {
@@ -151,7 +149,7 @@ const ListingPage = () => {
         fetchData();
     },[query?.province])
     return (
-        <div style={{position:"relative",display:"flex",flexDirection:"column",alignItems:"center"}}>
+        <Wrapperproperty>
             <SearchComponent/>
             <FilterComponent ListProvince={menuProvince} ListWard={menuWard}/>
             <Listpanel>
@@ -187,7 +185,7 @@ const ListingPage = () => {
                 }
                 
             </Listpanel>
-        </div>
+        </Wrapperproperty> 
     )
 }
 export default ListingPage;

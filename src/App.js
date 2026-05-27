@@ -7,9 +7,10 @@ import HeaderSidebarComponent from './components/HeaderSidebarComponent/HeaderSi
 //import { isJsonString } from './utils';
 import * as UserService from "./services/UserService";
 import { jwtDecode } from "jwt-decode";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from './redux/slides/userSlide';
 export default function App() {
+  const user = useSelector(state => state.user);
   const dispatch = useDispatch();
   const handleGetDetailsUser = async (id) => {
       try {
@@ -58,6 +59,7 @@ export default function App() {
     }
 
   },[]);
+  
   return (
     <div>
       <Routes>
@@ -69,7 +71,7 @@ export default function App() {
                 <Route key={route.path} path={route.path} element={
                   <Layout>
                     {route.isPrivate ? (
-                      <ProtectedRoute>
+                      <ProtectedRoute allowedRoles={route.allowedRoles}>
                         <Page />
                       </ProtectedRoute>
                     ) : (

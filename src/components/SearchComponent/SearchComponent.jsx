@@ -331,6 +331,7 @@ export default function SearchComponent() {
                 fontSize: "1rem",
                 fontWeight: "bold"}}
               onClick={() => handleSearch()}
+              className="btn-search-property"
             />
         </WrapperInputsearch>
     </WrapperSearch>

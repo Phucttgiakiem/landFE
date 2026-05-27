@@ -16,6 +16,10 @@ export const formatDateVN = (date) => {
 export const formatPrice = (price) => {
   return Number(price).toLocaleString("vi-VN") + " VND";
 };
+export const isNew = (date) => {
+    const DAYS = 7;
+    return Date.now() - new Date(date).getTime() < DAYS * 86400000;
+};
 export const formatPriceToString = (price) => {
   price = Number.isNaN(price) !== "number" ?  Number(price) : price;
   if (price >= 1000000000) {
@@ -54,27 +58,36 @@ export const formatArea = (communeMap, province, ward) => {
 }
 export const formatDate = (DateInput) => {
   if (!DateInput) return "";
+
   const now = new Date();
   const date = new Date(DateInput);
+
   const diffMs = now - date;
-  // if time is future, return "upcoming"
-  if(diffMs < 0) return "sắp tới";
-  
+
+  if (diffMs < 0) return "sắp tới";
+
   const seconds = Math.floor(diffMs / 1000);
-  if(seconds < 60) return "vừa xong";
+  if (seconds < 60) return "vừa xong";
+
   const minutes = Math.floor(seconds / 60);
-  if(minutes < 60) return `${minutes} phút trước`;
+  if (minutes < 60) return `${minutes} phút trước`;
+
   const hours = Math.floor(minutes / 60);
-  if(hours < 24) return `${hours} giờ trước`;
+  if (hours < 24) return `${hours} giờ trước`;
+
   const days = Math.floor(hours / 24);
-  if(days < 7) return `${days} ngày trước`;
-  const weeks = Math.floor(days / 7);
-  if(weeks < 4) return `${weeks} tuần trước`;
+  if (days < 7) return `${days} ngày trước`;
+
+  if (days < 30) {
+    return `${Math.floor(days / 7)} tuần trước`;
+  }
+
   const months = Math.floor(days / 30);
-  if(months < 12) return `${months} tháng trước`;
+  if (months < 12) return `${months} tháng trước`;
+
   const years = Math.floor(months / 12);
   return `${years} năm trước`;
-}
+};
 export const formatacreage = (horizontal, vertical) => {
   
   const horizontalNum = Number(horizontal);
@@ -104,12 +117,11 @@ export const parseQuery = (search) => {
 };
 export const toSlug = (str) => {
   return str
-    .normalize("NFD")                 // tách dấu
-    .replace(/[\u0300-\u036f]/g, "")  // xóa dấu
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .replace(/đ/g, "d")
     .replace(/Đ/g, "D")
-    .toLowerCase()
     .trim()
-    .replace(/\s+/g, "-")             // space -> -
-    .replace(/[^a-z0-9-]/g, "");      // bỏ ký tự lạ
+    .replace(/\s+/g, "-")
+    .replace(/[^a-zA-Z0-9-]/g, "");
 }

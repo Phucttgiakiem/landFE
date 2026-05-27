@@ -4,7 +4,8 @@ import { useNavigate,useParams } from "react-router-dom";
 import axios from "axios";
 import 'suneditor/dist/css/suneditor.min.css';
 import {WrapperEditListing,EditListingContainer,EditListingHeader,EditListingBody} from './style';
-import { Select,Upload,Image } from "antd";
+import { Select,Upload,Image,DatePicker } from "antd";
+import dayjs from 'dayjs';
 import SunEditor from 'suneditor-react';
 import { PlusOutlined } from '@ant-design/icons';
 import InputForm from "../../components/InputForm/InputForm";
@@ -12,6 +13,7 @@ import {useMessage} from "../../components/Message/Message";
 import Loading from "../../components/LoadingComponent/Loading";
 import { useMutationHook } from "../../hooks/useMutationhook";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
+import DashboardNotFound from "../../pages/NotFoundPage/DashboardNotFoundPage";
 import * as ListingService from "../../services/ListingService";
 import * as ImageService from "../../services/ImageService";
 const getBase64 = file =>
@@ -50,10 +52,13 @@ export default function EditListing () {
         Legal: '',
         User: '',
         visibility_status: '',
+        approval_status: '',
+        ExpiredAt: null,
     });
     const user = useSelector(state => state.user);
+    const access_token = localStorage.getItem("access_token");
     const mutation = useMutationHook(
-              data => ListingService.updateListing(id,data)
+              data => ListingService.updateListing(id,data,access_token)
     );
     const message = useMessage();
     const {isPending,isError,isSuccess} = mutation;
@@ -65,9 +70,6 @@ export default function EditListing () {
         }
         if(!formdata.Description.trim()){
             newErrors.Description = "Vui lòng nhập mô tả dự án";
-        }
-        if(formdata.Price == null || formdata.Price <= 0){
-            newErrors.Price = "Vui lòng nhập giá tài sản";
         }
         if(formdata.vertical == null || formdata.vertical <= 0){
             newErrors.vertical = "Vui lòng nhập chiều dài"
@@ -109,7 +111,7 @@ export default function EditListing () {
             newErrors.Images = "Vui lòng chọn ít nhất một ảnh cho bất động sản";
         }
         if(!formdata.visibility_status){
-            newErrors.visibility_status = "Vui lòng chọn tình trạng bài đăng";
+            newErrors.visibility_status = "Vui lòng chọn trạng thái bài đăng";
         }
         return newErrors;
     }
@@ -140,17 +142,18 @@ export default function EditListing () {
         }
     }
     const handleChangePrice = (value) => {
+        const rawValue = value.replace(/\./g, "");
         setFormdata(prev => ({
             ...prev,
-            Price: value<0 ? 0 : value
+            Price: rawValue<0 ? 0 : rawValue
         }))
-        if(errors.Price){
+        /* if(errors.Price){
             setErrors((prev) => {
                 const newErrors = {...prev};
                 delete newErrors.Price;
                 return newErrors;
             });
-        }
+        } */
     }
     const handleChangeLength = (value) => {
         setFormdata(prev => ({
@@ -357,6 +360,34 @@ export default function EditListing () {
             });
         }
     }
+    const handleApprovalStatusChange = (value) => {
+        setFormdata(prev => ({
+            ...prev,
+            approval_status:value
+        }))
+    }
+    const CompareDate = (date)=> {
+        if(!date) return false;
+        const datecompare = new Date(date);
+        const today = new Date();
+        if(datecompare < today) return true;
+        return false;
+    }
+    const handleExpiredDate = (date) => {
+        if(CompareDate(date)){
+            setFormdata(prev => ({
+                ...prev,
+                visibility_status: 'hết hạn',
+                ExpiredAt:date
+            }))
+        }else {
+            setFormdata(prev => ({
+                ...prev,
+                visibility_status: initialDataRef.current.visibility_status,
+                ExpiredAt:date
+            }))
+        }
+    }
     const handleUpdateListing = () => {
         const newErrors = validate();
 
@@ -366,7 +397,6 @@ export default function EditListing () {
         }
         // call api update listing
         const data = new FormData();
-        formdata.User = user.id;
         Object.keys(formdata).forEach(key => {
             data.append(key, formdata[key]);
         })
@@ -375,21 +405,26 @@ export default function EditListing () {
                 data.append("images", file.originFileObj);
             });
         }
-        /* removedImages.forEach((url) => {
-            data.append("removedImages", url);
-        }); */
         data.append("removedImages", JSON.stringify(removedImages));
 
         mutation.mutate(data);
     }
+    const formatNumber = (value) => {
+        if (!value) return 0;
+
+        return value
+            .toString()
+            .replace(/\D/g, "")
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
     const fetchListing = async () => {
                 try {
                     // ---------------------- get Listing -----------------------
                     const res = await ListingService.getListing(id);
                     const data = res.data.data;
                     setFormdata({
-                        CityID: data.Address.CityID,
-                        CommuneID: data.Address.CommuneID,
+                        CityID: data.Address.City.id,
+                        CommuneID: data.Address.Commune.id,
                         Title: data.Title,
                         Description: data.Description,
                         Price: Number.parseInt(data.Price),
@@ -403,12 +438,14 @@ export default function EditListing () {
                         Toilet: data.Toilet,
                         CatagoryProperty: data.CatagoryProperty,
                         Legal: data.Legal,
-                        User: data.User,
+                        User: data.UserInfo._id,
                         visibility_status: data.visibility_status,
+                        approval_status:data.approval_status,
+                        ExpiredAt:data.ExpiredAt
                     })
                     initialDataRef.current = {
-                        CityID: data.Address.CityID,
-                        CommuneID: data.Address.CommuneID,
+                        CityID: data.Address.City.id,
+                        CommuneID: data.Address.Commune.id,
                         Title: data.Title,
                         Description: data.Description,
                         Price: Number.parseInt(data.Price),
@@ -422,8 +459,10 @@ export default function EditListing () {
                         Toilet: data.Toilet,
                         CatagoryProperty: data.CatagoryProperty,
                         Legal: data.Legal,
-                        User: data.User,
+                        User: data.UserInfo._id,
                         visibility_status: data.visibility_status,
+                        approval_status:data.approval_status,
+                        ExpiredAt:data.ExpiredAt,
                         countImage: 0
                     };
                     // ----------------------- get image -------------------------
@@ -456,6 +495,7 @@ export default function EditListing () {
             )
             const { provinces } = data.data;
            
+            
             const list = provinces.map((item) => {
                 return {
                     code: item.code,
@@ -492,25 +532,13 @@ export default function EditListing () {
             );
                 const apiData = res.data.data;
 
-                // Group theo Type
-                const grouped = apiData.reduce((acc, item) => {
-                if (!acc[item.Type]) {
-                    acc[item.Type] = [];
-                }
-                acc[item.Type].push(item);
-                return acc;
-                }, {});
-
-                // Convert sang format AntD Select
-                const formattedOptions = Object.entries(grouped).map(
-                    ([groupName, items]) => ({
-                        label: groupName,
-                        options: items.map(item => ({
+                const formattedOptions = apiData.map(group => ({
+                    label: group._id, // Nhà đất bán / Nhà đất cho thuê
+                    options: group.items.map(item => ({
                         label: item.Name,
-                        value: item._id   // nên dùng id làm value
-                        }))
-                    })
-                );
+                        value: item._id
+                    }))
+                }));
                 setTypeListing(formattedOptions);
         }
         fetchData();
@@ -533,366 +561,430 @@ export default function EditListing () {
     );
     
     return (
-        <WrapperEditListing>
-            <EditListingContainer>
-                <EditListingHeader>
-                    <h2>Thông tin bất động sản chỉnh sửa</h2>
-                    <ButtonComponent 
-                        textButton={"Quay lại"} 
-                        size="large" 
-                        color="cyan" 
-                        variant="solid" 
-                        onClick={() => navigate('/manage-listing')}/>
-                </EditListingHeader>
-                <Loading isLoading={isPending}>
-                    <EditListingBody>
-                            <div>
-                                <span className="label">Tiêu đề bất động sản</span>
-                                <InputForm placeholder="Nhập tiêu đề bất động sản" size={"large"} 
-                                value={formdata?.Title}
-                                TypePassword={false} 
-                                handleOnChange={handleChangeTitle}
-                                />
-                                {
-                                    errors.Title && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.Title}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Mô tả bất động sản</span>
-                                <SunEditor
-                                    setOptions={{
-                                        buttonList: [
-                                        ['font', 'fontSize', 'formatBlock'],
-                                        ['bold', 'underline', 'italic'],
-                                        ['fontColor', 'hiliteColor'],
-                                        ['align', 'list'],
-                                        ]
-                                    }}
-                                    setContents={formdata?.Description}
-                                    onChange={handleChangeDescription}
-                                />
-                                {
-                                    errors.Description && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.Description}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Giá (đơn vị: triệu đồng)</span>
-                                <InputForm type="number" placeholder="Nhập giá bất động sản" size={"large"}
-                                min={0}
-                                value={formdata?.Price}
-                                TypePassword={false} 
-                                handleOnChange={handleChangePrice}
-                                />
-                                {
-                                    errors.Price && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.Price}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Chiều dài (m)</span>
-                                <InputForm type="number" placeholder="Nhập chiều dài bất động sản" size={"large"} 
-                                min={0}
-                                value={formdata?.vertical}
-                                TypePassword={false} 
-                                handleOnChange={handleChangeLength}
-                                />
-                                {
-                                    errors.vertical && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.vertical}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Chiều rộng (m)</span>
-                                <InputForm type="number" placeholder="Nhập chiều rộng bất động sản" size={"large"} 
-                                min={0}
-                                value={formdata?.horizontal}
-                                TypePassword={false}
-                                handleOnChange={handleChangeWidth}
-                                />
-                                {
-                                    errors.horizontal && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.horizontal}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Mặt tiền (m)</span>
-                                <InputForm type="number" placeholder="Nhập mặt tiền bất động sản" size={"large"} 
-                                min={0}
-                                value={formdata?.front_street}
-                                TypePassword={false} 
-                                handleOnChange={handleChangeFrontispiece}
-                                />
-                                {
-                                    errors.front_street && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.front_street}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Số nhà</span>
-                                <InputForm placeholder="Nhập số nhà bất động sản" size={"large"}
-                                value={formdata?.numberhouse} 
-                                TypePassword={false}
-                                handleOnChange={handleChangeNumberHouse}
-                                />
-                                {
-                                    errors.numberhouse && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.numberhouse}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Tỉnh, thành phố</span>
-                                <Select 
-                                    placeholder="--- Chọn tỉnh, thành phố ---"
-                                    options={listProvince?.map((item) => ({
-                                        value: item.code,
-                                        label: item.name,
-                                    }))}
-                                    value={formdata?.CityID}
-                                    onChange={handleChangeProvince}
-                                    style={{ width: '100%' }}
-                                    size="large"
-                                />
-                                {
-                                    errors.CityID && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.CityID}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Phường, xã</span>
-                                <Select 
-                                    placeholder="--- Chọn phường, xã ---"
-                                    options={listCommune?.map((item) => ({
-                                        value: item.code,
-                                        label: item.name,
-                                    }))}
-                                    disabled={!formdata.CityID}
-                                    value={formdata?.CommuneID}
-                                    onChange={handleChangeCommune}
-                                    style={{ width: '100%' }}
-                                    size="large"
-                                />
-                                {
-                                    errors.CommuneID && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.CommuneID}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Số tầng</span>
-                                <InputForm type="number" placeholder="Nhập số tầng bất động sản" 
-                                min={0}
-                                value={formdata?.floor}
-                                size={"large"} TypePassword={false} 
-                                handleOnChange={handleChangeNumberFloor}
-                                />
-                                {
-                                    errors.floor && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.floor}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Số phòng ngủ</span>
-                                <InputForm type="number" placeholder="Nhập số phòng ngủ bất động sản" 
-                                min={0}
-                                value={formdata?.bedroom}
-                                size={"large"} TypePassword={false} 
-                                handleOnChange={handleChangeNumberBedroom}
-                                />
-                                {
-                                    errors.bedroom && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.bedroom}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Số phòng tắm</span>
-                                <InputForm type="number" placeholder="Nhập số phòng tắm bất động sản" 
-                                min={0}
-                                value={formdata?.bathroom}
-                                size={"large"} TypePassword={false}
-                                handleOnChange={handleChangeNumberBathroom}
-                                />
-                                {
-                                    errors.bathroom && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.bathroom}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Số toilet</span>
-                                <InputForm type="number" placeholder="Nhập số toilet bất động sản"
-                                min={0}
-                                value={formdata?.Toilet}
-                                size={"large"} TypePassword={false}
-                                handleOnChange={handleChangeNumberToilet}
-                                />
-                                {
-                                    errors.Toilet && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.Toilet}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Loại bất động sản</span>
-                                <Select 
-                                    placeholder="--- Chọn loại bất động sản ---"
-                                    options={typeListing}
-                                    value={formdata?.CatagoryProperty}
-                                    style={{ width: '100%' }}
-                                    size="large"
-                                    onChange={handleChangeTypeRealEstate}
-                                />
-                                {
-                                    errors.CatagoryProperty && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.CatagoryProperty}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Loại giấy tờ</span>
-                                <Select 
-                                    placeholder="--- Chọn loại giấy tờ ---"
-                                    options={[
-                                        { value: null, label: '--- Chọn loại giấy tờ ---' },
-                                        { value: 'sổ đỏ', label: 'Sổ đỏ' },
-                                        { value: 'sổ hồng', label: 'Sổ hồng' },
-                                        { value: 'hợp đồng mua bán', label: 'Hợp đồng mua bán' },
-                                        { value: 'đang chờ sổ', label: 'Đang chờ sổ' },
-                                    ]}
-                                    value={formdata?.Legal}
-                                    style={{ width: '100%' }}
-                                    size="large"
-                                    onChange={handleChangeTypePaper}
-                                />
-                                {
-                                    errors.Legal && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.Legal}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Chọn ảnh</span>
-                                <Upload
-                                    listType="picture-card"
-                                    accept="image/*"
-                                    maxCount={8}
-                                    fileList={fileList}
-                                    onChange={handleChange}
-                                    onPreview={handlePreviewImage}
-                                    beforeUpload={() => false}
-                                    multiple
-                                    >
-                                    {fileList.length >= 8 ? null : uploadButton}
-                                </Upload>
-                                {
-                                    previewImage && (
-                                        <Image
-                                            wrapperStyle={{ display: 'none'}}
-                                            
-                                            preview={{
-                                                visible: previewOpen,
-                                                onVisibleChange: (visible) => setPreviewOpen(visible),
-                                                afterOpenChange: (visible) => !visible && setPreviewImage('')
+        <>
+            {
+                formdata?.User !== user?.id && user?.role !== "admin" ? 
+                <DashboardNotFound/> : 
+                <WrapperEditListing>
+                    <EditListingContainer>
+                        <EditListingHeader>
+                            <h2>Thông tin bất động sản chỉnh sửa</h2>
+                            <ButtonComponent 
+                                textButton={"Quay lại"} 
+                                size="large" 
+                                color="cyan" 
+                                variant="solid" 
+                                onClick={() => navigate('/manage-listing')}/>
+                        </EditListingHeader>
+                        <Loading isLoading={isPending}>
+                            <EditListingBody>
+                                    <div>
+                                        <span className="label">Tiêu đề bất động sản</span>
+                                        <InputForm placeholder="Nhập tiêu đề bất động sản" size={"large"} 
+                                        value={formdata?.Title}
+                                        TypePassword={false} 
+                                        handleOnChange={handleChangeTitle}
+                                        disabled={formdata?.User !== user?.id}
+                                        />
+                                        {
+                                            errors.Title && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.Title}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Mô tả bất động sản</span>
+                                        <SunEditor
+                                            setOptions={{
+                                                buttonList: [
+                                                ['font', 'fontSize', 'formatBlock'],
+                                                ['bold', 'underline', 'italic'],
+                                                ['fontColor', 'hiliteColor'],
+                                                ['align', 'list'],
+                                                ]
                                             }}
-                                            src={previewImage}
+                                            disable={formdata?.User !== user?.id}
+                                            setContents={formdata?.Description}
+                                            onChange={handleChangeDescription}
                                         />
-                                    )
-                                }
-                                {
-                                    errors.Images && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.Images}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                <span className="label">Tình trạng bài đăng</span>
-                                <Select 
-                                    placeholder="--- Chọn tình trạng bài đăng ---"
-                                    options={[
-                                        { value: null, label: '--- Chọn tình trạng bài đăng ---' },
-                                        { value: 'công khai', label: 'Công khai' },
-                                        { value: 'ẩn', label: 'Ẩn' },
-                                        { value: 'hết hạn', label: 'Hết hạn',disabled: true },
-                                        { value: 'bị khóa', label: 'Bị khóa',disabled: true },
-                                    ]}
-                                    value={formdata?.visibility_status}
-                                    style={{ width: '100%' }}
-                                    size="large"
-                                    disabled={formdata?.visibility_status === 'hết hạn' || formdata?.visibility_status === 'bị khóa'}
-                                    onChange={handleVisibilityStatusChange}
-                                />
-                                {
-                                    errors.visibility_status && (
-                                        <span style={{ color: "red", marginBottom: 10 }}>
-                                            {errors.visibility_status}
-                                        </span>
-                                    )
-                                }
-                            </div>
-                            <div className="button-group">
-                                {
-                                    (Object.keys(formdata).some(
-                                        key => formdata[key] !== initialDataRef.current[key]
-                                    // eslint-disable-next-line no-mixed-operators
-                                    ) || initialDataRef.current.countImage !== fileList.length || removedImages.length > 0) &&
-                                    <>
-                                        <ButtonComponent 
-                                            textButton={"Hủy"} 
-                                            size="large" 
-                                            color="default" 
-                                            variant="solid"
-                                            onClick={() => {fetchListing()}}
+                                        {
+                                            errors.Description && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.Description}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Giá (đơn vị: đồng)</span>
+                                        <InputForm type="number" placeholder="Nhập giá bất động sản" size={"large"}
+                                        min={0}
+                                        value={formdata?.Price}
+                                        TypePassword={false} 
+                                        handleOnChange={handleChangePrice}
+                                        disabled={formdata?.User !== user?.id}
                                         />
-                                        <ButtonComponent textButton={"Cập nhật"} size="large" type="primary" onClick={handleUpdateListing}/>
-                                    </>
-                                }
-                            </div>
-                    </EditListingBody>
-                </Loading>
-            </EditListingContainer>
-        </WrapperEditListing>
+                                        {
+                                            errors.Price && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.Price}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Chiều dài (m)</span>
+                                        <InputForm type="number" placeholder="Nhập chiều dài bất động sản" size={"large"} 
+                                        min={0}
+                                        value={formdata?.vertical}
+                                        TypePassword={false} 
+                                        handleOnChange={handleChangeLength}
+                                        disabled={formdata?.User !== user?.id}
+                                        />
+                                        {
+                                            errors.vertical && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.vertical}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Chiều rộng (m)</span>
+                                        <InputForm type="number" placeholder="Nhập chiều rộng bất động sản" size={"large"} 
+                                        min={0}
+                                        value={formdata?.horizontal}
+                                        TypePassword={false}
+                                        handleOnChange={handleChangeWidth}
+                                        disabled={formdata?.User !== user?.id}
+                                        />
+                                        {
+                                            errors.horizontal && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.horizontal}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Mặt tiền (m)</span>
+                                        <InputForm type="number" placeholder="Nhập mặt tiền bất động sản" size={"large"} 
+                                        min={0}
+                                        value={formdata?.front_street}
+                                        TypePassword={false} 
+                                        handleOnChange={handleChangeFrontispiece}
+                                        disabled={formdata?.User !== user?.id}
+                                        />
+                                        {
+                                            errors.front_street && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.front_street}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Số nhà</span>
+                                        <InputForm placeholder="Nhập số nhà bất động sản" size={"large"}
+                                        value={formdata?.numberhouse} 
+                                        TypePassword={false}
+                                        handleOnChange={handleChangeNumberHouse}
+                                        disabled={formdata?.User !== user?.id}
+                                        />
+                                        {
+                                            errors.numberhouse && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.numberhouse}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Tỉnh, thành phố</span>
+                                        <Select 
+                                            placeholder="--- Chọn tỉnh, thành phố ---"
+                                            options={listProvince?.map((item) => ({
+                                                value: item.code,
+                                                label: item.name,
+                                            }))}
+                                            value={formdata?.CityID}
+                                            onChange={handleChangeProvince}
+                                            style={{ width: '100%' }}
+                                            size="large"
+                                            disabled={formdata?.User !== user?.id}
+                                        />
+                                        {
+                                            errors.CityID && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.CityID}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Phường, xã</span>
+                                        <Select 
+                                            placeholder="--- Chọn phường, xã ---"
+                                            options={listCommune?.map((item) => ({
+                                                value: item.code,
+                                                label: item.name,
+                                            }))}
+                                            disabled={!formdata.CityID || formdata?.User !== user?.id}
+                                            value={formdata?.CommuneID}
+                                            onChange={handleChangeCommune}
+                                            style={{ width: '100%' }}
+                                            size="large"
+                                            
+                                        />
+                                        {
+                                            errors.CommuneID && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.CommuneID}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Số tầng</span>
+                                        <InputForm type="number" placeholder="Nhập số tầng bất động sản" 
+                                        min={0}
+                                        value={formdata?.floor}
+                                        size={"large"} TypePassword={false} 
+                                        handleOnChange={handleChangeNumberFloor}
+                                        disabled={formdata?.User !== user?.id}
+                                        />
+                                        {
+                                            errors.floor && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.floor}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Số phòng ngủ</span>
+                                        <InputForm type="number" placeholder="Nhập số phòng ngủ bất động sản" 
+                                        min={0}
+                                        value={formdata?.bedroom}
+                                        size={"large"} TypePassword={false} 
+                                        handleOnChange={handleChangeNumberBedroom}
+                                        disabled={formdata?.User !== user?.id}
+                                        />
+                                        {
+                                            errors.bedroom && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.bedroom}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Số phòng tắm</span>
+                                        <InputForm type="number" placeholder="Nhập số phòng tắm bất động sản" 
+                                        min={0}
+                                        value={formdata?.bathroom}
+                                        size={"large"} TypePassword={false}
+                                        handleOnChange={handleChangeNumberBathroom}
+                                        disabled={formdata?.User !== user?.id}
+                                        />
+                                        {
+                                            errors.bathroom && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.bathroom}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Số toilet</span>
+                                        <InputForm type="number" placeholder="Nhập số toilet bất động sản"
+                                        min={0}
+                                        value={formdata?.Toilet}
+                                        size={"large"} TypePassword={false}
+                                        handleOnChange={handleChangeNumberToilet}
+                                        disabled={formdata?.User !== user?.id}
+                                        />
+                                        {
+                                            errors.Toilet && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.Toilet}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Loại bất động sản</span>
+                                        <Select 
+                                            placeholder="--- Chọn loại bất động sản ---"
+                                            options={typeListing}
+                                            value={formdata?.CatagoryProperty}
+                                            style={{ width: '100%' }}
+                                            size="large"
+                                            onChange={handleChangeTypeRealEstate}
+                                            disabled={formdata?.User !== user?.id}
+                                        />
+                                        {
+                                            errors.CatagoryProperty && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.CatagoryProperty}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Loại giấy tờ</span>
+                                        <Select 
+                                            placeholder="--- Chọn loại giấy tờ ---"
+                                            options={[
+                                                { value: null, label: '--- Chọn loại giấy tờ ---' },
+                                                { value: 'sổ đỏ', label: 'Sổ đỏ' },
+                                                { value: 'sổ hồng', label: 'Sổ hồng' },
+                                                { value: 'hợp đồng mua bán', label: 'Hợp đồng mua bán' },
+                                                { value: 'đang chờ sổ', label: 'Đang chờ sổ' },
+                                            ]}
+                                            value={formdata?.Legal}
+                                            style={{ width: '100%' }}
+                                            size="large"
+                                            onChange={handleChangeTypePaper}
+                                            disabled={formdata?.User !== user?.id}
+                                        />
+                                        {
+                                            errors.Legal && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.Legal}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    {
+                                        formdata?.User === user.id && 
+                                        <div>
+                                            <span className="label">Chọn ảnh</span>
+                                            <Upload
+                                                listType="picture-card"
+                                                accept="image/*"
+                                                maxCount={8}
+                                                fileList={fileList}
+                                                onChange={handleChange}
+                                                onPreview={handlePreviewImage}
+                                                beforeUpload={() => false}
+                                                multiple
+                                                >
+                                                {fileList.length >= 8 ? null : uploadButton}
+                                            </Upload>
+                                            {
+                                                previewImage && (
+                                                    <Image
+                                                        wrapperStyle={{ display: 'none'}}
+                                                        
+                                                        preview={{
+                                                            visible: previewOpen,
+                                                            onVisibleChange: (visible) => setPreviewOpen(visible),
+                                                            afterOpenChange: (visible) => !visible && setPreviewImage('')
+                                                        }}
+                                                        src={previewImage}
+                                                    />
+                                                )
+                                            }
+                                            {
+                                                errors.Images && (
+                                                    <span style={{ color: "red", marginBottom: 10 }}>
+                                                        {errors.Images}
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+                                    }
+                                    
+                                    <div>
+                                        <span className="label">Trạng thái bài đăng</span>
+                                        <Select 
+                                            placeholder="--- Chọn trạng thái bài đăng ---"
+                                            options={[
+                                                { value: null, label: '--- Chọn trạng thái bài đăng ---' },
+                                                { value: 'công khai', label: 'Công khai',disabled: user?.id !== formdata?.User },
+                                                { value: 'ẩn', label: 'Ẩn' },
+                                                { value: 'hết hạn', label: 'Hết hạn'},
+                                                { value: 'bị khóa', label: 'Bị khóa',disabled: user?.role !== "admin" },
+                                            ]}
+                                            value={formdata?.visibility_status}
+                                            style={{ width: '100%' }}
+                                            size="large"
+                                            disabled={user?.role !== "admin" && formdata?.visibility_status === 'bị khóa'}
+                                            onChange={handleVisibilityStatusChange}
+                                        />
+                                        {
+                                            errors.visibility_status && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.visibility_status}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    {
+                                        user?.role === "admin" && (
+                                                <div>
+                                                    <span className="label">Tình trạng bài đăng</span>
+                                                    <Select 
+                                                        placeholder="--- Chọn tình trạng bài đăng ---"
+                                                        value={formdata?.approval_status}
+                                                        options={[
+                                                            { value: null, label: '--- Chọn tình trạng bài đăng ---' },
+                                                            { value: 'chưa xác thực', label: 'chưa xác thực' },
+                                                            { value: 'đã xác thực', label: 'đã xác thực' },
+                                                            { value: 'từ chối', label: 'bị từ chối'},
+                                                        ]}
+                                                        onChange={handleApprovalStatusChange}
+                                                        style={{ width: '100%' }}
+                                                        size="large"
+                                                    />
+                                                </div>
+                                        )
+                                    }
+                                    <div>
+                                        <span className="label">Chọn thời hạn tin đăng còn hiệu lực</span>
+                                        <DatePicker 
+                                            value={
+                                                formdata?.ExpiredAt &&
+                                                formdata?.ExpiredAt !== "1970-01-01T00:00:00.000Z"
+                                                    ? dayjs(formdata?.ExpiredAt)
+                                                    : null}
+                                            format="DD/MM/YYYY" 
+                                            size='large' 
+                                            placeholder="thời hạn tin đăng còn hiệu lực" 
+                                            style={{width:"100%"}} 
+                                            onChange={(date, dateString) => handleExpiredDate(date ? date.toISOString() : null)}
+                                            disabled={user?.role !== "admin"}
+                                            allowClear
+                                        />
+                                    </div>
+                                    
+                                    <div className="button-group">
+                                        {
+                                            (Object.keys(formdata).some(
+                                                key => formdata[key] !== initialDataRef.current[key]
+                                            // eslint-disable-next-line no-mixed-operators
+                                            ) || initialDataRef.current.countImage !== fileList.length || removedImages.length > 0) &&
+                                            <>
+                                                <ButtonComponent 
+                                                    textButton={"Hủy"} 
+                                                    size="large" 
+                                                    color="default" 
+                                                    variant="solid"
+                                                    onClick={() => {fetchListing()}}
+                                                />
+                                                <ButtonComponent textButton={"Cập nhật"} size="large" type="primary" onClick={handleUpdateListing}/>
+                                            </>
+                                        }
+                                    </div>
+                            </EditListingBody>
+                        </Loading>
+                    </EditListingContainer>
+                </WrapperEditListing>
+            }
+        </>
+        
     )
 }

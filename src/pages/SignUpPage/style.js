@@ -1,5 +1,19 @@
 import styled from 'styled-components';
 
+export const WrapperSignUpPage = styled.div`
+    display:flex;
+    flex-direction:row;
+    width: 1000px; 
+    height: 600px;
+    border-radius: 6px;
+    background-color: #fff; 
+    overflow: hidden;
+    @media screen and (max-width: 1199px) {
+        width:100vw;
+        height:100vh;
+        border-radius: 0;
+    }
+`
 export const WrapperContainerLeft = styled.div`
     position: relative;
     width: 60%;
@@ -9,9 +23,15 @@ export const WrapperContainerLeft = styled.div`
     & div h4:last-child {
         margin-top: 0px;
     }
+    @media screen and (max-width: 1199px) {
+        width:0;
+        display:none;
+    }
 `
 export const WrapperContainerRight = styled.div`
     width: 40%;
+    height:100%;
+    box-sizing:border-box;
     padding: 32px;
     display:flex;
     flex-direction:column;
@@ -52,11 +72,15 @@ export const WrapperContainerRight = styled.div`
             font-weight: bold
         }
     }
+    @media screen and (max-width: 1199px){
+        width: 100vw;
+        height: 100vh;
+    }
 `
 export const WrapperSignup = styled.div`
     box-sizing: border-box;
     width: 100%;
-    height: 15rem;
+    height: 20rem;
 `
 export const Signupcontainer = styled.div`
     display: flex;

@@ -1,5 +1,20 @@
 import styled from 'styled-components';
 
+export const WrapperSignInPage = styled.div`
+    display:flex;
+    flex-direction:row;
+    width: 1000px; 
+    height: 600px;
+    border-radius: 6px;
+    background-color: #fff; 
+    overflow: hidden;
+    @media screen and (max-width: 1199px) {
+        width:100vw;
+        height:100vh;
+        border-radius: 0;
+    }
+`
+
 export const WrapperContainerLeft = styled.div`
     position: relative;
     width: 60%;
@@ -9,13 +24,19 @@ export const WrapperContainerLeft = styled.div`
     & div h4:last-child {
         margin-top: 0px;
     }
+    @media screen and (max-width: 1199px) {
+        width:0;
+        display:none;
+    }
 `
 export const WrapperContainerRight = styled.div`
     width: 40%;
+    height:100%;
     padding: 32px;
     display:flex;
     flex-direction:column;
     justify-content: space-between;
+    box-sizing:border-box;
     & h5 {
         margin-bottom:0px;
         margin-top:0px;
@@ -52,6 +73,10 @@ export const WrapperContainerRight = styled.div`
             color: #02CBE0;
             font-weight: bold
         }
+    }
+    @media screen and (max-width: 1199px){
+        width: 100vw;
+        height: 100vh;
     }
 `
 export const WrapperRememberandForgot = styled.div`

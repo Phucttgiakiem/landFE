@@ -13,12 +13,20 @@ export const FilterPersonalpageContainer = styled.div`
     top: 0;
     left: 0;
     z-index: 20;
+    
 `
 export const FilterPersonalpageWrapper = styled.div`
     width: 35vw;
     height: 75vh;
     background-color: #fff;
     border-radius: 10px;
+    @media screen and (min-width: 768px) and (max-width: 1199px) {
+        width: 70vw;
+    }
+    @media screen and (max-width: 767px) {
+        width: 100vw;
+        height: 100vh;
+    }
 `
 export const FilterPersonalpageHeader = styled.div`
     width: 100%;

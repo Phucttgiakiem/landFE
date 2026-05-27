@@ -1,19 +1,18 @@
 import axios from "axios";
-
-export const axiosJWT = axios.create();
+import axiosJWT from "./axiosJWT";
 export const createListing = async (data) => {
     const res = await axios.post(`${process.env.REACT_APP_URL_BACKEND}/Listing/create-listing`,data);
     return res;
 }
-export const updateListing = async (id,data) => {
-    //console.log(Object.fromEntries(data.entries()));
-    //const dt = Object.fromEntries(data.entries());
-    const res = await axios.put(`${process.env.REACT_APP_URL_BACKEND}/Listing/update-listing/${id}`,data);
-   // console.log("res",res);
+export const updateListing = async (id,data,access_token) => {
+    const res = await axiosJWT.put(`${process.env.REACT_APP_URL_BACKEND}/Listing/update-listing/${id}`,data,{
+        headers: {
+            authorization: `Bearer ${access_token}`,
+        }
+    });
     return res;
 }
 export const softDeleteListing = async (data) => {
-   // console.log("data",data);
     const res = await axios.patch(`${process.env.REACT_APP_URL_BACKEND}/Listing/softdelete-listing`,data);
     return res;
 }
@@ -38,4 +37,12 @@ export const getAllDeletedListing = async (searchParams) => {
 export const getListing = async (idlist) => {
     const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/Listing/get-detail/${idlist}`);
     return res;
+}
+export const getSuggestionsSearch = async (data) => {
+    const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/Listing/searchpropery`,{
+            params: {
+                ...data,
+            }
+        })
+    return res.data;
 }

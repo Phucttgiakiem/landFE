@@ -7,6 +7,11 @@ export const WrapperManageListing = styled.div`
     padding: 20px;
     background-color: #e3e3e3;
     min-height: calc(100vh - 90px);
+    @media screen and (max-width: 1199px) {
+        width: 100%;
+        margin-left: 0;
+        min-height: 100vh;
+    }
 `;
 export const ManageListingContainer = styled.div`
     width: 100%;
@@ -16,6 +21,10 @@ export const ManageListingContainer = styled.div`
     border-radius: 8px;
     display: flex;
     flex-direction: column;
+    @media screen and (max-width: 1199px) {
+        margin-top: 6.5rem;
+        min-height:calc(100vh - 6.5rem - 40px)
+    }
     
 `
 export const ManageListingHeader = styled.div`
@@ -38,8 +47,55 @@ export const ManageListingHeaderContent = styled.div`
     border-top: 1px solid #eaeaea;
     padding: 20px 20px 0;
     .btn-trash {
-        margin-left: auto;
         cursor: pointer;
+    }
+    @media screen and (min-width:768px) and (max-width: 1199px){
+        display:grid;
+        grid-template-columns: repeat(2,1fr);
+        grid-template-rows: repeat(2,1fr);
+    }
+    @media screen and (max-width: 767px){
+        flex-direction: column;
+    }
+`
+export const Selectownerproperty = styled.div`
+    width:25rem;
+    height: 3rem;
+    border-radius: 15rem;
+    border: 1px solid #1d1d1d;
+    box-sizing: border-box;
+    padding: 0rem 1rem;
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+    .select-owner {
+        width:calc(25rem - 2rem);
+        height: 2.6rem;
+    }
+    .select-owner > .ant-select-selector {
+        border-style: none;
+    }
+    @media screen and (max-width: 767px){
+        width: 100%;
+        .select-owner {
+            width:calc(100% - 2rem);
+            
+        }
+        & > .ant-select {
+            width: 100%;
+        }
+    }
+`
+export const WrapperCreateandtrash = styled.div`
+    height: 3rem;
+    flex-grow: 1;
+    gap: 20px;
+    display:flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items:center;
+    @media screen and (max-width: 767px){
+        width: 100%;
     }
 `
 export const SearchContainer = styled.div`
@@ -57,6 +113,13 @@ export const SearchContainer = styled.div`
         border: none;
         outline: none;
         background-color: transparent;
+    }
+    @media screen and (min-width: 768px) and (max-width:1199px){
+        width: 100%;
+        grid-column: 1 / 3;
+    }
+    @media screen and (max-width: 767px){
+        width: 100%;
     }
 `
 export const SearchButton = styled.span`
@@ -98,6 +161,14 @@ export const TabsContainer = styled.div`
     gap: 20px;
     box-sizing: border-box;
     border-bottom: 1px solid #eaeaea;
+    @media screen and (min-width: 768px) and (max-width:1199px){
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+    }
+    @media screen and (max-width: 767px){
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+    }
 `
 export const TabButton = styled.span`
     display: flex;
@@ -116,7 +187,11 @@ export const TabButton = styled.span`
         background-color: #02CBE0;
         color: #fff;
     }
-
+    @media screen and (max-width:1199px){
+        width: 95%;
+        min-width: 0;
+        padding: 0 5px;
+    }
 `
 export const ManageListingBody = styled.div`
     width: 100%;

@@ -1,5 +1,15 @@
 import styled from 'styled-components';
 
+export const OverlayIpad = styled.div`
+    display: none;
+    @media screen and (min-width: 768px) and (max-width: 1199px) {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0,0,0,0.45);
+        z-index: 14;
+    }
+`
 export const RangeFilterWrapper = styled.div`
     position:absolute;
     top:2.2rem;
@@ -29,6 +39,14 @@ export const RangeFilterWrapper = styled.div`
         color: rgb(91, 91, 91);
         font-weight: 500;
         border-bottom: 1px solid rgb(225, 225, 225)
+    }
+    @media screen and (min-width: 768px) and (max-width: 1199px) {
+        position: fixed;
+        z-index: 15;
+        width:35rem;
+        height:30rem;
+        top:calc((100vh - 30rem)/2);
+        left:calc((100vw - 35rem)/2);
     }
 `
 export const RangeFilterContentTop = styled.div`
@@ -69,6 +87,7 @@ export const RangeFilterMainContent = styled.div`
     height: 5rem;
     overflow-y: scroll;
     overflow-x: hidden;
+    flex:1;
     padding: 0 1rem;
     box-sizing: border-box;
     &::-webkit-scrollbar-thumb {
@@ -99,13 +118,12 @@ export const RangeFilterMainContent = styled.div`
 `
 export const RangeFilterContentBottom = styled.div`
     width: 100%;
-    flex: 1;
     border-top: 1px solid rgb(225, 225, 225);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    padding: 20px;
     box-sizing: border-box;
     & .btn-apply {
         color: rgb(255, 255, 255);

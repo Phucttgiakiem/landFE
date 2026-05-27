@@ -1,6 +1,4 @@
-import axios from "axios";
-
-export const axiosJWT = axios.create();
+import axiosJWT from "./axiosJWT";
 export const createnewFavorite = async (data,Idproperty) => {
     const res = await axiosJWT.post(
         `${process.env.REACT_APP_URL_BACKEND}/Favorite/create-newfavorite`,

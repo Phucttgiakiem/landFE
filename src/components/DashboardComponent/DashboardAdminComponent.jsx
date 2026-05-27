@@ -1,5 +1,6 @@
-import {DashboardAdminTitle,DashboardAdminpropertybyMonth,DashboardChartWapper} from "./style";
+import {DashboardAdminTitle,DashboardAdminpropertybyMonth,DashboardChartWapper,ChartContainer,WrapperCardDashboard} from "./style";
 import { Line } from '@ant-design/plots';
+import CardDashboardComponent from "../CardDashboardComponent/CardDashboardComponent"
 import {useState,useEffect} from "react";
 import {getDashboardoverviewadmin} from "../../services/DashboardService";
 export default function DashboardAdminComponent () {
@@ -28,11 +29,19 @@ export default function DashboardAdminComponent () {
                 <h4>Tổng quan</h4>
             </DashboardAdminTitle>
             <DashboardAdminpropertybyMonth>
-                <div>
-                    <h5>Tổng số tài khoản sử dụng website: {totalUser} </h5>
-                    <h5>Tổng số tin đăng bất động sản: {totalproperty} </h5>
-                </div>
-                <div style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
+                <WrapperCardDashboard>
+                    <CardDashboardComponent styleComponent={{
+                        backgroundColor:"#10288C",  
+                    }}
+                        content={`Tổng số tài khoản sử dụng website: ${totalUser} `}
+                    />
+                    <CardDashboardComponent styleComponent={{
+                        backgroundColor:"#4B0090",  
+                    }}
+                        content={`Tổng số tin đăng bất động sản: ${totalproperty} `}
+                    />
+                </WrapperCardDashboard>
+                <ChartContainer>
                     <DashboardChartWapper>
                         <Line
                             data={propertybymonth}
@@ -55,7 +64,7 @@ export default function DashboardAdminComponent () {
                         />
                         <h5>Biểu đồ số tài khoản đăng ký mới trong 12 tháng gần nhất</h5>
                     </DashboardChartWapper>
-                </div>
+                </ChartContainer>
             </DashboardAdminpropertybyMonth>
         </div>
     )

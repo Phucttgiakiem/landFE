@@ -12,12 +12,14 @@ export const userSlide = createSlice({
     role: '',
     access_Token: '',
     idNumber: '',
-    
+    dateofbirth: '',
+    idIssuedDate: '',
+    idIssuedPlace: '',
   },
   reducers: {
     updateUser: (state,action) => {
-      const {_id,fullname,email,password,phone,address,role,access_Token,idNumber} = action.payload;
-      state.id = _id
+      const {_id,fullname,email,password,phone,address,role,access_Token,idNumber,dateOfBirth,idIssuedDate,idIssuedPlace} = action.payload;
+      state.id = _id;
       state.name = fullname;
       state.email = email;
       state.password = password;
@@ -26,6 +28,9 @@ export const userSlide = createSlice({
       state.role = role;
       state.access_Token = access_Token;
       state.idNumber = idNumber;
+      state.dateofbirth = dateOfBirth;
+      state.idIssuedDate = idIssuedDate;
+      state.idIssuedPlace = idIssuedPlace;
     },
     resetUser: (state) => {
       state.id = '';
@@ -37,6 +42,9 @@ export const userSlide = createSlice({
       state.role = '';
       state.password = '';
       state.idNumber = '';
+      state.dateofbirth = '';
+      state.idIssuedDate = '';
+      state.idIssuedPlace = '';
     }
   }
 })

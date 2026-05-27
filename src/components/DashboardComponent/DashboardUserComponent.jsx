@@ -1,10 +1,12 @@
-import {DashboardUserTitle,DashboardUserBody,WrapperLandslist} from "./style";
+import {DashboardUserTitle,DashboardUserBody,WrapperLandslist,WrapperCardDashboard} from "./style";
 import {useEffect,useState} from "react";
 import {getDashboarduseroverview} from "../../services/DashboardService";
 import SlickEffectComponent from "../SlickEffectComponent/SlickEffectComponent";
 import CardsmallComponent from "../CardsmallComponent/CardsmallComponent";
+import CardDashboardComponent from "../CardDashboardComponent/CardDashboardComponent"
 import {formatDate,formatacreage } from "../../utils";
 export default function DashboardUserComponent ({userinfo}){
+    const [loadingSlickslide,setLoadingSlickslide] = useState(false);
     const [infoforyou,setInfoforyou] = useState({
         totalpropertyislike: 0,
         topfivepropertynew: [],
@@ -65,18 +67,19 @@ export default function DashboardUserComponent ({userinfo}){
     useEffect(()=>{
         const fetchData = async () => {
             try {
+                setLoadingSlickslide(true);
                 const res = await getDashboarduseroverview(userinfo?.id);
-                console.log(res);
                 setInfoforyou({
                     totalpropertyislike: res.data?.totalpropertyislike,
                     topfivepropertynew:res.data?.topfivepropertynew,
                 });
-
+                setLoadingSlickslide(false)
             }catch(err){
                 setInfoforyou({
                     totalpropertyislike: 0,
                     topfivepropertynew:null,
                 })
+                setLoadingSlickslide(false)
             }
         }
         fetchData();
@@ -87,79 +90,80 @@ export default function DashboardUserComponent ({userinfo}){
                 <h4>Thông tin dành cho bạn</h4>
             </DashboardUserTitle>
             <DashboardUserBody>
-                <div>
-                    <h5>Số bài đăng đã like: {infoforyou.totalpropertyislike}</h5>
-                </div>
-                <div>
-                    <h5>Bài đăng bạn có thể quan tâm</h5>
-                </div>
-                <WrapperLandslist className="slider-container">
-                    <SlickEffectComponent
-                    setting={{
-                        dots: false,
-                        infinite: true,
-                        slidesToShow: 4,
-                        slidesToScroll: 1,
-                        arrows: true,
-                        centerMode: false,
-                        prevArrow:<SamplePrevArrow />,
-                        nextArrow:<SampleNextArrow />,
-                        
-                        responsive: [
-                            {
-                                breakpoint: 1024,
-                                settings: {
-                                slidesToShow: 3,
-                                slidesToScroll: 3,
-                                infinite: true,
-                                
-                                }
-                            },
-                            {
-                                breakpoint: 767,
-                                settings: {
-                                slidesToShow: 2,
-                                slidesToScroll: 2,
-                                initialSlide: 2
-                                }
-                            },
-                            {
-                                breakpoint: 766,
-                                settings: {
-                                slidesToShow: 1,
-                                slidesToScroll: 1
-                                }
-                            }
-                        ]
+                <WrapperCardDashboard>
+                    <CardDashboardComponent styleComponent={{
+                        backgroundColor:"#4B0090",  
                     }}
-                >
-                    {infoforyou.topfivepropertynew?.length > 0 && infoforyou.topfivepropertynew.map((item, index) => (
-                            <div key={item._id}>
-                                <CardsmallComponent 
-                                    Id={item._id}
-                                    loading={false}
-                                    Title={item.Title}
-                                    Price={item.Price}
-                                    likeCard={item.isFavorite}
-                                    handlelike={handleUpdatelike}
-                                    Area={item.Address.Commune.name+" / "+item.Address.City.name}
-                                    createdAt={formatDate(item.createdAt)}
-                                    Login={userinfo}
-                                    Img={
-                                        <img
-                                        src={item?.thumbnail}
-                                        alt={`imagebuilding${index}`}
-                                        className="image-land"
+                        content={`Số bài đăng đã like: ${infoforyou.totalpropertyislike}`}
+                    />
+                </WrapperCardDashboard>
+                {
+                    infoforyou.topfivepropertynew?.length > 0 && 
+                    (<>
+                        <div>
+                            <h5>Bài đăng bạn có thể quan tâm</h5>
+                        </div>
+                        <WrapperLandslist className="slider-container">
+                            <SlickEffectComponent
+                            setting={{
+                                dots: false,
+                                infinite: true,
+                                slidesToShow: 4,
+                                slidesToScroll: 1,
+                                arrows: true,
+                                centerMode: false,
+                                prevArrow:<SamplePrevArrow />,
+                                nextArrow:<SampleNextArrow />,
+                                responsive: [
+                                    {
+                                        breakpoint: 1024,
+                                        settings: {
+                                        slidesToShow: 3,
+                                        slidesToScroll: 3,
+                                        infinite: true,
+                                        
+                                        }
+                                    },
+                                    {
+                                        breakpoint: 767,
+                                        settings: {
+                                        slidesToShow: 1,
+                                        slidesToScroll: 1,
+                                        }
+                                    },
+                                ]
+                            }}
+                        >
+                            {infoforyou.topfivepropertynew.map((item, index) => (
+                                    <div key={item._id}>
+                                        <CardsmallComponent 
+                                            Id={item._id}
+                                            loading={loadingSlickslide}
+                                            Title={item.Title}
+                                            Price={item.Price}
+                                            likeCard={item.isFavorite}
+                                            handlelike={handleUpdatelike}
+                                            Area={item.Address.Commune.name+" / "+item.Address.City.name}
+                                            createdAt={formatDate(item.createdAt)}
+                                            Login={userinfo}
+                                            Img={
+                                                <img
+                                                src={item?.thumbnail}
+                                                alt={`imagebuilding${index}`}
+                                                className="image-land"
+                                                />
+                                            }
+                                            Acreage={formatacreage(item.horizontal, item.vertical)}
+                                            className="card-small-component"
                                         />
-                                    }
-                                    Acreage={formatacreage(item.horizontal, item.vertical)}
-                                    className="card-small-component"
-                                />
-                            </div>
-                            ))
-                    }
-                </SlickEffectComponent>
-                </WrapperLandslist>
+                                    </div>
+                                    ))
+                            }
+                        </SlickEffectComponent>
+                        </WrapperLandslist>
+                    </>)
+                }
+                
             </DashboardUserBody>
         </div>
     )

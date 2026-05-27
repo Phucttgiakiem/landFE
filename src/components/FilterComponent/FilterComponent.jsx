@@ -116,12 +116,13 @@ export default function FilterComponent ({ListProvince,ListWard}) {
                     iconAction={ countFilters > 0 && <CounterFilter>{countFilters}</CounterFilter>}
                     onClick={() => setOpenfilterenhance(true)}
                 />
-                <div style={{ position: "relative" }}>
+                <div className="filter-dropdown">
                     <ButtonComponent
                         size="middle"
                         textButton={ 
                             formatPriceLabel(query,TypeProperty)
                         }
+                        rightIconClassName="hide-icon-tablet"
                         rightIcon={activeDropdown === "price" ? <UpOutlined /> : <DownOutlined/>}
                         onClick={() =>
                             setActiveDropdown(
@@ -152,12 +153,13 @@ export default function FilterComponent ({ListProvince,ListWard}) {
                         </div>
                     )}
                 </div>
-                <div style={{ position: "relative" }}>
+                <div className="filter-dropdown">
                     <ButtonComponent
                         size="middle"
                         textButton={
                             formatAreaLabel(query)
                         }
+                        rightIconClassName="hide-icon-tablet"
                         rightIcon={<DownOutlined />}
                         onClick={() =>
                             setActiveDropdown(

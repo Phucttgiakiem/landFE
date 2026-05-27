@@ -1,4 +1,4 @@
-import {ContractHeaderContent,ContractVipContainer,TabsContainer,TabButton} from "./style";
+import {ContractHeaderContent,ContractVipContainer,TabsContainer,TabButton,WrapperRangerPickernotmobile,WrapperRangerPickermobile} from "./style";
 import { Space,DatePicker,Table } from "antd"
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import {formatDateVN} from "../../utils";
@@ -50,16 +50,19 @@ const getColumns = (role,iduser) => [
     {
         title: 'Tên bất động sản',
         dataIndex: ['propertySnapshot', 'title'],
+        width: 300
     },
     {
         title: 'Ngày tạo hợp đồng',
         dataIndex: 'createdAt',
         render: (value) => formatDateVN(value),
-        sorter: true
+        sorter: true,
+        width: 100
     },
     {
         title: 'Trạng thái',
-        dataIndex: 'status',    
+        dataIndex: 'status', 
+        width: 100   
     },
     {
         title: 'Hành động',
@@ -69,7 +72,8 @@ const getColumns = (role,iduser) => [
             <Space>
                 {role !== "user" && iduser === record.ownerId && <Link to={`/Contract/Edit/${record._id}`}>Edit</Link>}
                 <Link to={`/Contract/Detail/${record._id}`}>Detail</Link>
-            </Space>
+            </Space>,
+        width: 100
         
     }
 ]
@@ -144,7 +148,7 @@ export default function ContractVipcomponent () {
     return (
         <ContractVipContainer>
             <ContractHeaderContent>
-                <div style={{display:"flex",gap:10}}>
+                <WrapperRangerPickernotmobile>
                     <RangePicker 
                         value={[
                             filterdate.startDate
@@ -171,6 +175,7 @@ export default function ContractVipcomponent () {
                         }}
                         allowClear
                     />
+                    
                     <ButtonComponent 
                         textButton="Tìm" 
                         size="large" 
@@ -197,13 +202,102 @@ export default function ContractVipcomponent () {
                             dispatch(setPage({ pageCurrent: 1 }));
                         }}
                     />
-                </div>
-                <ButtonComponent 
-                    textButton="Tạo mới" 
-                    size="large" 
-                    className="btn-create"
-                    onClick={() => navigate("/Contract/Create")}
-                />
+                </WrapperRangerPickernotmobile>
+                <WrapperRangerPickermobile>
+                    <DatePicker value={
+                            filterdate.startDate
+                            ? dayjs(filterdate.startDate, "DD/MM/YYYY")
+                            : null}
+                        format="DD/MM/YYYY" size='large' placeholder="startDate" style={{width:"100%"}} 
+                    allowClear onChange={(date, dateString) => {
+                        if (
+                            filterdate.endDate &&
+                            dayjs(dateString, "DD/MM/YYYY").isAfter(
+                                dayjs(filterdate.endDate, "DD/MM/YYYY")
+                            )
+                        ) {
+                            setFilterDate({
+                                startDate: dateString,
+                                endDate: null,
+                            });
+                            return;
+                        }
+
+                        setFilterDate(prev => ({
+                            ...prev,
+                            startDate: dateString
+                        }));
+                    }}/>
+                    <DatePicker value={
+                            filterdate.endDate
+                            ? dayjs(filterdate.endDate, "DD/MM/YYYY")
+                            : null} format="DD/MM/YYYY" size='large' placeholder="endDate" style={{width:"100%"}} allowClear
+                        onChange={(date, dateString) => {
+
+                            if (
+                                filterdate.startDate &&
+                                dayjs(dateString, "DD/MM/YYYY").isBefore(
+                                    dayjs(filterdate.startDate, "DD/MM/YYYY")
+                                )
+                            ) {
+                                return;
+                            }
+
+                            setFilterDate(prev => ({
+                                ...prev,
+                                endDate: dateString
+                            }));
+                        }}
+                    />
+                    <div style={{display:"flex",flexDirection:"row",gap:10}}>
+                        <ButtonComponent 
+                            textButton="Tìm" 
+                            size="large" 
+                            color={filterdate.startDate && filterdate.endDate ? "danger" : "default"} 
+                            variant={filterdate.startDate && filterdate.endDate ? "solid": "filled"}  
+                            styleButton={{width:"50%"}}
+                            onClick={() => {
+                                const newFilter = {
+                                    ...contracts.filter,
+                                };
+
+                                // có chọn ngày mới add createdAt
+                                if (filterdate.startDate || filterdate.endDate) {
+                                    newFilter.createdAt = {
+                                        gte: filterdate.startDate,
+                                        lte: filterdate.endDate,
+                                    };
+                                } else {
+                                    // xoá filter ngày
+                                    delete newFilter.createdAt;
+                                }
+
+                                dispatch(setFilter(newFilter));
+                                dispatch(setPage({ pageCurrent: 1 }));
+                            }}
+                            disabled={!filterdate.startDate || !filterdate.endDate}
+                        />
+                        <ButtonComponent 
+                            textButton="Clear Date" 
+                            size="large" 
+                            color="cyan" 
+                            variant="solid"  
+                            styleButton={{width:"50%"}}
+                            onClick={() => setFilterDate({startDate:null,endDate:null})}
+                        />
+                    </div>
+                    
+                </WrapperRangerPickermobile>
+                {
+                    user?.role !== "user" && 
+                    <ButtonComponent 
+                        textButton="Tạo mới" 
+                        size="large" 
+                        className="btn-create"
+                        onClick={() => navigate("/Contract/Create")}
+                    />
+                }
+                
             </ContractHeaderContent>
             <TabsContainer>
                 {tabsData.map(tab => (
@@ -331,6 +425,7 @@ export default function ContractVipcomponent () {
                 dataSource={contracts.contract}
                 pagination={{current: contracts.page,pageSize: contracts.limit,total: contracts.total}} 
                 onChange={handleTableChange}
+                scroll={{ x: 800 }}
             />
         </ContractVipContainer>
     )

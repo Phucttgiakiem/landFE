@@ -9,6 +9,9 @@ export const WrapperSidebar = styled.div`
     background-color: #fff;
     padding: 20px 0;
     box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    @media screen and (max-width: 1199px) {
+        display:none;
+    }
 `
 export const UserSection = styled.div`
     display: flex;

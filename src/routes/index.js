@@ -1,6 +1,6 @@
 import HomePage from "../pages/HomePage/HomePage";
 import ListingPage from "../pages/ListingPage/ListingPage";
-import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
+import NotFoundPage from "../pages/NotFoundPage/PublicNotFoundPage";
 import SignInPage from "../pages/SignInPage/SignInPage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import ForgotPassPage from "../pages/ForgotPassPage/ForgotPassPage";
@@ -18,6 +18,8 @@ import CreateContractpage from "../pages/CreateContractpage/CreateContractpage";
 import EditContractpage from "../pages/EditContractpage/EditContractpage";
 import DetailContract from "../pages/DetailContract/DetailContract";
 import Profitpage from "../pages/Profitpage/Profitpage";
+import ManageClientPage from "../pages/ManageClientPage/ManageClientPage";
+import DetailUserpage from "../pages/DetailUser/DetailUserpage";
 export const routes = [
     {
         path: "/",
@@ -72,56 +74,64 @@ export const routes = [
         page: Profile,
         isShowHeader: true,
         isShowSidebar: true,
-        isPrivate: true
+        isPrivate: true,
+        allowedRoles: ["user","sell-user","admin"]
     },
     {
         path: "/change-password",
         page: Changepass,
         isShowHeader: true,
         isShowSidebar: true,
-        isPrivate: true
+        isPrivate: true,
+        allowedRoles: ["user","sell-user","admin"]
     },
     {
         path: "/manage-listing",
         page: ManageListing,
         isShowHeader: true,
         isShowSidebar: true,
-        isPrivate: true
+        isPrivate: true,
+        allowedRoles: ["user","sell-user","admin"]
     },
     {
         path: '/create-listing',
         page: CreateListing,
         isShowHeader: true,
         isShowSidebar: true,
-        isPrivate: true
+        isPrivate: true,
+        allowedRoles:["sell-user","admin"]
     },
     {
         path: '/Detail-listing/:id',
         page:DetailListing,
         isShowHeader: true,
         isShowSidebar: true,
-        isPrivate: true
+        isPrivate: true,
+        allowedRoles:["sell-user","admin"]
     },
     {
         path: '/Edit-listing/:id',
         page:EditListing,
         isShowHeader:true,
         isShowSidebar:true,
-        isPrivate: true
+        isPrivate: true,
+        allowedRoles:["sell-user","admin"]
     },
     {
         path: '/Delete-listing',
         page: DeleteListingPage,
         isShowHeader: true,
         isShowSidebar: true,
-        isPrivate: true
+        isPrivate: true,
+        allowedRoles: ["sell-user","admin"]
     },
     {
         path: '/Dashboard',
         page:DashboardPage,
         isShowHeader:true,
         isShowSidebar:true,
-        isPrivate:true
+        isPrivate:true,
+        allowedRoles: ["user","sell-user","admin"]
     },
     {
         path: '/Contract',
@@ -129,6 +139,7 @@ export const routes = [
         isShowHeader:true,
         isShowSidebar:true,
         isPrivate:true,
+        allowedRoles: ["sell-user","admin"]
     },
     {
         path: '/Contract-history',
@@ -136,6 +147,7 @@ export const routes = [
         isShowHeader:true,
         isShowSidebar:true,
         isPrivate:true,
+        allowedRoles:["user"],
     },
     {
         path: '/Contract/Create',
@@ -143,30 +155,53 @@ export const routes = [
         isShowHeader:true,
         isShowSidebar:true,
         isPrivate:true,
+        allowedRoles:["sell-user","admin"]
     },
     {
         path: '/Contract/Edit/:id',
         page: EditContractpage,
         isShowHeader: true,
         isShowSidebar: true,
-        isPrivate: true
+        isPrivate: true,
+        allowedRoles:["sell-user","admin"]
     },
     {
         path: '/Contract/Detail/:id',
         page: DetailContract,
         isShowHeader: true,
         isShowSidebar: true,
-        isPrivate: true
+        isPrivate: true,
+        allowedRoles: ["user","sell-user","admin"]
+    },
+    {
+        path: '/Admin/ManageClient',
+        page: ManageClientPage,
+        isShowHeader:true,
+        isShowSidebar:true,
+        isPrivate:true,
+        allowedRoles:["admin"]
+    },
+    {
+        path: '/Admin/DetailClient/:id',
+        page:DetailUserpage,
+        isShowHeader:true,
+        isShowSidebar:true,
+        isPrivate:true,
+        allowedRoles:["admin"]
     },
     {
         path: '/Profit',
         page: Profitpage,
         isShowHeader: true,
         isShowSidebar: true,
-        isPrivate: true
+        isPrivate: true,
+        allowedRoles:["sell-user","admin"]
     },
     {
         path: "*",
-        page: NotFoundPage
+        page: NotFoundPage,
+        isShowHeader: true,
+        isShowSidebar: false,
+        isPrivate: false,
     }
 ]

@@ -4,6 +4,7 @@ export const LandDetail = styled.div`
     height:max-content;
     marginBottom:2rem;
     @media screen and (max-width:1199px) {
+        margin-top:8rem;
         padding: 0 20px;
     }
 `
@@ -29,16 +30,25 @@ export const SliderContent = styled.div`
       height: 100%;
       border-radius: 0.5rem;
     }
+    @media screen and (max-width: 767px){
+      height: 18rem;
+    }
 `
 export const Sliderbottom = styled.div`
     width: 100%;
-    height: 8rem;
     margin-top:0.3rem;
+
+    & .slick-slide {
+      padding: 0 4px;
+      box-sizing: border-box;
+    }
+
+    & .slick-slide > div {
+      width: 100%;
+    }
+
     & .img-listing {
       height: 6rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       overflow: hidden;
       border-radius:0.8rem;
     }
@@ -47,18 +57,21 @@ export const Sliderbottom = styled.div`
       width: 100%;
       height: 100%;
       object-fit: cover;
-    }
-
-    & .slick-slide {
-      padding: 0 4px;
+      display:block;
     }
 
     & .slick-track {
       display: flex !important;
-      margin: 0;
+      margin:0;
     }
+
     & .slick-list {
       overflow: hidden;
+    }
+    @media screen and (max-width:767px){
+      & .img-listing {
+        height:4.5rem;
+      }
     }
 `
 export const ImageSlider = styled.img`
@@ -118,7 +131,7 @@ export const Nameland = styled.h1`
 `
 export const LocationLand = styled.span`
   font-family: "Roboto Regular", Roboto, Arial !important;
-  font-size: 14px;
+  font-size: 18px;
   line-height: 20px;
   font-weight: normal !important;
   color: #2C2C2C;
@@ -402,7 +415,7 @@ export const InfoContact = styled.div`
   align-items:center;
   gap:1rem;
   box-shadow: 0 4px 1.2rem rgba(0,0,0,0.25);
-  @media screen and (min-width: 768px){
+  @media screen and (min-width: 1200px){
     display:none;
   }
 `

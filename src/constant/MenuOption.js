@@ -86,7 +86,7 @@ export const MenuSidebar = [
             },
             {
                 label: "Quản lý người dùng",
-                path: "/manage-listing123456",
+                path: "/Admin/ManageClient",
                 roles: ["admin"],
             }
         ],

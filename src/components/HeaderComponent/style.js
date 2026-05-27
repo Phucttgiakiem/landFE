@@ -16,6 +16,11 @@ export const WrapperHeader = styled.div`
   @media screen and (max-width: 1199px) {
       justify-content: center;
       padding: 10px 20px;
+      height: max-content;
+      position:fixed;
+      top:0;
+      left:0;
+      width: 100%;
   }
 `
 export const WrapperAction = styled.div`

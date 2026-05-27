@@ -3,7 +3,7 @@ import DOMPurify from "dompurify";
 import { Descriptions, Badge, Spin,Tag,Image} from 'antd';
 import axios from 'axios';
 import { useNavigate,useParams,useLocation } from "react-router-dom";
-import {WrapperDetaillisting,DetailListingContainer,DetailListingHeader,DetailListingBody} from "./style";
+import {WrapperDetaillisting,DetailListingContainer,DetailListingHeader,DetailListingBody,WrapperImage} from "./style";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import * as ListingService from "../../services/ListingService";
 import * as ImageService from "../../services/ImageService";
@@ -11,8 +11,8 @@ export default function DetailListing() {
     const { id } = useParams();
     const [data, setData] = useState(null);
     const [urlimage,seturlimage] = useState([]);
-    const [provinces, setProvinces] = useState([]);
-    const [communes, setCommunes] = useState([]);
+    //const [provinces, setProvinces] = useState([]);
+    //const [communes, setCommunes] = useState([]);
     const [loading, setLoading] = useState(false);
     const location = useLocation();
     const from = location.state?.from;
@@ -48,7 +48,7 @@ export default function DetailListing() {
     }, [id]);
 
     // ================= FETCH PROVINCES (1 LẦN) =================
-    useEffect(() => {
+    /* useEffect(() => {
         const fetchProvinces = async () => {
             try {
                 const res = await axios.get(
@@ -61,10 +61,10 @@ export default function DetailListing() {
         };
 
         fetchProvinces();
-    }, []);
+    }, []); */
 
     // ================= FETCH COMMUNES KHI CÓ CityID =================
-    useEffect(() => {
+    /* useEffect(() => {
         if (!data?.Address?.CityID) return;
 
         const fetchCommunes = async () => {
@@ -79,10 +79,10 @@ export default function DetailListing() {
         };
 
         fetchCommunes();
-    }, [data?.Address?.CityID]);
+    }, [data?.Address?.CityID]); */
 
     // ================= DERIVED DATA (KHÔNG ASYNC) =================
-    const provinceName = useMemo(() => {
+    /* const provinceName = useMemo(() => {
         return (
             provinces.find(
                 (p) => p.code === data?.Address?.CityID
@@ -96,7 +96,7 @@ export default function DetailListing() {
                 (c) => c.code === data?.Address?.CommuneID
             )?.name || ""
         );
-    }, [communes, data?.Address?.CommuneID]);
+    }, [communes, data?.Address?.CommuneID]); */
 
     // ================= DESCRIPTIONS ITEMS =================
     const items = useMemo(() => {
@@ -123,7 +123,7 @@ export default function DetailListing() {
             {
                 key: "4",
                 label: "Địa chỉ",
-                children: `${data?.Address?.numberhouse || ""} - ${communeName} - ${provinceName}`,
+                children: `${data?.Address?.numberhouse || ""} - ${data?.Address?.Commune.name} - ${data?.Address?.City.name}`,
             },
             {
                 key: "5",
@@ -174,20 +174,20 @@ export default function DetailListing() {
                 key: "9",
                 label: "Hình ảnh",
                 span: 3,
-                children: <div>
+                children: <WrapperImage>
                     {urlimage?.length > 0 &&
                         urlimage.map(item => (
                             <Image
                             key={item._id}
                             src={item.URL}
-                            width={200}
+
                             />
                         ))
                     }
-                </div>
+                </WrapperImage>
             }
         ];
-    }, [data, provinceName, communeName,urlimage]);
+    }, [data,urlimage]);
     const handleBack = () => {
         if (from === "trash") {
             navigate("/Delete-listing");

@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Card,Skeleton, } from "antd";
+import { Card } from "antd";
 import { Link,useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { WrapperCardsmallTitle,CardsmallTitle,WrapperCardConfig,
     CardConfigPrice,CardConfigArea,SeparatorDot,
     WrapperCardLocation,WrapperCardContact,CardContactPublicInfo
@@ -12,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { formatPriceToString } from "../../utils";
 import * as FavoriteService from "../../services/FavoriteService";
+import Noimage from "../../assets/images/not_image.jpg"
 const CardsmallComponent = ({Id,Title,Img,Price,Stretch,Area,createdAt,loading,Acreage,Login,likeCard,handlelike,...rest}) => {
     
     const navigate = useNavigate();
@@ -46,7 +46,16 @@ const CardsmallComponent = ({Id,Title,Img,Price,Stretch,Area,createdAt,loading,A
         <Card 
             loading={loading}
             hoverable
-            cover={loading ? <Skeleton.Image active={true} style={{width:"100%",height:"200px"}}/> : Img}
+            cover={loading ? <div style={{
+                    width:"100%",
+                    height:"200px",
+                    display:"flex",
+                    flexDirection:"column",
+                    alignItems:"center",
+                    justifyContent:"center",
+                    }}>
+                                <img src={Noimage} alt="loading-image" width="100%" height="100%" />
+                            </div> : Img}
             {...rest}
             style={{backgroundColor:"#ffffffe7"}}
         >
@@ -59,7 +68,7 @@ const CardsmallComponent = ({Id,Title,Img,Price,Stretch,Area,createdAt,loading,A
                             </Link>
                         </WrapperCardsmallTitle>
                         <WrapperCardConfig>
-                            <CardConfigPrice>{formatPriceToString(Price)}/tháng</CardConfigPrice>
+                            <CardConfigPrice>{Price === 0 ? "Thỏa thuận" : formatPriceToString(Price)}/tháng</CardConfigPrice>
                             <SeparatorDot>-</SeparatorDot>
                             <CardConfigArea>{Acreage} m²</CardConfigArea>
                         </WrapperCardConfig>

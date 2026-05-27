@@ -1,10 +1,15 @@
 import styled from 'styled-components';
+export const Wrapperproperty = styled.div`
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  @media screen and (max-width: 1199px) { 
+    margin-top: 7rem;
+  }
+`
 export const Listpanel = styled.div`
   width: calc(100% - 280px);
-  position: absolute;
-  z-index:4;
-  height:max-content;
-  margin:12rem auto 0;
+  margin:0 auto;
   @media screen and (max-width: 1199px){
     width: calc(100% - 80px);
   }

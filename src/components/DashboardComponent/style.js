@@ -1,6 +1,22 @@
 import styled from "styled-components";
 
 /* ------------------ style for seller --------------------- */
+export const WrapperCardDashboard = styled.div`
+    width: 100%;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    margin:0;
+    padding: 0 10px;
+    gap: 10px;
+    box-sizing:border-box;
+    h5 {
+        margin:0;
+    }
+    @media screen and (max-width:767px){
+        flex-direction:column;
+    }
+`
 export const DashboardSellerTitle = styled.div`
     width: 100%;
     height:3rem;
@@ -27,6 +43,9 @@ export const DashboardChartWapper = styled.div`
         margin-top: 10px;
         text-align: center;
     }
+    @media screen and (max-width: 1199px) {
+        width: 100%;
+    }
 `
 /* ------------------ style for seller --------------------- */
 /* ------------------ style for admin ---------------------- */
@@ -43,8 +62,20 @@ export const DashboardAdminpropertybyMonth = styled.div`
     & div > h5 {
         margin: 0;
     }
-    & div:last-child {
+    & > div:last-child {
         margin-top:20px;
+    }
+`
+export const ChartContainer = styled.div`
+    display:flex;
+    flex-direction:row;
+    justify-content: space-between;
+    margin-top:5rem;
+    @media screen and (min-width:768px) and (max-width:1199px){
+        flex-direction:column;
+    }
+    @media screen and (max-width:767px) {
+        flex-direction:column;    
     }
 `
 /* ------------------ style for admin ---------------------- */
@@ -58,7 +89,7 @@ export const DashboardUserTitle = styled.div`
 `
 export const DashboardUserBody = styled.div`
     width: 100%;
-    height:30rem;
+    min-height:30rem;
 `
 export const WrapperLandslist = styled.div`
   margin-top:20px;

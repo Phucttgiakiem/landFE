@@ -7,11 +7,12 @@ import PreviewContractComponent from "../../components/previewContractComponent/
 import {formatDateVN} from "../../utils";
 import {WrapperDetailContract,DetailContractContainer,DetailContractHeader,DetailContractBody} from "./style";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
+import { useSelector } from "react-redux";
 export default function DetailContract() {
     const { id } = useParams();
     const [detailcontract, setDetailContract] = useState(null);
     const navigate = useNavigate();
-
+    const user = useSelector(state => state.user);
     useEffect(()=>{
         const fetchDetailContract = async () => {
             try {
@@ -156,7 +157,7 @@ export default function DetailContract() {
                         size="large" 
                         color="cyan" 
                         variant="solid" 
-                        onClick={() => navigate("/Contract")}    
+                        onClick={() => {user.role !== "user" ? navigate("/Contract") : navigate("/Contract-history")}}    
                     />
                     <ButtonComponent
                         textButton={"Tải hợp đồng"} 

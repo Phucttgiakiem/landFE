@@ -1,10 +1,10 @@
 import { useSelector,useDispatch } from "react-redux";
-import { useState,useEffect } from "react";
+import { useState,useEffect,useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import {WrapperHeadofHomepage,WrapperSlider,WrapperSearch,
-    MenuItem,SearchboxContent,SearchboxHeader,Searchboxdropdown,
-    WrapperSearchlist,MenuItemSearchleft,MenuItemSearchright,
+    MenuItem,SearchboxContent,SearchboxHeader,Searchboxdropdown,SearchItem,SearchIconWrapper,SearchContent,EmptySearch,
     WrapperContentHomepage,WrapperLandslist,WrapperPlacespecial} from "./style";
 import { CloseCircleOutlined,SearchOutlined } from "@ant-design/icons";
 import buildingone from "../../assets/images/Buldingone.jpg"
@@ -15,20 +15,28 @@ import Imagecity_DNN from "../../assets/images/dongnai.jpg"
 import Imagecity_hue from "../../assets/images/hue_city.png"
 import Imagecity_danang from "../../assets/images/danang_city.webp"
 import Imagecity_hanoi from "../../assets/images/hanoi_city.jpg"
-import ImageBuilding from "../../assets/images/20250904001841_bdbe_wm.jpg"
+import Vipicon from "../../assets/images/vip.png";
+import Newicon from "../../assets/images/new.png"
+import Noimage from "../../assets/images/not_image.jpg"
 import SliderEffectComponent from "../../components/SlickEffectComponent/SlickEffectComponent";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CardsmallComponent from "../../components/CardsmallComponent/CardsmallComponent";
 import CardPlaceComponent from "../../components/CardPlaceComponent/CardPlaceComponent";
 import * as HomeService from "../../services/HomeService";
 import { setData,setLoading,setError,setUpdatelike } from "../../redux/slides/HomeSlide";
-import {formatDate,formatacreage } from "../../utils";
+import {getSuggestionsSearch} from "../../services/ListingService";
+import {formatDate,formatacreage,toSlug,isNew} from "../../utils";
 
 const HomePage = () => {
-    const [activeMenu, setActiveMenu] = useState("sell");
+    const [activeMenu, setActiveMenu] = useState("Nhà đất bán");
+    const [suggestions,setSuggestions] = useState([]);
+    const [keyword,setKeyword] = useState("");
+    const wrapperRef = useRef(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const [loadingSearch,setLoadingSearch] = useState(false);
     const homeState = useSelector((state) => state.home);
     const user = useSelector((state) => state.user);
-   // console.log(user);
+    const navigate = useNavigate();
     const { featured, latest, cheap, countnews, entities,loading } = homeState;
 
     const dispatch = useDispatch();
@@ -42,6 +50,11 @@ const HomePage = () => {
     const handleUpdatelikeitem = (idproperty,status) =>{
         dispatch(setUpdatelike({idListing:idproperty,status}))
     }
+    const handleSearch = () => {
+        if(!keyword.trim()) return;
+        const typecata = toSlug(activeMenu)
+        navigate(`/listing/${typecata}?keyword=${keyword.trim()}`)
+    };
     useEffect(() => {
         const fetchHomeData = async () => {
             try {
@@ -118,6 +131,59 @@ const HomePage = () => {
 
         );
     }
+    useEffect(() => {
+
+        if(!keyword.trim()) {
+            setSuggestions([]);
+            return;
+        }
+
+        const timer = setTimeout(async() => {
+
+            try {
+
+                setLoadingSearch(true);
+
+                const res = await getSuggestionsSearch({
+                    limit: 8,
+                    keyword:keyword,
+                    typeproperty: activeMenu
+                });
+
+                console.log(res);
+                setSuggestions(res.result);
+
+            } catch(error) {
+
+                console.log(error);
+
+            } finally {
+
+                setLoadingSearch(false);
+
+            }
+
+        },400);
+
+        return () => clearTimeout(timer);
+
+    },[keyword]);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                wrapperRef.current &&
+                !wrapperRef.current.contains(event.target)
+            ) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
    return (
         <div>
             <WrapperHeadofHomepage>
@@ -146,242 +212,65 @@ const HomePage = () => {
                             <img src={buildingthree} alt="slider-img" style={{ width: "100%", height: "30rem", objectFit: "fill" }}/>
                         </div>
                     </SliderEffectComponent>
-                    <WrapperSearch>
+                    <WrapperSearch >
                         <ul>
-                            {['sell', 'rent'].map((type) => (
+                            {['Nhà đất bán', 'Nhà đất cho thuê'].map((type) => (
                             <MenuItem
                                     key={type}
                                     $active={activeMenu === type}
                                     onClick={() => setActiveMenu(type)}
                                 >
-                            {type === 'sell' ? 'Mua bán' : 'Cho thuê'}
+                            {type === 'Nhà đất bán' ? 'Mua bán' : 'Cho thuê'}
                                 </MenuItem>
                             ))}
                         </ul>
                         <div>
-                            <SearchboxContent>
+                            <SearchboxContent ref={wrapperRef}>
                                 <SearchboxHeader>
                                     <SearchOutlined className="icon-search"/>
                                     <div className="input-searchbox">
-                                        <input type="text" placeholder="Nhập nội dung tìm kiếm" />
-                                        <CloseCircleOutlined className="closeItemoutlined" />
+                                        <input type="text" placeholder="Nhập nội dung tìm kiếm" value={keyword}
+                                            onChange={(e) => setKeyword(e.target.value)}
+                                            onFocus={() => setIsOpen(true)}
+                                        />
+                                       {keyword && <CloseCircleOutlined className="closeItemoutlined" onClick={()=> setKeyword("")}/>} 
                                     </div>
                                     <div className="btn-searchbox">
-                                        <ButtonComponent textButton={"Tìm kiếm"} className="btn-search"/>
+                                        <ButtonComponent textButton={"Tìm kiếm"} className="btn-search" onClick={() => handleSearch()}/>
                                     </div>
                                 </SearchboxHeader>
+                                {
+                                isOpen &&
                                 <Searchboxdropdown>
-                                    <WrapperSearchlist>
-                                        <li>
-                                            <MenuItemSearchleft>
-                                                <SearchOutlined className="icon-searchitem"/>
-                                            </MenuItemSearchleft>
-                                            <MenuItemSearchright>
-                                                <span>Mua</span>
-                                                <span>bán</span>
-                                                <span>nhà</span>
-                                                <span>đất</span>
-                                                <span>thành</span>
-                                                <span>phố</span>
-                                                <span>Hồ</span>
-                                                <span>Chí</span>
-                                                <span>Minh</span>
-                                            </MenuItemSearchright>
-                                        </li>
-                                        <li>
-                                            <MenuItemSearchleft>
-                                                <SearchOutlined className="icon-searchitem"/>
-                                            </MenuItemSearchleft>
-                                            <MenuItemSearchright>
-                                                <span>Mua</span>
-                                                <span>bán</span>
-                                                <span>nhà</span>
-                                                <span>đất</span>
-                                                <span>thành</span>
-                                                <span>phố</span>
-                                                <span>Hồ</span>
-                                                <span>Chí</span>
-                                                <span>Minh</span>
-                                            </MenuItemSearchright>
-                                        </li>
-                                        <li>
-                                            <MenuItemSearchleft>
-                                                <SearchOutlined className="icon-searchitem"/>
-                                            </MenuItemSearchleft>
-                                            <MenuItemSearchright>
-                                                <span>Mua</span>
-                                                <span>bán</span>
-                                                <span>nhà</span>
-                                                <span>đất</span>
-                                                <span>thành</span>
-                                                <span>phố</span>
-                                                <span>Hồ</span>
-                                                <span>Chí</span>
-                                                <span>Minh</span>
-                                            </MenuItemSearchright>
-                                        </li>
-                                        <li>
-                                            <MenuItemSearchleft>
-                                                <SearchOutlined className="icon-searchitem"/>
-                                            </MenuItemSearchleft>
-                                            <MenuItemSearchright>
-                                                <span>Mua</span>
-                                                <span>bán</span>
-                                                <span>nhà</span>
-                                                <span>đất</span>
-                                                <span>thành</span>
-                                                <span>phố</span>
-                                                <span>Hồ</span>
-                                                <span>Chí</span>
-                                                <span>Minh</span>
-                                            </MenuItemSearchright>
-                                        </li>
-                                        <li>
-                                            <MenuItemSearchleft>
-                                                <SearchOutlined className="icon-searchitem"/>
-                                            </MenuItemSearchleft>
-                                            <MenuItemSearchright>
-                                                <span>Mua</span>
-                                                <span>bán</span>
-                                                <span>nhà</span>
-                                                <span>đất</span>
-                                                <span>thành</span>
-                                                <span>phố</span>
-                                                <span>Hồ</span>
-                                                <span>Chí</span>
-                                                <span>Minh</span>
-                                            </MenuItemSearchright>
-                                        </li>
-                                        <li>
-                                            <MenuItemSearchleft>
-                                                <SearchOutlined className="icon-searchitem"/>
-                                            </MenuItemSearchleft>
-                                            <MenuItemSearchright>
-                                                <span>Mua</span>
-                                                <span>bán</span>
-                                                <span>nhà</span>
-                                                <span>đất</span>
-                                                <span>thành</span>
-                                                <span>phố</span>
-                                                <span>Hồ</span>
-                                                <span>Chí</span>
-                                                <span>Minh</span>
-                                            </MenuItemSearchright>
-                                        </li>
-                                        <li>
-                                            <MenuItemSearchleft>
-                                                <SearchOutlined className="icon-searchitem"/>
-                                            </MenuItemSearchleft>
-                                            <MenuItemSearchright>
-                                                <span>Mua</span>
-                                                <span>bán</span>
-                                                <span>nhà</span>
-                                                <span>đất</span>
-                                                <span>thành</span>
-                                                <span>phố</span>
-                                                <span>Hồ</span>
-                                                <span>Chí</span>
-                                                <span>Minh</span>
-                                            </MenuItemSearchright>
-                                        </li>
-                                        <li>
-                                            <MenuItemSearchleft>
-                                                <SearchOutlined className="icon-searchitem"/>
-                                            </MenuItemSearchleft>
-                                            <MenuItemSearchright>
-                                                <span>Mua</span>
-                                                <span>bán</span>
-                                                <span>nhà</span>
-                                                <span>đất</span>
-                                                <span>thành</span>
-                                                <span>phố</span>
-                                                <span>Hồ</span>
-                                                <span>Chí</span>
-                                                <span>Minh</span>
-                                            </MenuItemSearchright>
-                                        </li>
-                                        <li>
-                                            <MenuItemSearchleft>
-                                                <SearchOutlined className="icon-searchitem"/>
-                                            </MenuItemSearchleft>
-                                            <MenuItemSearchright>
-                                                <span>Mua</span>
-                                                <span>bán</span>
-                                                <span>nhà</span>
-                                                <span>đất</span>
-                                                <span>thành</span>
-                                                <span>phố</span>
-                                                <span>Hồ</span>
-                                                <span>Chí</span>
-                                                <span>Minh</span>
-                                            </MenuItemSearchright>
-                                        </li>
-                                        <li>
-                                            <MenuItemSearchleft>
-                                                <SearchOutlined className="icon-searchitem"/>
-                                            </MenuItemSearchleft>
-                                            <MenuItemSearchright>
-                                                <span>Mua</span>
-                                                <span>bán</span>
-                                                <span>nhà</span>
-                                                <span>đất</span>
-                                                <span>thành</span>
-                                                <span>phố</span>
-                                                <span>Hồ</span>
-                                                <span>Chí</span>
-                                                <span>Minh</span>
-                                            </MenuItemSearchright>
-                                        </li>
-                                        <li>
-                                            <MenuItemSearchleft>
-                                                <SearchOutlined className="icon-searchitem"/>
-                                            </MenuItemSearchleft>
-                                            <MenuItemSearchright>
-                                                <span>Mua</span>
-                                                <span>bán</span>
-                                                <span>nhà</span>
-                                                <span>đất</span>
-                                                <span>thành</span>
-                                                <span>phố</span>
-                                                <span>Hồ</span>
-                                                <span>Chí</span>
-                                                <span>Minh</span>
-                                            </MenuItemSearchright>
-                                        </li>
-                                        <li>
-                                            <MenuItemSearchleft>
-                                                <SearchOutlined className="icon-searchitem"/>
-                                            </MenuItemSearchleft>
-                                            <MenuItemSearchright>
-                                                <span>Mua</span>
-                                                <span>bán</span>
-                                                <span>nhà</span>
-                                                <span>đất</span>
-                                                <span>thành</span>
-                                                <span>phố</span>
-                                                <span>Hồ</span>
-                                                <span>Chí</span>
-                                                <span>Minh</span>
-                                            </MenuItemSearchright>
-                                        </li>
-                                        <li>
-                                            <MenuItemSearchleft>
-                                                <SearchOutlined className="icon-searchitem"/>
-                                            </MenuItemSearchleft>
-                                            <MenuItemSearchright>
-                                                <span>Mua</span>
-                                                <span>bán</span>
-                                                <span>nhà</span>
-                                                <span>đất</span>
-                                                <span>thành</span>
-                                                <span>phố</span>
-                                                <span>Hồ</span>
-                                                <span>Chí</span>
-                                                <span>Minh</span>
-                                            </MenuItemSearchright>
-                                        </li>
-                                    </WrapperSearchlist>
+                                    {
+                                        !keyword ? <EmptySearch>Nhập nội dung tìm kiếm</EmptySearch> :
+                                        suggestions.length > 0 ?
+
+                                        suggestions.map(item => (
+
+                                            <SearchItem key={item._id} onClick={() => navigate(`/lands-detail/${item._id}`)}>
+
+                                                <SearchIconWrapper>
+                                                    <SearchOutlined className="icon-searchitem"/>
+                                                </SearchIconWrapper>
+
+                                                <SearchContent>
+                                                    {item.Title}
+                                                </SearchContent>
+
+                                            </SearchItem>
+
+                                        ))
+
+                                        :
+
+                                        <EmptySearch>
+                                            Không có thông tin tìm thấy
+                                        </EmptySearch>
+                                    }
+
                                 </Searchboxdropdown>
+                                }
                             </SearchboxContent>
                         </div>
                     </WrapperSearch>
@@ -405,24 +294,15 @@ const HomePage = () => {
                                         nextArrow:<SampleNextArrow />,
                                         responsive: [
                                             {
-                                                breakpoint: 1024,
+                                                breakpoint: 1199,
                                                 settings: {
-                                                slidesToShow: 3,
-                                                slidesToScroll: 3,
+                                                slidesToShow: 2,
+                                                slidesToScroll: 2,
                                                 infinite: true,
-                                                
                                                 }
                                             },
                                             {
                                                 breakpoint: 767,
-                                                settings: {
-                                                slidesToShow: 2,
-                                                slidesToScroll: 2,
-                                                initialSlide: 2
-                                                }
-                                            },
-                                            {
-                                                breakpoint: 766,
                                                 settings: {
                                                 slidesToShow: 1,
                                                 slidesToScroll: 1
@@ -453,11 +333,38 @@ const HomePage = () => {
                                                     createdAt={formatDate(item.createdAt)}
                                                     handlelike={handleUpdatelikeitem}
                                                     Img={
-                                                        <img
-                                                        src={item?.images?.URL || ImageBuilding}
-                                                        alt={`imagebuilding${index}`}
-                                                        className="image-land"
-                                                        />
+                                                        <div
+                                                            style={{position:"relative",
+                                                            overflow: "hidden"}}
+                                                        >   
+                                                            {
+                                                                item?.type === "vip" ?  
+                                                                    <img src={Vipicon} alt="vip-icon" 
+                                                                        style={{
+                                                                            position: "absolute",
+                                                                            top: "10px",
+                                                                            left: "10px",
+                                                                            width:"35px",
+                                                                            height: "35px",
+                                                                            zIndex: 2,
+                                                                        }}/> : isNew(item.createdAt) && 
+                                                                    <img src={Newicon} alt="vip-icon" 
+                                                                        style={{
+                                                                            position: "absolute",
+                                                                            top: "10px",
+                                                                            left: "10px",
+                                                                            width:"35px",
+                                                                            height: "35px",
+                                                                            zIndex: 2,
+                                                                        }}/>
+                                                            }
+                                                            <img
+                                                                src={item?.images?.URL || Noimage}
+                                                                alt={`imagebuilding${index}`}
+                                                                className={"image-land"}
+                                                            />
+                                                        </div>
+                                                        
                                                     }
                                                     Acreage={formatacreage(item.horizontal, item.vertical)}
                                                     className="card-small-component"
@@ -487,24 +394,16 @@ const HomePage = () => {
                                             nextArrow:<SampleNextArrow />,
                                             responsive: [
                                                 {
-                                                    breakpoint: 1024,
+                                                    breakpoint: 1199,
                                                     settings: {
-                                                    slidesToShow: 3,
-                                                    slidesToScroll: 3,
+                                                    slidesToShow: 2,
+                                                    slidesToScroll: 2,
                                                     infinite: true,
                                                     
                                                     }
                                                 },
                                                 {
                                                     breakpoint: 767,
-                                                    settings: {
-                                                    slidesToShow: 2,
-                                                    slidesToScroll: 2,
-                                                    initialSlide: 2
-                                                    }
-                                                },
-                                                {
-                                                    breakpoint: 766,
                                                     settings: {
                                                     slidesToShow: 1,
                                                     slidesToScroll: 1
@@ -532,11 +431,37 @@ const HomePage = () => {
                                                 Area={item.Address.Commune.name+" / "+item.Address.City.name}
                                                 createdAt={formatDate(item.createdAt)}
                                                 Img={
-                                                    <img
-                                                    src={item?.images?.URL || ImageBuilding}
-                                                    alt={`imagebuilding${index}`}
-                                                    className="image-land"
-                                                    />
+                                                    <div
+                                                            style={{position:"relative",
+                                                            overflow: "hidden"}}
+                                                        >   
+                                                            {
+                                                                item?.type === "vip" ?  
+                                                                    <img src={Vipicon} alt="vip-icon" 
+                                                                        style={{
+                                                                            position: "absolute",
+                                                                            top: "10px",
+                                                                            left: "10px",
+                                                                            width:"35px",
+                                                                            height: "35px",
+                                                                            zIndex: 2,
+                                                                        }}/> : isNew(item.createdAt) && 
+                                                                    <img src={Newicon} alt="vip-icon" 
+                                                                        style={{
+                                                                            position: "absolute",
+                                                                            top: "10px",
+                                                                            left: "10px",
+                                                                            width:"35px",
+                                                                            height: "35px",
+                                                                            zIndex: 2,
+                                                                        }}/>
+                                                            }
+                                                            <img
+                                                                src={item?.images?.URL || Noimage}
+                                                                alt={`imagebuilding${index}`}
+                                                                className={"image-land"}
+                                                            />
+                                                        </div>
                                                 }
                                                 Acreage={formatacreage(item.horizontal, item.vertical)}
                                                 className="card-small-component"
@@ -566,24 +491,16 @@ const HomePage = () => {
                                             nextArrow:<SampleNextArrow />,
                                             responsive: [
                                                 {
-                                                    breakpoint: 1024,
+                                                    breakpoint: 1199,
                                                     settings: {
-                                                    slidesToShow: 3,
-                                                    slidesToScroll: 3,
+                                                    slidesToShow: 2,
+                                                    slidesToScroll: 2,
                                                     infinite: true,
                                                     
                                                     }
                                                 },
                                                 {
                                                     breakpoint: 767,
-                                                    settings: {
-                                                    slidesToShow: 2,
-                                                    slidesToScroll: 2,
-                                                    initialSlide: 2
-                                                    }
-                                                },
-                                                {
-                                                    breakpoint: 766,
                                                     settings: {
                                                     slidesToShow: 1,
                                                     slidesToScroll: 1
@@ -608,8 +525,38 @@ const HomePage = () => {
                                                     Price={item.Price}
                                                     Area={item.Address.Commune.name+" / "+item.Address.City.name}
                                                     createdAt={formatDate(item.createdAt)}
-                                                    Img={<img src={item?.images?.URL || ImageBuilding} 
-                                                    alt={`imagebuilding${index}`} className="image-land"/>}
+                                                    Img={
+                                                    <div
+                                                            style={{position:"relative",
+                                                            overflow: "hidden"}}
+                                                        >   
+                                                            {
+                                                                item?.type === "vip" ?  
+                                                                    <img src={Vipicon} alt="vip-icon" 
+                                                                        style={{
+                                                                            position: "absolute",
+                                                                            top: "10px",
+                                                                            left: "10px",
+                                                                            width:"35px",
+                                                                            height: "35px",
+                                                                            zIndex: 2,
+                                                                        }}/> : isNew(item.createdAt) && 
+                                                                    <img src={Newicon} alt="vip-icon" 
+                                                                        style={{
+                                                                            position: "absolute",
+                                                                            top: "10px",
+                                                                            left: "10px",
+                                                                            width:"35px",
+                                                                            height: "35px",
+                                                                            zIndex: 2,
+                                                                        }}/>
+                                                            }
+                                                            <img
+                                                                src={item?.images?.URL || Noimage}
+                                                                alt={`imagebuilding${index}`}
+                                                                className={"image-land"}
+                                                            />
+                                                        </div>}
                                                     className="card-small-component"
                                                     Acreage={formatacreage(item.horizontal, item.vertical)}
                                                 />

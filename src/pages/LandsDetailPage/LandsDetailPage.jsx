@@ -9,43 +9,103 @@ import {
    InfoContact,ImageUser } from "./style";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useParams,Link } from "react-router-dom";
+import { useParams,Link,useNavigate } from "react-router-dom";
 import {useState,useEffect} from "react";
 import { useDispatch,useSelector } from "react-redux";
-import { Row,Col, Skeleton,Pagination} from "antd";
-import {WarningOutlined,HeartOutlined,DollarOutlined } from "@ant-design/icons";
+import { Row,Col, Skeleton,Pagination,Breadcrumb} from "antd";
+import {HeartOutlined,DollarOutlined,LoadingOutlined } from "@ant-design/icons";
 import DOMPurify from "dompurify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBuilding,faPenRuler,faHouse,faBed,faChair,faToilet } from '@fortawesome/free-solid-svg-icons';
+import { faBuilding,faPenRuler,faHouse,faBed,faChair,faToilet,faHeart } from '@fortawesome/free-solid-svg-icons';
 import useravatar from "../../assets/images/user_avatar_3607444.png";
-import icon_zalo from "../../assets/images/icon_zalo.png";
-import no_image from "../../assets/images/No_image.png";
+import icon_google from "../../assets/images/google.png";
 import * as ListingService from "../../services/ListingService";
 import * as ImageService from "../../services/ImageService";
 import * as HomeService from "../../services/HomeService";
 import { formatDateVN,formatacreage,formatPriceToString } from "../../utils";
-import {setEntities, setLoading,setRelated,setLoadingRelated,setPageRelated} from "../../redux/slides/HomeSlide";
+import {setEntities, setLoading,setRelated,setLoadingRelated,setPageRelated,setUpdatelike,setUpadtelikeRelated} from "../../redux/slides/HomeSlide";
+
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CardsmallComponent from "../../components/CardsmallComponent/CardsmallComponent";
 import SlickEffectComponent from "../../components/SlickEffectComponent/SlickEffectComponent";
+import * as FavoriteService from "../../services/FavoriteService";
 import {formatDate} from "../../utils";
+import Noimage from "../../assets/images/not_image.jpg"
 export default function LandsDetailPage () {
   const { id } = useParams();
-
+  const user = useSelector(state => state.user);
   const entity = useSelector(state => state.home.entities[id]);
+  const [loadingLike, setLoadingLike] = useState(false);
   const loadingDetail = useSelector(state => state.home.loading.detail);
   const {items,isLoading,page,limit,total} = useSelector(state => state.home.related);
+
+  console.log("entity: ",entity);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [imageClick, setImageclick] = useState("");
   const [imagesland, setImagesland] = useState([]);
   const [isimagesLoading, setImagesLoading] = useState(false);
  
+  const handleUpdatelikeitem = (idproperty,status) =>{
+          dispatch(setUpadtelikeRelated({idListing:idproperty,status}))
+          dispatch(setUpdatelike({idListing:idproperty,status}))
+      }
+  
+  const handleLikeProperty = async(item) => {
+          if(loadingLike) return;
+  
+          if(!user.access_Token){ 
+              navigate('/sign-in');
+              return;
+          }
+          const prev = item;
+          const status = !prev;
+  
+          setLoadingLike(true);
+          handleUpdatelikeitem(id,status);
+  
+          try {
+              if(prev){
+                  await FavoriteService.deleteFavoriteofuser(user,id);
+              } else {
+                  await FavoriteService.createnewFavorite(user,id);
+              }
+          } catch(err){
+              handleUpdatelikeitem(id,prev);
+          } finally {
+              setLoadingLike(false);
+          }
+      };
   const handleReplaceString = (value) => {
     const wordsToRemove = ["Phường ", "Thành phố ", "Xã "];
     const regex = new RegExp(wordsToRemove.join('|'), 'gi');
     return value?.replace(regex,'').replace(/\s+/g,' ').trim();
   };
+  const createbreadcrumb = () => (
+        <Breadcrumb
+            items={[
+                {
+                title: <Link to={"/"}>Home</Link>,
+                },
+                {
+                title: <Link>{handleReplaceString(entity?.Address?.Commune?.name)}</Link>,
+                },
+                {
+                title: <Link>{handleReplaceString(entity?.Address?.City?.name)}</Link>,
+                },
+                {
+                title: entity?.Title,
+                },
+            ]}
+        />
+    )
+  const isValidMongoDate = (date) => {
+        if (!date) return false;
 
+        const time = new Date(date).getTime();
+
+        return !isNaN(time) && time > 0;
+    };
   const fetchDetailland = async () => {
     try {
       dispatch(setLoading({ detail: true }));
@@ -62,7 +122,7 @@ export default function LandsDetailPage () {
       // set local state 1 lần (không cần useEffect nữa)
       const images = imageRes.data.data || [];
       setImagesland(images);
-      setImageclick(images?.[0]?.URL || no_image);
+      setImageclick(images?.[0]?.URL || Noimage);
 
     } catch (error) {
       console.log(error);
@@ -72,10 +132,10 @@ export default function LandsDetailPage () {
     }
   };
   
-  // chỉ chạy khi id đổi
-  useEffect(() => {
-    fetchDetailland();
-  }, [id]);
+    // chỉ chạy khi id đổi
+    useEffect(() => {
+        fetchDetailland();
+    }, [id]);
   
 
     useEffect(() => {
@@ -109,13 +169,9 @@ export default function LandsDetailPage () {
 }, [page, limit, entity]);
   return (
     <LandDetail>
-      <Row gutter={[8,16]} style={{marginBottom:"10rem"}}>
+      <Row gutter={[8,16]} style={{marginBottom:"10rem",marginTop:"1rem"}}>
                 <Col xs={0} sm={0} md={0} lg={0} xl={18} xxl={18}>
-                     {/* <nav style={{height: "3rem",display:"flex",alignItems:"center",gap:"5px",fontSize:"16px",fontWeight:"400"}}>
-                        <Link style={{color:"black"}}>{handleReplaceString(detailland?.Address?.Commune?.name)}/ </Link>
-                        <Link style={{color:"black"}}>{handleReplaceString(detailland?.Address?.City?.name)}/ </Link>
-                        <span>{detailland?.Title}</span>
-                    </nav> */}
+                     {createbreadcrumb()}
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={18} xxl={18}>
                     <WrapperSlider>
@@ -134,7 +190,18 @@ export default function LandsDetailPage () {
                                     slidesToShow: 8,
                                     slidesToScroll: 1,
                                     centerMode: false,
+                                    responsive: [
+                                        {
+                                            breakpoint: 767,
+                                            settings: {
+                                            slidesToShow: 4,
+                                            slidesToScroll: 4,
+                                            infinite: true,
+                                            }
+                                        }
+                                    ]
                                }}
+                              
                             >
                                 {
                                     isimagesLoading ? 
@@ -185,8 +252,9 @@ export default function LandsDetailPage () {
                                 loadingDetail ? (
                                     <Skeleton.Button active style={{width:260}}/>
                                 ) : 
-                                <Link href="#" style={{marginTop:"16px"}}>
-                                    <ButtonComponent leftIcon={<img src={icon_zalo} alt="zaloicon" style={{width:"25px",height:"25px"}}/>} size="large" textButton={"Chat qua Zalo"} styleButton={{width:"100%"}}/>
+                                <Link to={`https://mail.google.com/mail/?view=cm&fs=1&to=${entity?.UserInfo?.email}`} style={{marginTop:"16px"}}>
+                                    <ButtonComponent leftIcon={<img src={icon_google} alt="zaloicon" style={{width:"18px",height:"18px"}}/>} size="large" textButton={"liên hệ qua gmail"} styleButton={{width:"100%"
+                                    }}/>
                                 </Link>
                             }
                         </ContactInfo>
@@ -205,7 +273,10 @@ export default function LandsDetailPage () {
                     {
                         loadingDetail ?
                             <Skeleton avatar={false} active paragraph={false} title={{ width: "100%", style: { height: 30 } }}/> :
-                        <LocationLand>Đường Xuân Thủy, Phường Dịch Vọng Hậu, Cầu Giấy, Hà Nội</LocationLand>
+                        <LocationLand>{entity && entity?.Address.numberhouse + " - " 
+                            + entity?.Address.Commune.name + " - "
+                            + entity?.Address.City.name
+                        }</LocationLand>
                     }
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={18} xxl={18}>
@@ -228,8 +299,13 @@ export default function LandsDetailPage () {
                                 <InfoItemValue>{entity?.bedroom} PN</InfoItemValue>
                             </InfoItem>
                             < WrapperAction>
-                                    <ActionIcon><WarningOutlined /></ActionIcon>
-                                    <ActionIcon><HeartOutlined/></ActionIcon>
+                            <ActionIcon onClick={() => handleLikeProperty(entity?.isFavorite)}>
+                                {
+                                    loadingLike ? <LoadingOutlined /> :
+                                    entity?.isFavorite ? <FontAwesomeIcon icon={faHeart} style={{color: "red"}}/> :
+                                    <HeartOutlined/>
+                                }
+                            </ActionIcon>
                             </WrapperAction>
                         </InfoLand>
                     }
@@ -318,10 +394,14 @@ export default function LandsDetailPage () {
                                     <ConfigItemTitle>Ngày đăng</ConfigItemTitle>
                                     <ConfigItemValue>{formatDateVN(entity?.createdAt)}</ConfigItemValue>
                                 </ConfigItem>
-                                <ConfigItem>
-                                    <ConfigItemTitle>Ngày hết hạn</ConfigItemTitle>
-                                    <ConfigItemValue>{formatDateVN(entity?.ExpiredAt)}</ConfigItemValue>
-                                </ConfigItem>
+                                {
+                                    isValidMongoDate(entity?.ExpiredAt) &&
+                                    <ConfigItem>
+                                        <ConfigItemTitle>Ngày hết hạn</ConfigItemTitle>
+                                        <ConfigItemValue>{formatDateVN(entity?.ExpiredAt)}</ConfigItemValue>
+                                    </ConfigItem>
+                                }
+                                
                             </>
                         }
                     </WrapperConfig>
@@ -348,9 +428,12 @@ export default function LandsDetailPage () {
                                                     Id={rs._id}
                                                     Title={rs.Title}
                                                     Price={rs.Price}
+                                                    likeCard={rs?.isFavorite}
+                                                    Login={user}
                                                     Area={rs.Address.Commune.name+" / "+rs.Address.City.name}
                                                     createdAt={formatDate(rs.createdAt)}
-                                                    Img={<img src={rs?.images[0]?.URL}
+                                                    handlelike={handleUpdatelikeitem}
+                                                    Img={<img src={rs?.images[0]?.URL || Noimage}
                                                     alt={`imagebuilding${index}`} className="image-land"/>}
                                                     className="card-small-component"
                                                     Acreage={formatacreage(rs.horizontal,rs.vertical)}
@@ -382,8 +465,8 @@ export default function LandsDetailPage () {
                         <img src={useravatar} alt="avatar"/>
                     </Link>
                 </ImageUser>
-                <Link href="#" style={{flexGrow:1}}>
-                    <ButtonComponent leftIcon={<img src={icon_zalo} alt="zaloicon" style={{width:"25px",height:"25px"}}/>} size="large" textButton={"Chat qua Zalo"} styleButton={{width:"100%"}}/>
+                <Link to={`https://mail.google.com/mail/?view=cm&fs=1&to=${entity?.UserInfo?.email}`} style={{flexGrow:1}}>
+                    <ButtonComponent leftIcon={<img src={icon_google} alt="zaloicon" style={{width:"25px",height:"25px"}}/>} size="large" textButton={"liên hệ qua gmail"} styleButton={{width:"100%"}}/>
                 </Link>
             </InfoContact>
     </LandDetail>

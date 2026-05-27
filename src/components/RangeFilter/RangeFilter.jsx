@@ -3,7 +3,7 @@ import {useState,useEffect} from 'react';
 import { InputNumber,Slider,Radio } from "antd";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import { ArrowRightOutlined,CloseOutlined } from "@ant-design/icons";
-import {RangeFilterWrapper,RangeFilterContentTop,RangeFilterMainContent,RangeFilterContentBottom} from "./style"
+import {RangeFilterWrapper,RangeFilterContentTop,RangeFilterMainContent,RangeFilterContentBottom,OverlayIpad} from "./style"
 
 export default function RangeFilter({
   title,
@@ -99,6 +99,9 @@ export default function RangeFilter({
     }
   }, [typeDropdown]);
   return (
+    <>
+    <OverlayIpad onClick={() => onCloseFilter(null)} />
+
     <RangeFilterWrapper>
       <div>
         <h3>{title}</h3>
@@ -186,5 +189,6 @@ export default function RangeFilter({
         />
       </RangeFilterContentBottom>
     </RangeFilterWrapper>
+    </>
   );
 }

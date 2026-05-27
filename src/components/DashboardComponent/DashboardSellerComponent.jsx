@@ -1,7 +1,8 @@
-import {DashboardSellerTitle,DashboardSellerpropertybyMonth,DashboardChartWapper} from './style';
+import {DashboardSellerTitle,DashboardSellerpropertybyMonth,DashboardChartWapper,ChartContainer,WrapperCardDashboard} from './style';
 import { Line } from '@ant-design/plots';
 import {useState,useEffect} from "react";
 import {getDashboardoverviewSeller} from "../../services/DashboardService";
+import CardDashboardComponent from "../CardDashboardComponent/CardDashboardComponent"
 export default function DashboardSellerComponent ({iduser}) {
     const [propertyBymonth,setPropertyBymonth] = useState([]);
     const [favoriteBymonth,setFavoriteBymonth] = useState([]);
@@ -33,10 +34,14 @@ export default function DashboardSellerComponent ({iduser}) {
                 <h4>Tổng quan</h4>
             </DashboardSellerTitle>
             <DashboardSellerpropertybyMonth>
-                <div>
-                    <h5>Tổng số bài đăng {totalProperty} bài</h5>
-                </div>
-                <div style={{display:"flex",flexDirection:"row",justifyContent:"space-between"}}>
+                <WrapperCardDashboard>
+                    <CardDashboardComponent styleComponent={{
+                        backgroundColor:"#10288C",  
+                    }}
+                        content={`Tổng số bài đăng: ${totalProperty} bài `}
+                    />
+                </WrapperCardDashboard>
+                <ChartContainer>
                     <DashboardChartWapper>
                         <Line
                             data={propertyBymonth}
@@ -59,7 +64,7 @@ export default function DashboardSellerComponent ({iduser}) {
                         />
                         <h5>Biểu đồ số lượt like 4 tháng gần nhất</h5>
                     </DashboardChartWapper>
-                </div>
+                </ChartContainer>
                 
                 {/* <Line data={favoriteBymonth} xField="month" yField="value" /> */}
             </DashboardSellerpropertybyMonth>
