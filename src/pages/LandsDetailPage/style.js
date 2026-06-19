@@ -120,10 +120,17 @@ export const Arrow = styled.div`
     color: #ffffffff
   }
 `;
+export const Titlewrapper = styled.div`
+  width: 100%;
+  display:flex;
+  flex-direction: row;
+  align-items:center;
+  gap: 10px;
+`
 export const Nameland = styled.h1`
   font-family: "Lexend Medium", Roboto, Arial !important;
   font-size: 24px;
-  line-height: 32px;
+  line-height: 25px;
   font-weight: normal !important;
   letter-spacing: -.2px;
   color: #2C2C2C;
@@ -342,32 +349,79 @@ export const ConfigItemValue = styled.span`
 `
 export const WrapperContactBox = styled.div`
   border: 2px solid #F2F2F2;
-  border-radius: 8px;
+  border-radius: 1rem;
   box-shadow: 0px 4px 16px 0px rgba(44, 44, 44, 0.08);
-  padding: 16px 0;
   width: 100%;
+  height:20rem;
+  box-sizing:border-box;
+  padding-bottom:0.2rem;
   max-width: 292px;
+  background-color: #02CBE0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+`
+export const WrapperCtBup = styled.div`
+  width:97%;
+  height: 17rem;
   background-color: #fff;
+  border-radius: 1rem;
+  box-sizing:border-box;
 `
 export const AvatarArea = styled.div`
-  padding: 0 16px 16px;
-  border-bottom: 1px solid #F2F2F2;
+  box-sizing: border-box;
+  width:100%;
+  top:-1.5rem;
+  left:0;
+  padding: 0 17px;
   display: flex;
+  gap:10px;
 `
 export const AgentInfor = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: left;
-  min-width: 48px;
-  margin-right: 12px;
-  & a img {
-    width: 48px;
-    height: 48px;
+  width: 5rem ;
+  margin-top:-32px;
+  z-index: 2;
+  & img {
+    width: 100%;
+    height: 5rem;
   }
 `
 export const AgentName = styled.div`
-  max-width: calc(100% - 60px);
-  align-self: center;
+  max-width: calc(100% - 5rem);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding-bottom:0.5rem;
+  & > span {
+      font-family: Tahoma;
+      font-size:15px;
+      font-weight:400;
+  }
+`
+export const InformationBroker = styled.div`
+  width: 100%;
+  margin: 2rem 0 5px;
+  padding: 5px 10px;
+  display:flex;
+  flex-direction:row;
+  box-sizing:border-box;
+  justify-content:space-between;
+`
+export const DetailInfor = styled.span`
+  width: 45%;
+  text-align:center;
+`
+export const PhoneInfor = styled.span`
+  display:block;
+  margin-top:0.5rem;
+  width: 100%;
+  box-sizing:border-box;
+  font-family:Tahoma;
+  font-size: 25px;
+  font-weight: 500;
+  color: #02CBE0;
+  text-align:center;
 `
 export const ContactLink = styled.div`
   font-family: "Roboto Regular", Roboto, Arial !important;
@@ -427,5 +481,32 @@ export const ImageUser = styled.div`
   & a img {
     width: 48px;
     height: 48px;
+  }
+`
+export const SwitchTypeproperty = styled.div`
+  width: 20rem;
+  height:2.5rem;
+  display:flex;
+  flex-direction:row;
+  border-radius: 30rem;
+  box-sizing: border-box;
+  box-shadow: 2px 2px 8px #ccc,
+    -2px -2px 8px #ccc;
+`
+export const SwitchItem = styled.span`
+  display:block;
+  width:50%;
+  height: 100%;
+  border-radius: 30rem;
+  box-sizing: border-box;
+  font-family: Tahoma;
+  font-weight:400;
+  font-size: 18px;
+  text-align:center;
+  line-height:2.5rem;
+  cursor: pointer;
+  &.active {
+    background-color: #02CBE0;
+    color: #fff;
   }
 `

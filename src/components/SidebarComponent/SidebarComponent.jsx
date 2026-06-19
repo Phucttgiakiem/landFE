@@ -5,12 +5,12 @@ import { useState } from 'react';
 import { useSelector } from "react-redux";
 import {MenuSidebar} from '../../constant/MenuOption';
 import { filterMenu } from './filterMenu';
-
+import userImage from "../../assets/images/user.png"
 const SidebarItem = ({item,level = 0}) => {
     const [open,setOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
-    const isActive = item.path && location.pathname === item.path;
+    const isActive = item.path && location.pathname.includes(item.path);
     const handleClick = () => {
         if(item.children){
             setOpen(prev => !prev);
@@ -74,7 +74,7 @@ export default function SidebarComponent() {
         <WrapperSidebar>
             <UserSection>
                 <span>
-                    <img src="./user.png" alt="User Avatar" />
+                    <img src={userImage} alt="User Avatar" />
                 </span>
                 <h3>{user?.name}</h3>
             </UserSection>

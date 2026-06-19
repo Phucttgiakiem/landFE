@@ -86,6 +86,7 @@ const ListingPage = () => {
                 sort
             });
 
+            
             dispatch(setFiltered({ ...data }));
             dispatch(setLoadingFiltered(false));
         };
@@ -157,7 +158,7 @@ const ListingPage = () => {
                     {
                         isLoading ?
                          <ListCardLoadingMediumComponent/> : 
-                        items && items.length > 0 && 
+                        items && items.length > 0 ? 
                         items.map((vl,index) => (
                             <CardComponent 
                                 idListing={vl._id}
@@ -168,8 +169,10 @@ const ListingPage = () => {
                                 Address={vl?.Address?.Commune?.name+" - "+vl?.Address?.City?.name}
                                 Description={vl?.Description}
                                 ImageCard={vl?.thumbnail}
+                                createdAt={vl?.createdAt}
                             />
-                        ))
+                        )) : 
+                        <span>Không có thông tin tìm thấy</span>
                     }
                 </div>
                 {

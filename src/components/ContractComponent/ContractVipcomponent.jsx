@@ -279,10 +279,8 @@ export default function ContractVipcomponent () {
                         />
                         <ButtonComponent 
                             textButton="Clear Date" 
-                            size="large" 
-                            color="cyan" 
-                            variant="solid"  
-                            styleButton={{width:"50%"}}
+                            size="large"   
+                            styleButton={{width:"50%",backgroundColor:"#9900ff",color:"#ffffff"}}
                             onClick={() => setFilterDate({startDate:null,endDate:null})}
                         />
                     </div>
@@ -421,6 +419,7 @@ export default function ContractVipcomponent () {
             </TabsContainer>
             <Table 
                 columns={columns} 
+                loading={isloading}
                 rowKey={record => record._id}   
                 dataSource={contracts.contract}
                 pagination={{current: contracts.page,pageSize: contracts.limit,total: contracts.total}} 

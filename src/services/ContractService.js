@@ -29,6 +29,7 @@ export const getContractByIdnotiduser = async (idcontract) => {
     return res.data;
 }
 export const updateContract = async (data) => {
+    console.log("data: ",data);
     const res = await axiosJWT.put(`${process.env.REACT_APP_URL_BACKEND}/Contract/updateContract`,data,{
         headers:{
             authorization: `Bearer ${data.token}`,

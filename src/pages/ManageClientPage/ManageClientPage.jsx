@@ -12,28 +12,30 @@ const columns = [
     {
         title: 'Họ và tên',
         dataIndex: 'fullname',
+        width:290,
     },
     {
         title: 'Điện thoại',
         dataIndex: 'phone',
+        width:200,
     },
     {
         title: 'Ngày tham gia',
         dataIndex: 'createdAt',
         render: (value) => formatDateVN(value),
-
-        // chỉ khai báo true để bật sort UI
+        width:250,
         sorter: true,
     },
     {
         title: 'Ngày cập nhật gần đây',
         dataIndex: 'updatedAt',
         render: (value) => formatDateVN(value),
+        width:250,
     },
     {
         title: 'Quyền',
         dataIndex: 'role',
-
+        width: 150,
         filters: [
             {
                 text: 'Khách',
@@ -48,6 +50,7 @@ const columns = [
     {
         title: 'Hành động',
         key: 'x',
+        width:260,
         render: (_, record) => (
             <Space>
                 <Link
@@ -150,7 +153,7 @@ export default function ManageClientPage () {
                         columns={columns}
                         dataSource={listClient.items}
                         rowKey="_id"
-
+                        scroll={{ x: 950 }}
                         pagination={{
                             current: listClient.pageCurrent,
                             pageSize: listClient.limit,

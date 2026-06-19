@@ -6,6 +6,7 @@ import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import ForgotPassPage from "../pages/ForgotPassPage/ForgotPassPage";
 import LandsDetailPage from "../pages/LandsDetailPage/LandsDetailPage";
 import Profile from "../pages/Profile/Profile";
+import ProfileBrokerPage from "../pages/ProfileBrokerPage/ProfileBrokerPage";
 import Changepass from "../pages/Changepass/Changepass";
 import ManageListing from "../pages/ManageListing/ManageListing";
 import CreateListing from "../pages/CreateListing/CreateListing";
@@ -20,6 +21,9 @@ import DetailContract from "../pages/DetailContract/DetailContract";
 import Profitpage from "../pages/Profitpage/Profitpage";
 import ManageClientPage from "../pages/ManageClientPage/ManageClientPage";
 import DetailUserpage from "../pages/DetailUser/DetailUserpage";
+import ResendVerificationPage from "../pages/ResendVerificationPage/ResendVerificationPage";
+import VerifyEmailPage from "../pages/VerifyEmailPage/VerifyEmailPage";
+import forgetPasswordPage from "../pages/ForgotPassPage/ForgotPassPage";
 export const routes = [
     {
         path: "/",
@@ -58,6 +62,12 @@ export const routes = [
         isShowSidebar: false
     },
     {
+        path: "/forgot-password",
+        page: forgetPasswordPage,
+        isShowHeader: false,
+        isShowSidebar: false
+    },
+    {
         path: "/lands-detail/:id",
         page: LandsDetailPage,
         isShowHeader: true,
@@ -68,6 +78,24 @@ export const routes = [
         page: ForgotPassPage,
         isShowHeader: false,
         isShowSidebar: false
+    },
+    {
+        path:"/resend-verification",
+        page: ResendVerificationPage,
+        isShowHeader: false,
+        isShowSidebar: false
+    },
+    {
+        path: "/verify-email",
+        page: VerifyEmailPage,
+        isShowHeader: false,
+        isShowSidebar: false
+    },
+    {
+        path: "/profile-broker",
+        page: ProfileBrokerPage,
+        isShowHeader: true,
+        isShowSidebar: false,
     },
     {
         path: "/profile-user",
@@ -94,7 +122,7 @@ export const routes = [
         allowedRoles: ["user","sell-user","admin"]
     },
     {
-        path: '/create-listing',
+        path: '/manage-listing/create-listing',
         page: CreateListing,
         isShowHeader: true,
         isShowSidebar: true,
@@ -102,7 +130,7 @@ export const routes = [
         allowedRoles:["sell-user","admin"]
     },
     {
-        path: '/Detail-listing/:id',
+        path: '/manage-listing/Detail-listing/:id',
         page:DetailListing,
         isShowHeader: true,
         isShowSidebar: true,
@@ -110,7 +138,7 @@ export const routes = [
         allowedRoles:["sell-user","admin"]
     },
     {
-        path: '/Edit-listing/:id',
+        path: '/manage-listing/Edit-listing/:id',
         page:EditListing,
         isShowHeader:true,
         isShowSidebar:true,
@@ -118,7 +146,7 @@ export const routes = [
         allowedRoles:["sell-user","admin"]
     },
     {
-        path: '/Delete-listing',
+        path: '/manage-listing/Delete-listing',
         page: DeleteListingPage,
         isShowHeader: true,
         isShowSidebar: true,

@@ -96,13 +96,6 @@ export default function CreateListing() {
             ...prev,
             Price: normalizeNumber(value)
         }))
-        /* if(errors.Price){
-            setErrors((prev) => {
-                const newErrors = {...prev};
-                delete newErrors.Price;
-                return newErrors;
-            });
-        } */
     }
     const handleChangeLength = (value) => {
         setFormdata(prev => ({
@@ -209,7 +202,6 @@ export default function CreateListing() {
         }
     }
     const handleChangeTypeRealEstate = (value) => {
-        console.log("selected value: ", value);
         setFormdata(prev => ({
             ...prev,
             CatagoryProperty:value

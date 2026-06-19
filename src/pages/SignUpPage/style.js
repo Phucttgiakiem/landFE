@@ -44,23 +44,16 @@ export const WrapperContainerRight = styled.div`
         margin-top: 0px;
         margin-bottom: 20px;
     }
-    .btn-login {
+    .btn-signup {
         margin-top: 24px;
-        background-color:#c0c0c0;
+        background-color:#02CBE0;
         color:#fff;
         font-weight:700;
         border:none
     }
-    .btn-login.active {
-        background-color: #02CBE0;
-    }
-    .btn-login.active:hover {
+    
+    .btn-signup:hover {
         background-color: rgba(2,232,244,2);
-    }
-
-    .btn-login.disabled:hover {
-        
-        background-color: #c0c0c0;
     }
     & .signup_member {
         display: flex;
@@ -101,7 +94,6 @@ export const Signupcontainer = styled.div`
 `
 export const WrapperTypeUser = styled.div`
     width:100%;
-    height: 20rem;
     padding: 1rem 0;
     display: flex;
     flex-direction:row;
@@ -185,4 +177,22 @@ export const WrapperAnotherSignin = styled.div`
         color: rgb(153, 153, 153);
     }
   }
+`
+export const PanelField = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction:column;
+    gap: 10px;
+    & > .note-text {
+        display: block;
+        font-size: 13px;
+        color: rgb(179, 179, 179)
+    }
+`
+export const WrapperInformationSuccess = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction:row;
+    gap: 16px;
+    align-items: center;
 `

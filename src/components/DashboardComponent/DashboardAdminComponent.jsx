@@ -43,26 +43,100 @@ export default function DashboardAdminComponent () {
                 </WrapperCardDashboard>
                 <ChartContainer>
                     <DashboardChartWapper>
-                        <Line
-                            data={propertybymonth}
-                            xField="month"
-                            yField="value"
-                            seriesField="type"
-                            height={400}
-                            tooltip={{ shared: true }}
-                        />
-                        <h5>Biểu đồ số bài đăng trong 12 tháng gần nhất</h5>
+                        <div style={{ minWidth: '800px' }}>
+                            <Line
+                                data={propertybymonth}
+                                xField="month"
+                                yField="value"
+                                seriesField="type"
+                                height={400}
+                                colorField="rgb(75,0, 144)"
+                                tooltip={{ shared: true }}
+                                style={{
+                                    lineWidth: 2,
+                                }}
+                                point={{
+                                    shapeField: 'square',
+                                    sizeField:4,
+                                    animate: {
+                                        enter: {
+                                        type: 'fadeIn',
+                                        duration: 500,
+                                        },
+                                    },
+                                }}
+                                animate = {{ enter : { type : 'pathIn' , duration : 3000 } }}
+                                axis={{
+                                    x: {
+                                        line:true,
+                                        arrow: true,
+                                        title: "Time",
+                                        titleFontSize: 16,
+                                        titleFontWeight: 300,
+                                        labelAutoHide: true,
+                                        labelAutoRotate: false,
+                                    },
+                                    y: {
+                                        line:true,
+                                        arrow : true,
+                                        title: "Total Post",
+                                        titleFontSize: 16,
+                                        titleFontWeight: 300,
+                                        gridLineDash: [20,5],
+                                    },
+
+                                }}
+                            />
+                            <h5 style={{width:"100%",textAlign:"center"}}>Biểu đồ số bài đăng trên hệ thống trong 12 tháng gần nhất</h5>
+                        </div>
                     </DashboardChartWapper>
                     <DashboardChartWapper>
-                        <Line
+                        <div style={{ minWidth: '800px' }}> 
+                                <Line
                             data={userbymonth}
                             xField="month"
                             yField="value"
                             seriesField="type"
                             height={400}
                             tooltip={{ shared: true }}
+                             colorField="rgb(16, 40, 140)"
+                                style={{
+                                    lineWidth: 2,
+                                }}
+                                point={{
+                                    shapeField: 'square',
+                                    sizeField:4,
+                                    animate: {
+                                        enter: {
+                                        type: 'fadeIn',
+                                        duration: 500,
+                                        },
+                                    },
+                                }}
+                                animate = {{ enter : { type : 'pathIn' , duration : 3000 } }}
+                                axis={{
+                                    x: {
+                                        line:true,
+                                        arrow: true,
+                                        title: "Time",
+                                        titleFontSize: 16,
+                                        titleFontWeight: 300,
+                                        labelAutoHide: true,
+                                        labelAutoRotate: false,
+                                    },
+                                    y: {
+                                        line:true,
+                                        arrow : true,
+                                        title: "Total account",
+                                        titleFontSize: 16,
+                                        titleFontWeight: 300,
+                                        gridLineDash: [20,5],
+                                    },
+
+                                }}
                         />
-                        <h5>Biểu đồ số tài khoản đăng ký mới trong 12 tháng gần nhất</h5>
+                        <h5 style={{width:"100%",textAlign:"center"}}>Biểu đồ số tài khoản đăng ký mới trong 12 tháng gần nhất</h5>
+                        </div>
                     </DashboardChartWapper>
                 </ChartContainer>
             </DashboardAdminpropertybyMonth>

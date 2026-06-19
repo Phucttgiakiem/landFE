@@ -3,14 +3,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBed,faBath,faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import flagnew from "../../assets/images/newlogo.png"
 import DOMPurify from "dompurify";
+import {comparedateInputwithtoday} from "../../utils";
 import { useNavigate } from 'react-router-dom';
-export const CardComponent = ({idListing,Title,Price,Area,Address,Bedroom,Bathroom,Description,ImageCard}) => {
+export const CardComponent = ({idListing,Title,Price,Area,Address,Bedroom,Bathroom,Description,ImageCard,createdAt}) => {
     const navigate = useNavigate()
     return (
         <WrapperCard>
             <LeftCard>
                 <img style={{width:"100%",height:"100%"}}  src={ImageCard} alt="Property exterior"/>
-                <NewLogo src={flagnew} alt="new"/>
+                {comparedateInputwithtoday(createdAt) && <NewLogo src={flagnew} alt="new"/>}
             </LeftCard>
             <RightCard>
                 <TitleCard onClick={() => navigate("/lands-detail/"+idListing)}>

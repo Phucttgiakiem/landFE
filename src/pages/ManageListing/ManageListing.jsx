@@ -3,7 +3,7 @@ import { WrapperManageListing,ManageListingContainer,
     ,SearchButton,TabsContainer,TabButton,ManageListingBody,Selectownerproperty,WrapperCreateandtrash } from "./style";
 import {SearchOutlined,RestOutlined} from '@ant-design/icons';
 import { Table,Space,Badge,Select} from "antd";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate,Link,useSearchParams } from "react-router-dom";
 import {useEffect,useState} from "react";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import {useMessage} from "../../components/Message/Message";
@@ -69,7 +69,7 @@ const tabsData = [
         }
     }
 ]
-const getColumns = (handleDelete,iduser) => [
+const getColumns = (handleDelete,iduser,selectedowner) => [
     {
         title: 'Tên bất động sản',
         dataIndex: 'Title',
@@ -101,8 +101,8 @@ const getColumns = (handleDelete,iduser) => [
         render: (_, record) => 
             <Space>
                 {record?.User === iduser && <span style={{cursor: 'pointer'}} onClick={() => handleDelete(record._id)}>Delete</span>}
-                <Link to={`/Edit-listing/${record._id}`}>Edit</Link>
-                <Link to={`/Detail-listing/${record._id}`} state={{ from: "listings" }}>Detail</Link>
+                <Link to={`/manage-listing/Edit-listing/${record._id}?owner=${selectedowner}`}>Edit</Link>
+                <Link to={`/manage-listing/Detail-listing/${record._id}?owner=${selectedowner}`} state={{ from: "listings" }}>Detail</Link>
             </Space>,
         width:210
         
@@ -114,9 +114,15 @@ export default function ManageListing() {
     const [keywordfind,setKeywordfind] = useState("");
     const [loading,setLoading] = useState(false);
     const [listowner,setListowner] = useState([]);
-    const [selectedowner,setSelectedowner] = useState("");
-    const Listing = useSelector(state => state.listing);
+   // const [selectedowner,setSelectedowner] = useState("");
     const user = useSelector(state => state.user);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const selectedowner =
+        searchParams.get("owner") ||
+        `${user?.id}`;
+    
+    const Listing = useSelector(state => state.listing);
+    const token = localStorage.getItem("access_token");
     const dispatch = useDispatch();
     const message = useMessage();
     const navigate = useNavigate();
@@ -137,9 +143,9 @@ export default function ManageListing() {
     const handleDelete = (arrid) => {
         setLoading(true);
         if(Array.isArray(arrid)) {
-            mutation.mutate({arrid: arrid,typedelete:'soft'});
+            mutation.mutate({arrid: arrid,typedelete:'soft',token:token,id:user?.id});
         }else {
-            mutation.mutate({arrid: [arrid],typedelete:'soft'});
+            mutation.mutate({arrid: [arrid],typedelete:'soft',token:token,id:user?.id});
         }
     };
     const onSelectChange = (newSelectedRowKeys) => {
@@ -175,7 +181,7 @@ export default function ManageListing() {
             }
         ]
     }
-    const columns = getColumns(handleDelete,user?.id);
+    const columns = getColumns(handleDelete,user?.id,selectedowner);
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -188,7 +194,7 @@ export default function ManageListing() {
                 "filter",
                 JSON.stringify({
                     ...Listing.filter,
-                    User: selectedowner.split("-")[0] || user.id 
+                    User:user.role !== "admin" ? user.id : selectedowner.split("-")[0]  
                 })
             );
             searchParams.append("sort",
@@ -245,13 +251,12 @@ export default function ManageListing() {
     }, []);
     useEffect (() =>{
         fetchData();
-    },[Listing?.page,Listing?.filter,Listing?.sort,selectedowner]);
+    },[Listing?.page,Listing?.filter,Listing?.sort,selectedowner,user?.id]);
     useEffect (() => {
         const fetchData = async () => {
             try {
                 const response = await getAllowner(user?.access_Token);
                 setListowner(response.owner);
-                setSelectedowner(`${user?.id}-${user?.role}`)
             }catch(e){
                 console.log(e)
             }
@@ -300,10 +305,25 @@ export default function ManageListing() {
                                         value={selectedowner}
                                         options={
                                             listowner.map(item => (
-                                                {value:item._id+"-"+item.role,label:item.fullname+" - "+item.phone}
+                                                {value:item._id,label:item.fullname+" - "+item.phone}
                                             ))
                                         }
-                                        onChange={value => value === undefined ? setSelectedowner(`${user?.id}-${user?.role}`) : setSelectedowner(value)}
+                                        onChange={(value) => {
+                                            setSearchParams(prev => {
+                                                const params = new URLSearchParams(prev);
+
+                                                if (!value) {
+                                                    params.set(
+                                                        "owner",
+                                                        `${user?.id}`
+                                                    );
+                                                } else {
+                                                    params.set("owner", value);
+                                                }
+
+                                                return params;
+                                            });
+                                        }}
                                         allowClear
                                     />
                                 </Selectownerproperty>
@@ -311,12 +331,12 @@ export default function ManageListing() {
                             
                             <WrapperCreateandtrash>
                                 {
-                                selectedowner.split("-")[0] === user?.id && 
+                                (selectedowner === user?.id || user?.role !== "admin") && 
                                     <Badge count={Listing.itemdeleted} className="btn-trash">
                                         <ButtonComponent 
                                             size="large" 
                                             textButton={<RestOutlined style={{fontSize: 24}}/>}
-                                            onClick={() => { navigate('/Delete-listing')}}    
+                                            onClick={() => { navigate(`/manage-listing/Delete-listing?owner=${selectedowner}`)}}    
                                         />
                                     </Badge>
                                 }
@@ -325,7 +345,7 @@ export default function ManageListing() {
                                     size="large" 
                                     color="danger" 
                                     variant="solid"
-                                    onClick={() => navigate('/create-listing')}    
+                                    onClick={() => navigate('/manage-listing/create-listing')}    
                                 />
                             </WrapperCreateandtrash>
                         </ManageListingHeaderContent>

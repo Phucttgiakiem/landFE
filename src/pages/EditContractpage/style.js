@@ -7,6 +7,11 @@ export const WrapperUpdateContract = styled.div`
     padding: 20px;
     background-color: #e3e3e3;
     min-height: calc(100vh - 90px);
+    @media screen and (max-width: 1199px) {
+        width: 100%;
+        margin-left: 0;
+        min-height: 100vh;
+    }
 `
 export const UpdateContractContainer = styled.div`
     width: 100%;
@@ -16,6 +21,10 @@ export const UpdateContractContainer = styled.div`
     border-radius: 8px;
     display: flex;
     flex-direction: column;
+    @media screen and (max-width: 1199px) {
+        margin-top: 6.5rem;
+        min-height:calc(100vh - 6.5rem - 40px)
+    }
 `
 export const UpdateContractHeader = styled.div`
     width: 100%;
@@ -53,5 +62,22 @@ export const MainContentofContract = styled.div`
     gap:20px;
     & > div {
         width:100%;
+    }
+`
+export const WrapperDatecreateContractipad = styled.div`
+    width:100%;
+    height:max-content;
+    @media screen and (max-width: 767px){
+        display:none;
+    }
+`
+export const WrapperDatecreateContractmobile = styled.div`
+    width:100%;
+    height:max-content;
+    display:flex;
+    flex-direction:row;
+    gap:5px;
+    @media screen and (min-width: 768px){
+        display:none;
     }
 `

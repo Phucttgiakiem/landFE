@@ -14,6 +14,7 @@ import dayjs from 'dayjs'
 export default function Profile() {
     const message = useMessage();
     const user = useSelector(state => state.user);
+    const token = localStorage.getItem("access_token");
     const [updatefieldform,setUpdatefieldform] = useState({
         editName:false,
         editPhone:false,
@@ -122,7 +123,7 @@ export default function Profile() {
         handleUpdateformdata(user,"create");
     }, [user])
     const handleUpdate = () => {
-        mutation.mutate({ id: user?.id, ...formData ,access_token: user?.access_Token })
+        mutation.mutate({ id: user?.id, ...formData ,access_token: token })
 
     }
     const handleGetDetailsUser = async (id, token) => {

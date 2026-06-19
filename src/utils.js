@@ -115,6 +115,48 @@ export const parseQuery = (search) => {
         areaMax: getNumber(params.get("areaMax")),
     };
 };
+export const getJoinedTime = (createdAt) => {
+    const joinDate = new Date(createdAt);
+    const now = new Date();
+
+    let years = now.getFullYear() - joinDate.getFullYear();
+    let months = now.getMonth() - joinDate.getMonth();
+    let days = now.getDate() - joinDate.getDate();
+
+    if (days < 0) {
+        months--;
+        const prevMonth = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            0
+        ).getDate();
+        days += prevMonth;
+    }
+
+    if (months < 0) {
+        years--;
+        months += 12;
+    }
+
+    const result = [];
+
+    if (years > 0) result.push(`${years} năm`);
+    if (months > 0) result.push(`${months} tháng`);
+    if (days > 0) result.push(`${days} ngày`);
+
+    return result.length > 0
+        ? `${result.join(" ")}`
+        : "Mới tham gia";
+};
+export const comparedateInputwithtoday = (date) => {
+    const joinDate = new Date(date);
+    const now = new Date();
+
+    if(joinDate.getFullYear() < now.getFullYear() ) return false;
+    else if(joinDate.getMonth() < now.getMonth()) return false;
+    else if (now.getDate() - joinDate.getDate > 14) return false;
+    else return true;
+}
 export const toSlug = (str) => {
   return str
     .normalize("NFD")

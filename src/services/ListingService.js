@@ -13,25 +13,53 @@ export const updateListing = async (id,data,access_token) => {
     return res;
 }
 export const softDeleteListing = async (data) => {
-    const res = await axios.patch(`${process.env.REACT_APP_URL_BACKEND}/Listing/softdelete-listing`,data);
+    const {arrid,typedelete,token,id} = data; 
+    const res = await axiosJWT.patch(`${process.env.REACT_APP_URL_BACKEND}/Listing/softdelete-listing/${id}`,{
+        arrid: arrid,
+        typedelete:typedelete
+    },{
+        headers: {
+            authorization: `Bearer ${token}`,
+        }
+    });
     return res;
 }
 export const restoreListing = async (data) => {
-    const res = await axios.patch(`${process.env.REACT_APP_URL_BACKEND}/Listing/restore-listing`,data);
+    const {arrid,id,token} = data;
+    const res = await axiosJWT.patch(`${process.env.REACT_APP_URL_BACKEND}/Listing/restore-listing/${id}`,arrid,{
+        headers: {
+            authorization: `Bearer ${token}`,
+        }
+    });
     return res;
 }
 export const hardDeleteListing = async (data) => {
-    const res = await axios.delete(`${process.env.REACT_APP_URL_BACKEND}/Listing/delete-listing`,{data});
+    const {arrid,id,token,typedelete} = data
+    console.log("arr: ",arrid);
+    const res = await axiosJWT.delete(`${process.env.REACT_APP_URL_BACKEND}/Listing/delete-listing/${id}`,{
+        data: {
+            arrid,
+            typedelete
+        },
+        headers: {
+            authorization: `Bearer ${token}`,
+        }
+    });
     return res;
 }
 export const getAllmeListing = async (searchParams)=> {
+    
     const res = await axios.get(
         `${process.env.REACT_APP_URL_BACKEND}/Listing/me/getAll?${searchParams.toString()}`);
     return res;
 }
-export const getAllDeletedListing = async (searchParams) => {
-    const res = await axios.get(
-        `${process.env.REACT_APP_URL_BACKEND}/Listing/me/getAllDeleted?${searchParams.toString()}`);
+export const getAllDeletedListing = async (searchParams,id,access_token) => {
+    const res = await axiosJWT.get(
+        `${process.env.REACT_APP_URL_BACKEND}/Listing/me/getAllDeleted/${id}?${searchParams.toString()}`,{
+            headers: {
+                authorization: `Bearer ${access_token}`,
+            }
+        });
     return res;
 }
 export const getListing = async (idlist) => {

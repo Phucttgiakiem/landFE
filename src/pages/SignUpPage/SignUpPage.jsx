@@ -1,10 +1,12 @@
-import { WrapperContainerLeft,WrapperContainerRight,WrapperAnotherSignin,WrapperSignup,Signupcontainer,WrapperTypeUser,WrapperSignUpPage } from "./style";
+import { WrapperContainerLeft,WrapperContainerRight,
+  WrapperSignup,Signupcontainer,WrapperTypeUser,
+  WrapperSignUpPage,PanelField,WrapperInformationSuccess } from "./style";
 import {IdcardOutlined,LockOutlined} from '@ant-design/icons';
 import { faUsers,faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import logo from "../../assets/images/real_state.png";
 import backgroundland from "../../assets/images/building_home.jpg";
-import GoogleIcon from "../../assets/images/google.png";
+import Icon_success from "../../assets/images/icons_success.png";
 import InputForm from "../../components/InputForm/InputForm";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import Loading from "../../components/LoadingComponent/Loading";
@@ -14,62 +16,177 @@ import * as UserService from "../../services/UserService";
 import { useMessage } from "../../components/Message/Message";
 import {useState,useEffect} from 'react';
 export default function SignUpPage () {
-  const [name,setName] = useState("");
-  const [email,setEmail] = useState("");
-  const [phone,setPhone] = useState("");
-  const [address,setAddress] = useState("");
-  const [password,setPassword] = useState("");
-  const [confirmPassword,setConfirmPassword] = useState("");
-  const [typeuser,setTypeuser] = useState(null);
+ 
+  const [errors,setErrors] = useState({});
+  const [formdata,setFormdata] = useState({
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+      password: "",
+      confirmPassword: "",
+      typeuser: null,
+  })
+  const checkEmail = (email) => {
+      const reg = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      return reg.test(email);
+  }
+  const checkPass = (pass) => {
+      const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])(?=\S+$).{8,16}$/
+      return reg.test(pass);
+  }
   const message = useMessage();
   const navigate = useNavigate();
   const handleLogin = (e) => {
     e.preventDefault();
     navigate("/sign-in");
   }
+  const validate = () => {
+      let newErrors = {};
+      if(!formdata.name.trim()){
+         newErrors.name = "Vui lòng nhập họ tên"
+      }
+      if(!formdata.email.trim()){
+         newErrors.email = "Vui lòng nhập email"
+      }else if(!checkEmail(formdata.email.trim())){
+          newErrors.email = "Email không đúng định dạng"
+      }
+      if(!formdata.phone.trim()){
+         newErrors.phone = "Vui lòng nhập số điện thoại"
+      }
+      if(!formdata.address.trim()){
+          newErrors.address = "Vui lòng nhập địa chỉ"
+      }
+      if(!formdata.password.trim()){
+          newErrors.password = "Vui lòng nhập password"
+      }else if (!checkPass(formdata.password.trim())){
+          newErrors.password = "Mật khẩu không đúng định dạng"
+      }
+      if(!formdata.confirmPassword.trim()){
+          newErrors.confirmPassword = "Vui lòng nhập Confirmpassword"
+      }else if (formdata.confirmPassword !== formdata.password){
+          newErrors.confirmPassword = "confirmpassword không khớp với password"
+      }
+      if(!formdata.typeuser){
+          newErrors.typeuser = "Vui lòng chọn một trong hai loại tài khoản"
+      }
+      return newErrors;
+  }
   const handleOnChangeName = (value) => {
-    setName(value);
+      setFormdata(prev => ({
+          ...prev,
+          name: value
+      }));
+      if(errors.name){
+          setErrors((prev) => {
+                const newErrors = {...prev};
+                delete newErrors.name;
+                return newErrors;
+          });
+      }
   }
   const handleOnChangeEmail = (value) => {
-    setEmail(value);
+      setFormdata(prev => ({
+          ...prev,
+          email: value
+      }));
+      if(errors.email){
+          setErrors((prev) => {
+              const newErrors = {...prev};
+              delete newErrors.email;
+              return newErrors;
+          })
+      }
   }
   const handleOnChangePhone = (value) => {
-    setPhone(value);
+      setFormdata(prev => ({
+        ...prev,
+        phone: value
+      }));
+      if(errors.phone){
+          setErrors(prev => {
+            const newErrors = {...prev};
+            delete newErrors.phone;
+            return newErrors;
+          })
+      }
   }
   const handleOnChangeAddress = (value) => {
-    setAddress(value);
+      setFormdata(prev => ({
+          ...prev,
+          address: value
+      }));
+      if(errors.address){
+          setErrors(prev => {
+              const newErrors = {...prev};
+              delete newErrors.address;
+              return newErrors;
+          })
+      }
   }
   const handleOnChangePassword = (value) => {
-    setPassword(value);
+      setFormdata(prev => ({
+          ...prev,
+          password: value
+      }));
+      if(errors.password){
+          setErrors(prev => {
+            const newErrors = {...prev};
+            delete newErrors.password;
+            return newErrors;
+          })
+      }
   }
   const handleOnChangeConfirmPassword = (value) => {
-    setConfirmPassword(value);
+      setFormdata(prev => ({
+          ...prev,
+          confirmPassword:value
+      }));
+      if(errors.confirmPassword){
+          setErrors(prev => {
+            const newErrors = {...prev};
+            delete newErrors.confirmPassword;
+            return newErrors;
+          })
+      }
   }
-  const handleSignUp = () => {
-      mutation.mutate(
-        {
-          email, 
-          password,
-          fullname: name,
-          confirmPassword,
-          phone,
-          address,
-          typeuser
-        }
-      );
-    }
+  const handleOnChangeTypeuser = (value) => {
+      setFormdata(prev => ({
+          ...prev,
+          typeuser: prev.typeuser === value ? null : value
+      }));
+      if(errors.typeuser){
+          setErrors(prev => {
+              const newErrors = {...prev};
+              delete newErrors.typeuser;
+              return newErrors;
+          })
+      }
+  }
+  
     const mutation = useMutationHook(
         data => UserService.signupUser(data)
     );
-    const {isPending,data,isSuccess,isError} = mutation;
+    const {isPending,data,isSuccess,isError,error} = mutation;
+    const handleSignUp = () => {
+      const newErrors = validate();
+        if(Object.keys(newErrors).length > 0){
+            setErrors(newErrors);
+            return;
+        }
+      mutation.mutate(
+        {...formdata}
+      );
+    }
     useEffect(() => {
       if(isSuccess) {
-        message.success();
-        navigate("/sign-in");
+        console.log(data);
+        message.success(`${data?.message}`);
       }else if(isError) {
-        message.error();
+        setErrors({[error?.response?.data?.errorfield]:error?.response?.data.message});
+        message.error(error?.response?.data.message);
       }
-    },[isSuccess,isError]);
+    },[isSuccess,isError,data,error]);
   return (
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center',background:'rgba(0,0,0,0.53)',height: '100vh'}}>
         <WrapperSignUpPage>
@@ -85,48 +202,155 @@ export default function SignUpPage () {
             <div>
                 <h5>Xin chào bạn</h5>
                 <h3>Đăng ký tài khoản mới</h3>
-                <WrapperSignup>
-                  <Signupcontainer>
-                      <InputForm placeholder={"Nhập họ tên"} size={"large"} prefix={<IdcardOutlined />} TypePassword={false} style={{marginRight: '10px'}} value={name} handleOnChange={handleOnChangeName}/>
-                      <InputForm placeholder={"Nhập địa chỉ email"} size={"large"} prefix={<IdcardOutlined />} TypePassword={false} style={{marginRight: '10px'}} value={email} handleOnChange={handleOnChangeEmail} />
-                      <InputForm placeholder={"Nhập số điện thoại"} size={"large"} prefix={<IdcardOutlined />} TypePassword={false} style={{marginRight: '10px'}} value={phone} handleOnChange={handleOnChangePhone}/>
-                      <InputForm placeholder={"Nhập địa chỉ"} size={"large"} prefix={<IdcardOutlined />} TypePassword={false} style={{marginRight: '10px'}} value={address} handleOnChange={handleOnChangeAddress}/>
-                      <InputForm placeholder={"Nhập password"} size={"large"} prefix={<LockOutlined />} TypePassword={true} style={{marginRight: '10px'}} value={password} handleOnChange={handleOnChangePassword}/>
-                      <InputForm placeholder={"Nhập lại password"} size={"large"} prefix={<LockOutlined />} TypePassword={true} style={{marginRight: '10px'}} value={confirmPassword} handleOnChange={handleOnChangeConfirmPassword}/>
-                      <WrapperTypeUser>
-                          <div className={`btn-choosetype ${typeuser === "sell-user" ? "active" : ""}`} onClick={()=> setTypeuser(prev => prev === "sell-user" ? null : "sell-user") }>
-                            <FontAwesomeIcon icon={faUsers} />
-                            <span>Bên bán</span>
-                          </div>
-                          <div className={`btn-choosetype ${typeuser === "user" ? "active" : ""}`} onClick={() => setTypeuser(prev => prev === "user" ? null : "user")}>
-                            <FontAwesomeIcon icon={faUser} />
-                            <span>Khách</span>
-                          </div>
-                      </WrapperTypeUser>
-                  </Signupcontainer>
-                </WrapperSignup>
-                {data?.status === "ERR" && <span style={{ color: "red"}}>{data?.message}</span>}
-                <Loading isLoading={isPending}> 
-                  <ButtonComponent 
-                    disabled={!name.length || !email.length || !phone.length || !address.length || !password.length || !confirmPassword.length}
-                    className={`btn-login ${!name.length || !email.length || !phone.length || !address.length || !password.length || !confirmPassword.length || !typeuser ?'disabled' : 'active'}`} 
-                    size="large" 
-                    textButton={"Đăng ký"} 
-                    styleButton={{width:"100%"}}
-                    onClick={handleSignUp}
-                    />
-                </Loading>
-                {/* <WrapperAnotherSignin>
-                    <div></div>
-                    <div>
-                        <div className="another_option">Hoặc</div>
-                    </div>
-                </WrapperAnotherSignin>
-                <ButtonComponent size="large" 
-                  leftIcon={<img src={GoogleIcon} alt="icon-google" width="16" height="16" 
-                  style={{display:"flex",flexDirection:"column",alignItems:'center'}} />} 
-                  textButton={"Đăng ký tài khoản với Google"} 
-                  styleButton={{width:"100%", marginTop:"1rem", display:"flex",flexDirection:"row",alignItems:"center"}}/> */}
+                {
+                  data ? 
+                  <WrapperInformationSuccess>
+                        <img src={Icon_success} alt="icon success" style={{width: '40px', height: '40px'}}/>
+                        <span style={{ color: "green", marginBottom: "8px",margin: 0 }}>{data?.message}</span>
+                    </WrapperInformationSuccess> : (
+                    <>
+                      <WrapperSignup>
+                        <Signupcontainer>
+                          <PanelField>
+                            <InputForm 
+                              placeholder={"Nhập họ tên"} 
+                              size={"large"} 
+                              status={errors.name ? "error" : ""}
+                              prefix={<IdcardOutlined />} 
+                              TypePassword={false} 
+                              style={{marginRight: '10px'}} 
+                              value={formdata.name} 
+                              handleOnChange={handleOnChangeName}
+                            />
+                            {
+                              errors.name && (
+                                  <span style={{ color: "red", marginBottom: 10 }}>
+                                      {errors.name}
+                                  </span>
+                              )
+                            }            
+                          </PanelField>
+                          <PanelField>
+                            <InputForm 
+                              placeholder={"Nhập địa chỉ email"} 
+                              size={"large"} 
+                              status={errors.email ? "error" : ""}
+                              prefix={<IdcardOutlined />} 
+                              TypePassword={false} 
+                              style={{marginRight: '10px'}} 
+                              value={formdata.email} 
+                              handleOnChange={handleOnChangeEmail} />
+                            {
+                              errors.email && (
+                                  <span style={{ color: "red", marginBottom: 10 }}>
+                                      {errors.email}
+                                  </span>
+                              )
+                            } 
+                          </PanelField>
+                          <PanelField>
+                            <InputForm 
+                              placeholder={"Nhập số điện thoại"} 
+                              size={"large"} 
+                              status={errors.phone ? "error": ""}
+                              prefix={<IdcardOutlined />} 
+                              TypePassword={false} 
+                              style={{marginRight: '10px'}} 
+                              value={formdata.phone} handleOnChange={handleOnChangePhone}/>
+                            {
+                              errors.phone && (
+                                  <span style={{ color: "red", marginBottom: 10 }}>
+                                      {errors.phone}
+                                  </span>
+                              )
+                            }
+                          </PanelField>
+                          <PanelField>
+                            <InputForm 
+                              placeholder={"Nhập địa chỉ"} 
+                              status={errors.address ? "error" : ""}
+                              size={"large"} 
+                              prefix={<IdcardOutlined />} 
+                              TypePassword={false} 
+                              style={{marginRight: '10px'}} 
+                              value={formdata.address} handleOnChange={handleOnChangeAddress}/>
+                            {
+                              errors.address && (
+                                  <span style={{ color: "red", marginBottom: 10}}>
+                                      {errors.address}
+                                  </span>
+                              )
+                            }
+                          </PanelField>
+                          <PanelField>
+                            <InputForm 
+                              placeholder={"Nhập password"} 
+                              status={errors.password ? "error" : ""}
+                              size={"large"} 
+                              prefix={<LockOutlined />} 
+                              TypePassword={true} 
+                              style={{marginRight: '10px'}} 
+                              value={formdata.password} handleOnChange={handleOnChangePassword}/>
+                              <span className="note-text">Mật khẩu phải có từ 8 đến 16 ký tự, bao gồm chữ cái hoa đầu chuỗi, 
+                                      chữ cái thường và số, ít nhất một ký tự đặc biệt trong nhóm này @$!%*?&</span>
+                            {
+                              errors.password && (
+                                  <span style={{ color: "red", marginBottom: 10}}>
+                                      {errors.password}
+                                  </span>
+                              )
+                            }
+                          </PanelField>
+                          <PanelField>
+                            <InputForm 
+                              placeholder={"Nhập lại password"} 
+                              status={errors.confirmPassword ? "error": ""}
+                              size={"large"} 
+                              prefix={<LockOutlined />} 
+                              TypePassword={true} 
+                              style={{marginRight: '10px'}} 
+                              value={formdata.confirmPassword} handleOnChange={handleOnChangeConfirmPassword}/>
+                            {
+                              errors.confirmPassword && (
+                                  <span style={{ color: "red", marginBottom: 10}}>
+                                      {errors.confirmPassword}
+                                  </span>
+                              )
+                            }
+                          </PanelField>
+                          <PanelField>
+                            <WrapperTypeUser>
+                                <div className={`btn-choosetype ${formdata.typeuser === "sell-user" ? "active" : ""}`} onClick={()=> handleOnChangeTypeuser("sell-user") }>
+                                  <FontAwesomeIcon icon={faUsers} />
+                                  <span>Bên bán</span>
+                                </div>
+                                <div className={`btn-choosetype ${formdata.typeuser === "user" ? "active" : ""}`} onClick={() => handleOnChangeTypeuser("user")}>
+                                  <FontAwesomeIcon icon={faUser} />
+                                  <span>Khách</span>
+                                </div>
+                            </WrapperTypeUser>
+                            {
+                              errors.typeuser && (
+                                  <span style={{ color: "red", marginBottom: 10}}>
+                                      {errors.typeuser}
+                                  </span>
+                              )
+                            }
+                          </PanelField>
+                        </Signupcontainer>
+                      </WrapperSignup>
+                      <Loading isLoading={isPending}> 
+                        <ButtonComponent 
+                          className={`btn-signup`} 
+                          size="large" 
+                          textButton={"Đăng ký"} 
+                          styleButton={{width:"100%"}}
+                          onClick={handleSignUp}
+                          />
+                      </Loading>
+                    </>
+                  )
+                }
             </div>
             <div className="signup_member">
                 <span>Bạn là thành viên? <Link rel="icon" onClick={(e) => handleLogin(e)} >Đăng nhập</Link> Tại đây</span>

@@ -1,7 +1,6 @@
 import {useState,useEffect,useMemo} from "react";
 import DOMPurify from "dompurify";
 import { Descriptions, Badge, Spin,Tag,Image} from 'antd';
-import axios from 'axios';
 import { useNavigate,useParams,useLocation } from "react-router-dom";
 import {WrapperDetaillisting,DetailListingContainer,DetailListingHeader,DetailListingBody,WrapperImage} from "./style";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
@@ -11,18 +10,15 @@ export default function DetailListing() {
     const { id } = useParams();
     const [data, setData] = useState(null);
     const [urlimage,seturlimage] = useState([]);
-    //const [provinces, setProvinces] = useState([]);
-    //const [communes, setCommunes] = useState([]);
     const [loading, setLoading] = useState(false);
     const location = useLocation();
-    const from = location.state?.from;
     const navigate = useNavigate();
     // ================= FORMAT =================
     const formatCurrency = (value) => {
         if (!value) return "0 VND";
         return new Intl.NumberFormat("vi-VN").format(value) + " VND";
     };
-
+    const isDefaultDate = (date) => new Date(date).getTime() === 0;
     const formatDate = (date) => {
         if (!date) return "";
         return new Date(date).toLocaleString("vi-VN");
@@ -47,56 +43,6 @@ export default function DetailListing() {
         fetchListing();
     }, [id]);
 
-    // ================= FETCH PROVINCES (1 LẦN) =================
-    /* useEffect(() => {
-        const fetchProvinces = async () => {
-            try {
-                const res = await axios.get(
-                    "https://production.cas.so/address-kit/2025-07-01/provinces"
-                );
-                setProvinces(res.data.provinces);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        fetchProvinces();
-    }, []); */
-
-    // ================= FETCH COMMUNES KHI CÓ CityID =================
-    /* useEffect(() => {
-        if (!data?.Address?.CityID) return;
-
-        const fetchCommunes = async () => {
-            try {
-                const res = await axios.get(
-                    `https://production.cas.so/address-kit/2025-07-01/provinces/${data.Address.CityID}/communes`
-                );
-                setCommunes(res.data.communes);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        fetchCommunes();
-    }, [data?.Address?.CityID]); */
-
-    // ================= DERIVED DATA (KHÔNG ASYNC) =================
-    /* const provinceName = useMemo(() => {
-        return (
-            provinces.find(
-                (p) => p.code === data?.Address?.CityID
-            )?.name || ""
-        );
-    }, [provinces, data?.Address?.CityID]);
-
-    const communeName = useMemo(() => {
-        return (
-            communes.find(
-                (c) => c.code === data?.Address?.CommuneID
-            )?.name || ""
-        );
-    }, [communes, data?.Address?.CommuneID]); */
 
     // ================= DESCRIPTIONS ITEMS =================
     const items = useMemo(() => {
@@ -162,6 +108,18 @@ export default function DetailListing() {
             },
             {
                 key: "8",
+                label: "Ngày cập nhật gần nhất",
+                children: formatDate(data.updatedAt),
+                span: 1
+            },
+            {
+                key: "9",
+                label: "Ngày hết hạn",
+                children: isDefaultDate(data.ExpiredAt) ? "Chưa có thông tin" : formatDate(data.ExpiredAt),
+                span: 2
+            },
+            {
+                key: "10",
                 label: "Mô tả",
                 span: 3,
                 children: <div
@@ -171,7 +129,7 @@ export default function DetailListing() {
                 />,
             },
             {
-                key: "9",
+                key: "11",
                 label: "Hình ảnh",
                 span: 3,
                 children: <WrapperImage>
@@ -189,11 +147,7 @@ export default function DetailListing() {
         ];
     }, [data,urlimage]);
     const handleBack = () => {
-        if (from === "trash") {
-            navigate("/Delete-listing");
-        } else {
-            navigate("/manage-listing");
-        }
+        navigate(`/manage-listing${location.search}`);
     };
     return (
         <WrapperDetaillisting>

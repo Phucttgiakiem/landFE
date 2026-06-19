@@ -26,6 +26,13 @@ export const ContractHeaderContent = styled.div`
             border-color:rgb(110, 217, 239);
         }
     }
+    @media screen and (max-width:767px) {
+        flex-direction:column;
+        align-items:flex-start;
+        .btn-create {
+            width: 49%;
+        }
+    }
 `
 export const WrapperRangerPickernotmobile = styled.div`
     display:flex;
@@ -40,7 +47,7 @@ export const WrapperRangerPickermobile = styled.div`
     gap: 10px;
     width: 100%;
     box-sizing: border-box;
-    @media screen and (min-width: 786px){
+    @media screen and (min-width: 768px){
         display:none;
     }
 `

@@ -1,6 +1,6 @@
 import {WrapperUpdateContract,UpdateContractContainer,UpdateContractHeader,
     UpdateContractBody,MainContentofContract,
-    UpdateContractFooter
+    UpdateContractFooter,WrapperDatecreateContractipad,WrapperDatecreateContractmobile
 } from "./style"
 import { Input,InputNumber,DatePicker,Select } from "antd";
 import {useState,useEffect} from "react";
@@ -11,18 +11,20 @@ import dayjs from 'dayjs'
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useParams,useNavigate } from "react-router-dom";
 import { getContractById,updateContract } from "../../services/ContractService";
+import Loading from "../../components/LoadingComponent/Loading";
 export default function EditContractpage() {
     const { id } = useParams();
     const [contractoriginal, setContractoriginal] = useState(null);
     const [editedContract, setEditedContract] = useState(null);
     const [errors,setErrors] = useState({});
+    const token = localStorage.getItem("access_token");
     const user = useSelector((state) => state.user);
     const navigate = useNavigate();
     const message = useMessage();
     const mutation = useMutationHook(
-                  data => updateContract(data)
-              );
-        const {isPending,isError,isSuccess,error} = mutation;
+        data => updateContract(data)
+    );
+    const {isPending,isError,isSuccess,error} = mutation;
     const validate = () => {
         let newErrors = {};
         if(!editedContract.idNumberowner){
@@ -42,7 +44,7 @@ export default function EditContractpage() {
             if(editedContract.idNumbertenant && !handleCheckIDNumber(editedContract.idNumbertenant)){
                 newErrors.idNumbertenant = "Vui lòng nhập số căn cước công dân người thuê đủ 12 số"
             }
-            if(!editedContract.startdate && !editedContract.enddate){
+            if(!editedContract.startdate || !editedContract.enddate){
                 newErrors.errdate = "Vui lòng nhập đủ thông tin thời hạn hợp đồng"
             }
             if(!editedContract.deposit){
@@ -68,6 +70,24 @@ export default function EditContractpage() {
         const vl = idnumber.trim();
         if(vl.length < 12 || vl.length > 12) return false;
         return true;
+    }
+    const handleAddvalueDatecreateContractonmobile = (value,key,errDate) => {
+        setEditedContract(prev => {
+            const updated = {
+                ...prev,
+                [key]: value
+            };
+
+            if (updated.startdate && updated.enddate && errDate in errors) {
+                setErrors(prevErrors => {
+                    const newErrors = { ...prevErrors };
+                    delete newErrors[errDate];
+                    return newErrors;
+                });
+            }
+
+            return updated;
+        });
     }
     const handleAddvalueinformdata = (value,key) => {
         setEditedContract(prev => {
@@ -127,7 +147,7 @@ export default function EditContractpage() {
             setErrors(newErrors);
             return;
         }
-        editedContract.token = user.access_Token;
+        editedContract.token = token;
         editedContract.id = user.id;
         mutation.mutate(editedContract);
     }
@@ -136,7 +156,6 @@ export default function EditContractpage() {
             try {
                 const data = await getContractById(id,user.id);
                 setContractoriginal(data.contract);
-                console.log("data contract: ",data);
                 setEditedContract({
                     idcontract: data.contract?._id || null,
                     idproperty: data.contract?.listingId || null,
@@ -189,210 +208,240 @@ export default function EditContractpage() {
             <UpdateContractContainer>
                 <UpdateContractHeader>
                     <h2>Chỉnh sửa hợp đồng</h2>
-                    <ButtonComponent textButton={"Quay lại"} size="large" color="cyan" variant="solid"/>
+                    <ButtonComponent textButton={"Quay lại"} size="large" color="cyan" variant="solid" onClick={() => navigate("/Contract")}/>
                 </UpdateContractHeader>
-                <UpdateContractBody>
-                    <MainContentofContract>
-                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                            <h5 style={{margin:"0 0 10px 0"}}>Loại hợp đồng</h5>
-                            <Input value={editedContract?.typecontract} disabled/>
-                        </div>
-                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                            <h5 style={{margin:"0 0 10px 0"}}>Tên mặt bằng, nhà ở</h5>
-                            <Input value={editedContract?.titleproperty} disabled/>
-                        </div>
-                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                            <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ mặt bằng, nhà ở</h5>
-                            <Input value={editedContract?.addressproperty} disabled/>
-                        </div>
-                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                            <h5 style={{margin:"0 0 10px 0"}}>Diện tích mặt bằng, nhà ở</h5>
-                            <Input value={editedContract?.areaproperty} disabled/>
-                        </div>
-                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                            <h5 style={{margin:"0 0 10px 0"}}>Giá {editedContract?.typecontract === "rent" ? "thuê" : "mua"} mặt bằng, nhà ở</h5>
-                            <Input value={editedContract?.price} disabled/>
-                        </div>
-                        {
-                            editedContract?.typecontract === "rent" ? (
-                                <>
-                                    <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                        <h5 style={{margin:"0 0 10px 0"}}>Tên người thuê</h5>
-                                        <Input value={editedContract?.fullnametenant} disabled/>
-                                    </div>
-                                    <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                        <h5 style={{margin:"0 0 10px 0"}}>Số căn cước công dân</h5>
-                                        <Input value={editedContract?.idNumbertenant} allowClear
-                                            onChange={(e) => {
-                                                if(e.target.value === " ") return;
-                                                handleAddvalueinformdata(e.target.value,"idNumbertenant");
-                                            }} 
-                                            style={{width:"100%"}} placeholder="Nhập số căn cước công dân người thuê"
-                                        />
-                                        {
-                                            errors.idNumbertenant && (
-                                                <span style={{ color: "red", marginBottom: 10 }}>
-                                                    {errors.idNumbertenant}
-                                                </span>
-                                            )
-                                        }
-                                    </div>
-                                    <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                        <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ cư trú</h5>
-                                        <Input value={editedContract?.addresstenant} disabled/>
-                                    </div>
-                                    <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                        <h5 style={{margin:"0 0 10px 0"}}>Tiền đặt cọc</h5>
-                                        <InputNumber min={0} value={editedContract?.deposit} onChange={(value) => handleAddvalueinformdata(value,"deposit")} prefix="VND" style={{width:"100%"}} placeholder="Nhập số tiền đặt cọc"/>
-                                        {
-                                            errors.deposit && (
-                                                <span style={{ color: "red", marginBottom: 10 }}>
-                                                    {errors.deposit}
-                                                </span>
-                                            )
-                                        }
-                                    </div>
-                                     <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                        <h5 style={{margin:"0 0 10px 0"}}>Ngày bắt đầu và kết thúc hợp đồng</h5>
-                                        <DatePicker.RangePicker
-                                                value={[
-                                                    editedContract?.startdate ? dayjs(editedContract.startdate) : null,
-                                                    editedContract?.enddate ? dayjs(editedContract.enddate) : null
+                <Loading isLoading={isPending}>
+                    <UpdateContractBody>
+                        <MainContentofContract>
+                            <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                <h5 style={{margin:"0 0 10px 0"}}>Loại hợp đồng</h5>
+                                <Input value={editedContract?.typecontract} disabled/>
+                            </div>
+                            <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                <h5 style={{margin:"0 0 10px 0"}}>Tên mặt bằng, nhà ở</h5>
+                                <Input value={editedContract?.titleproperty} disabled/>
+                            </div>
+                            <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ mặt bằng, nhà ở</h5>
+                                <Input value={editedContract?.addressproperty} disabled/>
+                            </div>
+                            <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                <h5 style={{margin:"0 0 10px 0"}}>Diện tích mặt bằng, nhà ở</h5>
+                                <Input value={editedContract?.areaproperty} disabled/>
+                            </div>
+                            <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                <h5 style={{margin:"0 0 10px 0"}}>Giá {editedContract?.typecontract === "rent" ? "thuê" : "mua"} mặt bằng, nhà ở</h5>
+                                <Input value={editedContract?.price} disabled/>
+                            </div>
+                            {
+                                editedContract?.typecontract === "rent" ? (
+                                    <>
+                                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Tên người thuê</h5>
+                                            <Input value={editedContract?.fullnametenant} disabled/>
+                                        </div>
+                                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Số căn cước công dân</h5>
+                                            <Input value={editedContract?.idNumbertenant} allowClear
+                                                onChange={(e) => {
+                                                    if(e.target.value === " ") return;
+                                                    handleAddvalueinformdata(e.target.value,"idNumbertenant");
+                                                }} 
+                                                style={{width:"100%"}} placeholder="Nhập số căn cước công dân người thuê"
+                                            />
+                                            {
+                                                errors.idNumbertenant && (
+                                                    <span style={{ color: "red", marginBottom: 10 }}>
+                                                        {errors.idNumbertenant}
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+                                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ cư trú</h5>
+                                            <Input value={editedContract?.addresstenant} disabled/>
+                                        </div>
+                                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Tiền đặt cọc</h5>
+                                            <InputNumber min={0} value={editedContract?.deposit} onChange={(value) => handleAddvalueinformdata(value,"deposit")} prefix="VND" style={{width:"100%"}} placeholder="Nhập số tiền đặt cọc"/>
+                                            {
+                                                errors.deposit && (
+                                                    <span style={{ color: "red", marginBottom: 10 }}>
+                                                        {errors.deposit}
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+                                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Ngày bắt đầu và kết thúc hợp đồng</h5>
+                                            <WrapperDatecreateContractipad>
+                                                <DatePicker.RangePicker
+                                                        value={[
+                                                            editedContract?.startdate ? dayjs(editedContract.startdate) : null,
+                                                            editedContract?.enddate ? dayjs(editedContract.enddate) : null
+                                                        ]}
+                                                    
+                                                    format="DD/MM/YYYY"
+                                                    onChange={(date,dateStrings) => {
+                                                        const value = [
+                                                            date?.[0]?.toISOString() || null,
+                                                            date?.[1]?.toISOString() || null
+                                                        ];
+                                                        handleAddvalueinformdata(value,"errdate")
+                                                    }}
+                                                    style={{width:"100%"}}
+                                                    allowClear
+                                                />
+                                            </WrapperDatecreateContractipad>
+                                            <WrapperDatecreateContractmobile>
+                                                <DatePicker 
+                                                    value={editedContract?.startdate ? dayjs(editedContract.startdate) : null}
+                                                    onChange={(date,dateString) => {
+                                                        handleAddvalueDatecreateContractonmobile(date ? date.toISOString() : null,"startdate","errdate")
+                                                    }}
+                                                    format="DD/MM/YYYY"
+                                                    placeholder="Ngày bắt đầu"
+                                                    style={{width:"100%"}}
+                                                    allowClear
+                                                />
+                                                <DatePicker 
+                                                    value={editedContract?.enddate ? dayjs(editedContract.enddate) : null}
+                                                    format="DD/MM/YYYY"
+                                                    onChange={(date,dateString) => {
+                                                        handleAddvalueDatecreateContractonmobile(date ? date.toISOString() : null,"enddate","errdate")
+                                                    }}
+                                                    placeholder="Ngày kết thúc"
+                                                    style={{width:"100%"}}
+                                                    allowClear
+                                                />
+                                            </WrapperDatecreateContractmobile>
+                                            {
+                                                errors.errdate && (
+                                                    <span style={{ color: "red", marginBottom: 10 }}>
+                                                        {JSON.stringify(errors.errdate)}
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Tên người mua</h5>
+                                            <Input value={editedContract?.fullnamebuyer} disabled/>
+                                        </div>
+                                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Số căn cước công dân</h5>
+                                            <Input value={editedContract?.idNumberbuyer} onChange={(e) => handleAddvalueinformdata(e.target.value,"idNumberbuyer")} style={{width:"100%"}} placeholder="Nhập số căn cước công dân người mua" allowClear/>
+                                            {
+                                                errors.idNumberbuyer && (
+                                                    <span style={{ color: "red", marginBottom: 10 }}>
+                                                        {errors.idNumberbuyer}
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+                                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ cư trú</h5>
+                                            <Input value={editedContract?.addressbuyer} disabled/>
+                                        </div>
+                                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Phương thức thanh toán</h5>
+                                            <Select 
+                                                placeholder="chọn phương thức thanh toán"
+                                                size="large"
+                                                style={{width:"100%"}}
+                                                value={editedContract?.paymentMethod}
+                                                options={[
+                                                    {value:"chuyển khoản",label:"Chuyển khoản"},
+                                                    {value: "tiền mặt",label:"tiền mặt"},
                                                 ]}
-                                            
-                                            format="DD/MM/YYYY"
-                                            onChange={(date,dateStrings) => {
-                                                const value = [dateStrings?.[0],dateStrings?.[1]];
-                                                handleAddvalueinformdata(value,"errdate")
-                                            }}
-                                            allowClear
-                                        />
-                                        {
-                                            errors.errdate && (
-                                                <span style={{ color: "red", marginBottom: 10 }}>
-                                                    {errors.errdate}
-                                                </span>
-                                            )
-                                        }
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                        <h5 style={{margin:"0 0 10px 0"}}>Tên người mua</h5>
-                                        <Input value={editedContract?.fullnamebuyer} disabled/>
-                                    </div>
-                                    <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                        <h5 style={{margin:"0 0 10px 0"}}>Số căn cước công dân</h5>
-                                        <Input value={editedContract?.idNumberbuyer} onChange={(e) => handleAddvalueinformdata(e.target.value,"idNumberbuyer")} style={{width:"100%"}} placeholder="Nhập số căn cước công dân người mua" allowClear/>
-                                        {
-                                            errors.idNumberbuyer && (
-                                                <span style={{ color: "red", marginBottom: 10 }}>
-                                                    {errors.idNumberbuyer}
-                                                </span>
-                                            )
-                                        }
-                                    </div>
-                                    <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                        <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ cư trú</h5>
-                                        <Input value={editedContract?.addressbuyer} disabled/>
-                                    </div>
-                                    <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                        <h5 style={{margin:"0 0 10px 0"}}>Phương thức thanh toán</h5>
-                                        <Select 
-                                            placeholder="chọn phương thức thanh toán"
-                                            size="large"
-                                            style={{width:"100%"}}
-                                            value={editedContract?.paymentMethod}
-                                            options={[
-                                                {value:"chuyển khoản",label:"Chuyển khoản"},
-                                                {value: "tiền mặt",label:"tiền mặt"},
-                                            ]}
-                                            onChange={(value) => handleAddvalueinformdata(value,"paymentMethod")}
-                                            allowClear
-                                        />
-                                        {
-                                            errors.paymentMethod && (
-                                                <span style={{ color: "red", marginBottom: 10 }}>
-                                                    {errors.paymentMethod}
-                                                </span>
-                                            )
-                                        }
-                                    </div>
-                                    <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                        <h5 style={{margin:"0 0 10px 0"}}>Ngày chuyển khoản</h5>
-                                        <DatePicker size="large" style={{width:"100%"}}
-                                            value={editedContract?.transferDate
-                                                ? dayjs(editedContract?.transferDate)
-                                                : null}
-                                            format="DD/MM/YYYY"
-                                            onChange={(date, dateStrings) => handleAddvalueinformdata(dateStrings, "transferDate")}
-                                        />
-                                        {
-                                            errors.transferDate && (
-                                                <span style={{ color: "red", marginBottom: 10 }}>
-                                                    {errors.transferDate}
-                                                </span>
-                                            )
-                                        }
-                                    </div>
-                                </>
-                            )
-                        }
-                       <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                            <h5 style={{margin:"0 0 10px 0"}}>Tên người lập hợp đồng</h5>
-                            <Input value={editedContract?.fullnameowner} disabled/>
-                        </div>
-                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                            <h5 style={{margin:"0 0 10px 0"}}>Số căn cước công dân</h5>
-                            <Input value={editedContract?.idNumberowner} onChange={(e) => handleAddvalueinformdata(e.target.value,"idNumberowner")} placeholder="Nhập số căn cước công dân" allowClear/>
-                            {
-                                errors.idNumberowner && (
-                                    <span style={{ color: "red", marginBottom: 10 }}>
-                                        {errors.idNumberowner}
-                                    </span>
+                                                onChange={(value) => handleAddvalueinformdata(value,"paymentMethod")}
+                                                allowClear
+                                            />
+                                            {
+                                                errors.paymentMethod && (
+                                                    <span style={{ color: "red", marginBottom: 10 }}>
+                                                        {errors.paymentMethod}
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+                                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Ngày chuyển khoản</h5>
+                                            <DatePicker size="large" style={{width:"100%"}}
+                                                value={editedContract?.transferDate
+                                                    ? dayjs(editedContract?.transferDate)
+                                                    : null}
+                                                format="DD/MM/YYYY"
+                                                onChange={(date, dateStrings) => handleAddvalueinformdata(dateStrings, "transferDate")}
+                                            />
+                                            {
+                                                errors.transferDate && (
+                                                    <span style={{ color: "red", marginBottom: 10 }}>
+                                                        {errors.transferDate}
+                                                    </span>
+                                                )
+                                            }
+                                        </div>
+                                    </>
                                 )
                             }
-                        </div>
                         <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                            <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ cư trú</h5>
-                            <Input value={editedContract?.addressowner} disabled/>
-                        </div>
-                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                            <h5 style={{margin:"0 0 10px 0"}}>Điều khoản hợp đồng</h5>
-                            <Input.TextArea value={editedContract?.term} onChange={(e)=> handleAddvalueinformdata(e.target.value,"term")} allowClear/>
-                        </div>
-                        <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                            <h5 style={{margin:"0 0 10px 0"}}>Tình trạng hợp đồng</h5>
-                            <Select 
-                                placeholder="chọn trạng thái hợp đồng"
-                                size="large"
-                                style={{width:"100%"}}
-                                value={editedContract?.statusContract}
-                                onChange={(value) => handleAddvalueinformdata(value,"statusContract")}
-                                options={[
-                                    {value:"mới tạo",label:"mới tạo",disabled:contractoriginal?.status === "xong" || contractoriginal?.status === "hủy"},
-                                    {value: "đã ký",label:"đã ký",disabled:contractoriginal?.status === "xong" || contractoriginal?.status === "hủy"},
-                                    {value:"xong",label:"hoàn thành",disabled:contractoriginal?.status === "hủy"},
-                                    {value:"hủy",label:"hủy",disabled:contractoriginal?.status === "mới tạo" || contractoriginal?.status === "đã ký"},
-                                ]}
-                                
-                                allowClear
-                            />
-                            {
-                                errors.statusContract && (
-                                    <span style={{ color: "red", marginBottom: 10 }}>
-                                        {errors.statusContract}
-                                    </span>
-                                )
-                            }
-                        </div>
-                    </MainContentofContract>
-                </UpdateContractBody>
-                <UpdateContractFooter>
-                    <ButtonComponent textButton={"Cập nhật"} size="large" type="primary" onClick={handleUpdateContract}/>
-                    <ButtonComponent textButton={"Hủy"} size="large" color="default" variant="solid" onClick={handleResetForm}/>
-                </UpdateContractFooter>
+                                <h5 style={{margin:"0 0 10px 0"}}>Tên người lập hợp đồng</h5>
+                                <Input value={editedContract?.fullnameowner} disabled/>
+                            </div>
+                            <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                <h5 style={{margin:"0 0 10px 0"}}>Số căn cước công dân</h5>
+                                <Input value={editedContract?.idNumberowner} onChange={(e) => handleAddvalueinformdata(e.target.value,"idNumberowner")} placeholder="Nhập số căn cước công dân" allowClear/>
+                                {
+                                    errors.idNumberowner && (
+                                        <span style={{ color: "red", marginBottom: 10 }}>
+                                            {errors.idNumberowner}
+                                        </span>
+                                    )
+                                }
+                            </div>
+                            <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ cư trú</h5>
+                                <Input value={editedContract?.addressowner} disabled/>
+                            </div>
+                            <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                <h5 style={{margin:"0 0 10px 0"}}>Điều khoản hợp đồng</h5>
+                                <Input.TextArea value={editedContract?.term} onChange={(e)=> handleAddvalueinformdata(e.target.value,"term")} allowClear/>
+                            </div>
+                            <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
+                                <h5 style={{margin:"0 0 10px 0"}}>Tình trạng hợp đồng</h5>
+                                <Select 
+                                    placeholder="chọn trạng thái hợp đồng"
+                                    size="large"
+                                    style={{width:"100%"}}
+                                    value={editedContract?.statusContract}
+                                    onChange={(value) => handleAddvalueinformdata(value,"statusContract")}
+                                    options={[
+                                        {value:"mới tạo",label:"mới tạo",disabled:contractoriginal?.status === "xong" || contractoriginal?.status === "hủy"},
+                                        {value: "đã ký",label:"đã ký",disabled:contractoriginal?.status === "xong" || contractoriginal?.status === "hủy"},
+                                        {value:"xong",label:"hoàn thành",disabled:contractoriginal?.status === "hủy"},
+                                        {value:"hủy",label:"hủy",disabled:contractoriginal?.status === "mới tạo" || contractoriginal?.status === "đã ký"},
+                                    ]}
+                                    
+                                    allowClear
+                                />
+                                {
+                                    errors.statusContract && (
+                                        <span style={{ color: "red", marginBottom: 10 }}>
+                                            {errors.statusContract}
+                                        </span>
+                                    )
+                                }
+                            </div>
+                        </MainContentofContract>
+                    </UpdateContractBody>
+                    <UpdateContractFooter>
+                        <ButtonComponent textButton={"Cập nhật"} size="large" type="primary" onClick={handleUpdateContract}/>
+                        <ButtonComponent textButton={"Hủy"} size="large" color="default" variant="solid" onClick={handleResetForm}/>
+                    </UpdateContractFooter>
+                </Loading>
             </UpdateContractContainer>
         </WrapperUpdateContract>
     )

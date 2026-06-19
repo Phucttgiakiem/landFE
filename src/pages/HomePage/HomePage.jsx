@@ -23,7 +23,7 @@ import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CardsmallComponent from "../../components/CardsmallComponent/CardsmallComponent";
 import CardPlaceComponent from "../../components/CardPlaceComponent/CardPlaceComponent";
 import * as HomeService from "../../services/HomeService";
-import { setData,setLoading,setError,setUpdatelike } from "../../redux/slides/HomeSlide";
+import { setData,setLoading,setError } from "../../redux/slides/HomeSlide";
 import {getSuggestionsSearch} from "../../services/ListingService";
 import {formatDate,formatacreage,toSlug,isNew} from "../../utils";
 
@@ -47,9 +47,6 @@ const HomePage = () => {
     const featuredls = getList(featured, entities)
     const latestls = getList(latest, entities)
     const cheapls = getList(cheap, entities)
-    const handleUpdatelikeitem = (idproperty,status) =>{
-        dispatch(setUpdatelike({idListing:idproperty,status}))
-    }
     const handleSearch = () => {
         if(!keyword.trim()) return;
         const typecata = toSlug(activeMenu)
@@ -327,11 +324,8 @@ const HomePage = () => {
                                                     loading={false}
                                                     Title={item.Title}
                                                     Price={item.Price}
-                                                    likeCard={item.isFavorite}
                                                     Area={item.Address.Commune.name+" / "+item.Address.City.name}
-                                                    Login={user}
                                                     createdAt={formatDate(item.createdAt)}
-                                                    handlelike={handleUpdatelikeitem}
                                                     Img={
                                                         <div
                                                             style={{position:"relative",

@@ -6,6 +6,11 @@ export const WrapperProfit = styled.div`
     padding: 20px;
     background-color: #e3e3e3;
     min-height: calc(100vh - 90px);
+    @media screen and (max-width: 1199px) {
+        width: 100%;
+        margin-left: 0;
+        min-height: 100vh;
+    }
 `
 export const ProfitContainer = styled.div`
     width: 100%;
@@ -15,6 +20,10 @@ export const ProfitContainer = styled.div`
     border-radius: 8px;
     display: flex;
     flex-direction: column;
+    @media screen and (max-width: 1199px) {
+        margin-top: 6.5rem;
+        min-height:calc(100vh - 6.5rem - 40px)
+    }
 `
 export const ProfitHeader = styled.div`
     width: 100%;
@@ -47,5 +56,29 @@ export const Statisticaltype = styled.div`
             margin:0;
             padding:0;
         }
+        .fieldDataProfit{
+            width:40%;
+            margin-top:10px;
+        }
+    }
+    @media screen and (max-width:767px){
+        & > div .fieldDataProfit {
+            width: 100%;
+        }
+    }
+`
+export const WrapperStatisticaldatenotmobile = styled.div`
+    width: 100%;
+    @media screen and (max-width:767px){
+        display:none;
+    }
+`
+export const WrapperStatisticaldatemobile = styled.div`
+    width: 100%;
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    @media screen and (min-width:768px){
+        display:none;
     }
 `

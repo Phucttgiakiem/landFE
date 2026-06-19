@@ -38,3 +38,13 @@ export const getArea = async () => {
   let communesCache = data.communes; 
   return communesCache;
 }
+export const getPropertyofBroker = async (data) => {
+    const res = await axios.get(
+        `${process.env.REACT_APP_URL_BACKEND}/home/getAllListingofbroder`,{
+        params: {
+          ...data,
+        }
+      }
+    );
+    return res.data;
+}

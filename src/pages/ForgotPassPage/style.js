@@ -1,5 +1,20 @@
 import styled from 'styled-components';
 
+export const WrapperForgetPass = styled.div`
+    display:flex;
+    flex-direction:row;
+    width:1000px; 
+    height:600px; 
+    border-radius:6px;
+    background-color:#fff;
+    overflow:hidden;
+    @media screen and (max-width: 1199px) {
+        width:100vw;
+        height:100vh;
+        border-radius: 0;
+    }
+`
+
 export const WrapperContainerLeft = styled.div`
     position: relative;
     width: 60%;
@@ -9,110 +24,58 @@ export const WrapperContainerLeft = styled.div`
     & div h4:last-child {
         margin-top: 0px;
     }
+    @media screen and (max-width: 1199px) {
+        width:0;
+        display:none;
+    }
 `
 export const WrapperContainerRight = styled.div`
     width: 40%;
     padding: 32px;
     display:flex;
     flex-direction:column;
-    justify-content: space-between;
-    & h5 {
-        margin-bottom:0px;
-        margin-top:0px;
-    }
+    gap: 16px;
     & h3 {
-        margin-top: 0px;
-        margin-bottom: 20px;
+        margin: 0px;
     }
-    .btn-login {
+    & > span {
+        display:block;
+        text-align: center;
+        .link-login {
+            text-decoration:none;
+            color:#02cbe0;
+        }
+    }
+    
+    .btn-submitforgotpass {
         margin-top: 24px;
         background-color:#02CBE0;
         color:#fff;
         font-weight:700;
         border:none
     }
-    .btn-login:hover {
+    .btn-submitforgotpass:hover {
         border:none;
         background-color: rgba(2,232,244,2)
     }
-    & .signup_member {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        & span a {
-            text-decoration:none;
-            color: #02CBE0;
-            font-weight: bold
-        }
+    @media screen and (max-width: 1199px){
+        width: 100vw;
+        height: 100vh;
     }
 `
-export const WrapperSignup = styled.div`
-    width: 100%;
-    height: 18rem;
-`
-export const Signupcontainer = styled.div`
-    display: flex;
+export const Panelfield = styled.div`
+    display:flex;
     flex-direction: column;
-    height: 100%;
-    gap: 1rem;
-    overflow-y: auto;
-    overflow-x: hidden;
-`
-export const WrapperRememberandForgot = styled.div`
-    margin-top: 16px;
-    display: flex;
-    justify-content: space-between;
-    
-    .ant-checkbox:hover .ant-checkbox-inner {
-        border-color: #d9d9d9 
+    gap: 10px;
+    .note-text, .error-text {
+        dipslay:block;
+        width: 100%;
+        font-size: 12px;
     }
-    .ant-checkbox-checked .ant-checkbox-inner {
-        background-color: #02CBE0;
-        border-color: #02CBE0;
+    .note-text {
+        color: rgb(158, 158, 158);
     }
-
-
-    & div:first-child {
-        display: flex;
-        flex-direction: row;
+    .error-text {
+        color: rgb(238, 72, 72)
     }
-    & div:first-child span {
-        margin-right: 2px;
-    }
-    & div:last-child  span{
-        color: #02CBE0;
-    }
-    & div span {
-        cursor: pointer;
-    }
-`;
-export const WrapperAnotherSignin = styled.div`
-  width: 100%;
-  height: 24px;
-  margin-top:2rem;
-  display:flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  
-  & div:first-child {
-    width: 100%;
-    height: 1px;
-    background-color: rgb(242, 242, 242);
-  }
-  & div:last-child {
-    position: absolute;
-    top: 0px;
-    left: calc(50% - 24px);
-    height: 24px;
-    width: 49px;
-    padding: 0px 8px;
-    background-color: rgb(255, 255, 255);
-    .another_option {
-        font-size: 14px;
-        line-height: 20px;
-        font-weight: 400;
-        color: rgb(153, 153, 153);
-    }
-  }
 `

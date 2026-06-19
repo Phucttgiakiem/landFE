@@ -2,7 +2,7 @@ import {useEffect,useState} from 'react'
 import { useSelector,useDispatch } from 'react-redux';
 import { SearchOutlined,WarningTwoTone } from '@ant-design/icons';
 import { Table,Space,Select,Modal,Button,Flex, Spin } from "antd";
-import { Link,useNavigate } from 'react-router-dom';
+import { Link,useNavigate,useLocation } from 'react-router-dom';
 import {useMessage} from "../../components/Message/Message";
 import { useMutationHook } from "../../hooks/useMutationhook";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
@@ -55,15 +55,17 @@ export default function DeleteListingPage() {
     const [confirmModal, setConfirmModal] = useState(false);
     const Listing = useSelector(state => state.listing);
     const user = useSelector(state => state.user);
+    const location = useLocation();
+    const token = localStorage.getItem("access_token");
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const message = useMessage();
     const mutation = useMutationHook(
                 ({ arrid, action }) => {
                     if (action === "Xóa") {
-                        return ListingService.hardDeleteListing({ arrid });
+                        return ListingService.hardDeleteListing({ arrid,id:user.id,token,typedelete:"harddelete" });
                     } else if (action === "Khôi phục") {
-                        return ListingService.restoreListing({ arrid });
+                        return ListingService.restoreListing({ arrid,id:user.id,token });
                     }
                 },{
                     onSuccess: () => {
@@ -151,7 +153,7 @@ export default function DeleteListingPage() {
                         ...Listing.sort
                     })
                 )
-                const res = await ListingService.getAllDeletedListing(searchParams);
+                const res = await ListingService.getAllDeletedListing(searchParams,user.id,token);
                 const {totalPage} = res.data;
                 if (Listing.page > totalPage && totalPage > 0) {
                     dispatch(setPage({ pageCurrent: totalPage }));
@@ -173,7 +175,7 @@ export default function DeleteListingPage() {
         }, []);
         useEffect (() =>{
             fetchData();
-        },[Listing?.page,Listing?.sort]);
+        },[Listing?.page,Listing?.sort,user?.id]);
         const handleTableChange = (pagination,_,sorter) => {
             dispatch(setPage({pageCurrent: pagination.current}));
             dispatch(setSort({
@@ -236,7 +238,7 @@ export default function DeleteListingPage() {
                             size="large" 
                             color="cyan" 
                             variant="solid" 
-                            onClick={() => navigate('/manage-listing')}
+                            onClick={() => navigate(`/manage-listing${location.search}`)}
                         />
                     </DeletedListingHeader>
                     <DeletedListingHeaderContent>

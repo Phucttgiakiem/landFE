@@ -12,36 +12,10 @@ import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { formatPriceToString } from "../../utils";
 import * as FavoriteService from "../../services/FavoriteService";
 import Noimage from "../../assets/images/not_image.jpg"
-const CardsmallComponent = ({Id,Title,Img,Price,Stretch,Area,createdAt,loading,Acreage,Login,likeCard,handlelike,...rest}) => {
+const CardsmallComponent = ({Id,Title,Img,Price,Stretch,Area,createdAt,loading,Acreage,...rest}) => {
+  
     
-    const navigate = useNavigate();
-    const [loadingLike, setLoadingLike] = useState(false);
-
-    const handleLikeProperty = async(item) => {
-        if(loadingLike) return;
-
-        if(!Login.access_Token){ 
-            navigate('/sign-in');
-            return;
-        }
-        const prev = item;
-        const status = !prev;
-
-        setLoadingLike(true);
-        handlelike(Id,status);
-
-        try {
-            if(prev){
-                await FavoriteService.deleteFavoriteofuser(Login,Id);
-            } else {
-                await FavoriteService.createnewFavorite(Login,Id);
-            }
-        } catch(err){
-            handlelike(Id,prev);
-        } finally {
-            setLoadingLike(false);
-        }
-    };
+    
     return (
         <Card 
             loading={loading}
@@ -78,10 +52,7 @@ const CardsmallComponent = ({Id,Title,Img,Price,Stretch,Area,createdAt,loading,A
                         </WrapperCardLocation>
                         <WrapperCardContact>
                             <CardContactPublicInfo>{createdAt}</CardContactPublicInfo>
-                            <ButtonComponent textButton={<FontAwesomeIcon icon={faHeart} 
-                                onClick={() => handleLikeProperty(likeCard)}
-                                style={{color: likeCard ? "#02CBE0": "#000000"}}
-                            />} className="btn-heart"/>
+                            
                         </WrapperCardContact>
                     </>
                 )

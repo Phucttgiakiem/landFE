@@ -77,22 +77,6 @@ export const homeSlide = createSlice({
             state.filtered.totalPage = totalPage
             state.filtered.page = pageCurrent
         },
-        setUpdatelike: (state,action) => {
-            const {idListing,status} = action.payload;
-            if(state.entities[idListing]){
-                state.entities[idListing].isFavorite = status;
-            }
-        },
-        setUpadtelikeRelated: (state,action) => {
-            const {idListing,status} = action.payload;
-            const arr = state.related.items;
-            for(const item of arr){
-                if(item._id === idListing){
-                    item.isFavorite = status;
-                    break;
-                }
-            }
-        },
         setLoadingRelated: (state,action) => {
             state.related.isLoading = action.payload
         },
@@ -114,5 +98,5 @@ export const {
     setLoading,setEntities,setData,
     setRelated,setError,setLoadingRelated,
     setLoadingFiltered,setPageRelated,setFiltered,
-    setPageFiltered,setUpdatelike,setUpadtelikeRelated } = homeSlide.actions
+    setPageFiltered } = homeSlide.actions
 export default homeSlide.reducer

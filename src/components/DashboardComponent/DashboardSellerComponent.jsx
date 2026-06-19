@@ -5,7 +5,6 @@ import {getDashboardoverviewSeller} from "../../services/DashboardService";
 import CardDashboardComponent from "../CardDashboardComponent/CardDashboardComponent"
 export default function DashboardSellerComponent ({iduser}) {
     const [propertyBymonth,setPropertyBymonth] = useState([]);
-    const [favoriteBymonth,setFavoriteBymonth] = useState([]);
     const [totalProperty,setTotalproperty] = useState(0);
     useEffect(() => {
         const fetchData = async () => {
@@ -13,12 +12,10 @@ export default function DashboardSellerComponent ({iduser}) {
                 const res = await getDashboardoverviewSeller(iduser);
 
                 setPropertyBymonth(res?.data?.propertyChart || []);
-                setFavoriteBymonth(res?.data?.favoriteChart || []);
                 setTotalproperty(res?.data?.totalproperty);
             } catch (e) {
                 console.error(e);
                 setPropertyBymonth([]);
-                setFavoriteBymonth([]);
                 setTotalproperty(0);
             }
         };
@@ -43,30 +40,55 @@ export default function DashboardSellerComponent ({iduser}) {
                 </WrapperCardDashboard>
                 <ChartContainer>
                     <DashboardChartWapper>
-                        <Line
-                            data={propertyBymonth}
-                            xField="month"
-                            yField="value"
-                            seriesField="type"
-                            height={400}
-                            tooltip={{ shared: true }}
-                        />
-                        <h5>Biểu đồ số bài đăng trong 12 tháng gần nhất</h5>
-                    </DashboardChartWapper>
-                    <DashboardChartWapper>
-                        <Line
-                            data={favoriteBymonth}
-                            xField="month"
-                            yField="value"
-                            seriesField="type"
-                            height={400}
-                            tooltip={{ shared: true }}
-                        />
-                        <h5>Biểu đồ số lượt like 4 tháng gần nhất</h5>
+                        <div style={{ minWidth: '800px' }}>
+                            <Line
+                                data={propertyBymonth}
+                                xField="month"
+                                yField="value"
+                                colorField="rgb(31, 242, 235)"
+                                seriesField="type"
+                                height={400}
+                                tooltip={{ shared: true }}
+                                style={{
+                                    lineWidth: 2,
+                                }}
+                                point={{
+                                    shapeField: 'square',
+                                    sizeField:4,
+                                    animate: {
+                                        enter: {
+                                        type: 'fadeIn',
+                                        duration: 500,
+                                        },
+                                    },
+                                }}
+                                animate = {{ enter : { type : 'pathIn' , duration : 3000 } }}
+                                axis={{
+                                    x: {
+                                        line:true,
+                                        arrow: true,
+                                        title: "Time",
+                                        titleFontSize: 16,
+                                        titleFontWeight: 300,
+                                        labelAutoHide: true,
+                                        labelAutoRotate: false,
+                                    },
+                                    y: {
+                                        line:true,
+                                        arrow : true,
+                                        title: "Total Post",
+                                        titleFontSize: 16,
+                                        titleFontWeight: 300,
+                                        gridLineDash: [20,5],
+                                    },
+
+                                }}
+                            />
+                            <h5 style={{width:"100%",textAlign:"center"}}>Biểu đồ thống kê số bài đăng theo 12 tháng gần nhất</h5>
+                        </div>
+                        
                     </DashboardChartWapper>
                 </ChartContainer>
-                
-                {/* <Line data={favoriteBymonth} xField="month" yField="value" /> */}
             </DashboardSellerpropertybyMonth>
         </div>
     )

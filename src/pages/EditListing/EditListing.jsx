@@ -1,10 +1,10 @@
 import { useState,useEffect,useRef } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate,useParams,useLocation } from "react-router-dom";
 import axios from "axios";
 import 'suneditor/dist/css/suneditor.min.css';
 import {WrapperEditListing,EditListingContainer,EditListingHeader,EditListingBody} from './style';
-import { Select,Upload,Image,DatePicker } from "antd";
+import { Select,Upload,Image,DatePicker,InputNumber } from "antd";
 import dayjs from 'dayjs';
 import SunEditor from 'suneditor-react';
 import { PlusOutlined } from '@ant-design/icons';
@@ -53,6 +53,7 @@ export default function EditListing () {
         User: '',
         visibility_status: '',
         approval_status: '',
+        type: '',
         ExpiredAt: null,
     });
     const user = useSelector(state => state.user);
@@ -61,8 +62,9 @@ export default function EditListing () {
               data => ListingService.updateListing(id,data,access_token)
     );
     const message = useMessage();
-    const {isPending,isError,isSuccess} = mutation;
+    const {isPending,isError,isSuccess,error} = mutation;
     const navigate = useNavigate();
+    const location = useLocation();
     const validate = () => {
         let newErrors = {};
         if(!formdata.Title.trim()){
@@ -113,6 +115,9 @@ export default function EditListing () {
         if(!formdata.visibility_status){
             newErrors.visibility_status = "Vui lòng chọn trạng thái bài đăng";
         }
+        if(!formdata.type) {
+            newErrors.typenews = "Vui lòng chọn loại tin đăng";
+        }
         return newErrors;
     }
     const handleChangeTitle = (value) => {
@@ -142,18 +147,10 @@ export default function EditListing () {
         }
     }
     const handleChangePrice = (value) => {
-        const rawValue = value.replace(/\./g, "");
         setFormdata(prev => ({
             ...prev,
-            Price: rawValue<0 ? 0 : rawValue
+            Price: value <0 ? 0 : value
         }))
-        /* if(errors.Price){
-            setErrors((prev) => {
-                const newErrors = {...prev};
-                delete newErrors.Price;
-                return newErrors;
-            });
-        } */
     }
     const handleChangeLength = (value) => {
         setFormdata(prev => ({
@@ -388,6 +385,19 @@ export default function EditListing () {
             }))
         }
     }
+    const handleTypeNews = (value) => {
+        setFormdata(prev => ({
+            ...prev,
+            type: value
+        }));
+        if(value !== null && errors.typenews ){
+            setErrors((prev) => {
+                const newErrors = {...prev};
+                delete newErrors.typenews;
+                return newErrors;
+            });
+        }
+    }
     const handleUpdateListing = () => {
         const newErrors = validate();
 
@@ -410,12 +420,9 @@ export default function EditListing () {
         mutation.mutate(data);
     }
     const formatNumber = (value) => {
-        if (!value) return 0;
-
-        return value
-            .toString()
-            .replace(/\D/g, "")
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        const [start, end] = `${value}`.split('.') || [];
+        const v = `${start}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return `Đ ${end ? `${v}.${end}` : `${v}`}`;
     };
     const fetchListing = async () => {
                 try {
@@ -441,6 +448,7 @@ export default function EditListing () {
                         User: data.UserInfo._id,
                         visibility_status: data.visibility_status,
                         approval_status:data.approval_status,
+                        type:data.type,
                         ExpiredAt:data.ExpiredAt
                     })
                     initialDataRef.current = {
@@ -462,6 +470,7 @@ export default function EditListing () {
                         User: data.UserInfo._id,
                         visibility_status: data.visibility_status,
                         approval_status:data.approval_status,
+                        type: data.type,
                         ExpiredAt:data.ExpiredAt,
                         countImage: 0
                     };
@@ -550,7 +559,8 @@ export default function EditListing () {
                 navigate('/manage-listing');
             },2000)
         } else if (isError) {
-            message.error("Cập nhật thông tin thất bại!");
+            console.log(error);
+            message.error(error?.response?.data?.message || "Cập nhật thông tin thất bại!");
         }
     },[isSuccess, isError])
     const uploadButton = (
@@ -574,7 +584,7 @@ export default function EditListing () {
                                 size="large" 
                                 color="cyan" 
                                 variant="solid" 
-                                onClick={() => navigate('/manage-listing')}/>
+                                onClick={() => navigate(`/manage-listing${location.search}`)}/>
                         </EditListingHeader>
                         <Loading isLoading={isPending}>
                             <EditListingBody>
@@ -619,12 +629,16 @@ export default function EditListing () {
                                     </div>
                                     <div>
                                         <span className="label">Giá (đơn vị: đồng)</span>
-                                        <InputForm type="number" placeholder="Nhập giá bất động sản" size={"large"}
-                                        min={0}
-                                        value={formdata?.Price}
-                                        TypePassword={false} 
-                                        handleOnChange={handleChangePrice}
-                                        disabled={formdata?.User !== user?.id}
+                                        <InputNumber
+                                            min={0}
+                                            value={formdata?.Price}
+                                            formatter={formatNumber}
+                                            parser={(value) => value?.toString().replace(/\s?Đ|(,*)/g, '')}
+                                            placeholder="Nhập giá bất động sản" 
+                                            size={"large"}
+                                            style={{width:"100%"}}
+                                            onChange={handleChangePrice}
+                                            disabled={formdata?.User !== user?.id}
                                         />
                                         {
                                             errors.Price && (
@@ -919,6 +933,28 @@ export default function EditListing () {
                                             errors.visibility_status && (
                                                 <span style={{ color: "red", marginBottom: 10 }}>
                                                     {errors.visibility_status}
+                                                </span>
+                                            )
+                                        }
+                                    </div>
+                                    <div>
+                                        <span className="label">Loại tin đăng</span>
+                                        <Select 
+                                            placeholder="--- Chọn loại tin đăng ---"
+                                            options={[
+                                                { value: null, label: '--- Chọn loại tin đăng ---' },
+                                                { value: 'vip', label: 'tin vip' },
+                                                { value: 'normal', label: 'tin thường' },
+                                            ]}
+                                            value={formdata?.type}
+                                            style={{ width: '100%' }}
+                                            size="large"
+                                            onChange={handleTypeNews}
+                                        />
+                                        {
+                                            errors.typenews && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.typenews}
                                                 </span>
                                             )
                                         }

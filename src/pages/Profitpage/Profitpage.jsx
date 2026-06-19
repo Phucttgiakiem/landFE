@@ -1,8 +1,9 @@
-import { WrapperProfit, ProfitContainer,ProfitHeader,ProfitBody,Statisticaltype } from "./style";
-import { Select,DatePicker,Table,Space } from "antd";
+import { WrapperProfit, ProfitContainer,ProfitHeader,ProfitBody,Statisticaltype,
+    WrapperStatisticaldatenotmobile,WrapperStatisticaldatemobile
+ } from "./style";
+import { Select,DatePicker,Table } from "antd";
 import { useState,useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import {formatDateVN,formatPrice} from "../../utils";
 //import dayjs from 'dayjs'
 import {getdataStatisticalbytype,getAllowners} from "../../services/StatisticalService";
@@ -10,46 +11,44 @@ const column = [
     {
         title: "Mã hợp đồng",
         dataIndex: "_id",
+        width:280
     },
     {
         title: "Ngày lập hợp đồng",
         dataIndex: "createdAt",
-        render: (value) => formatDateVN(value)
+        render: (value) => formatDateVN(value),
+         width:280
     },
     {
         title: "Ngày cập nhật mới nhất",
         dataIndex: "updatedAt",
-        render: (value) => formatDateVN(value)
+        render: (value) => formatDateVN(value),
+         width:280
     },
     {
         title: "Loại hợp đồng",
         dataIndex: "typeContract",
+         width:280
     },
     {
         title: "Giá trị hợp đồng",
         dataIndex: "price",
-        render: (value) => formatPrice(value)
-    },
-    {
-        title: "Hành động",
-        dataIndex: "action",
-         render: (_, record) => 
-            <Space>
-                <Link to={`/Detail-listing/${record.listingId}`} state={{ from: "listings" }}>Detail</Link>
-            </Space>
-    },
+        render: (value) => formatPrice(value),
+        width:280
+    }
 ]
 export default function Profitpage() {
     const [ListAllOwners,setListallOwners] = useState([]);
     const [statisticalType, setStatisticalType] = useState("");
     const [Datastatistical,setDatastatistical] = useState({
-        limit: 5,
+        limit: 3,
         pageCurrent: 1,
         totalpage: 0,
         totalitem: 0,
         items : [],
         totalprofit: 0,
     })
+    const [loadingtable,setLoadingTable] = useState(false);
     const [datafilter,setDatafilter] = useState({})
     const user = useSelector(state => state.user);
     const [userSelected,setUserselected] = useState("");
@@ -66,7 +65,6 @@ export default function Profitpage() {
         return;
     }
     const handleTableChange = (pagination) => {
-        console.log(pagination);
         setDatastatistical(prev=> ({
             ...prev,
             pageCurrent:pagination.current
@@ -77,6 +75,7 @@ export default function Profitpage() {
 
         const fetchData = async () => {
             try {
+                setLoadingTable(true);
                 const data = {
                     limit: Datastatistical.limit,
                     page: Datastatistical.pageCurrent,
@@ -85,8 +84,6 @@ export default function Profitpage() {
                 };
 
                 const response = await getdataStatisticalbytype(data);
-                //console.log(response);
-                
                     setDatastatistical(prev => ({
                         ...prev,
                         pageCurrent: response?.pageCurrent,
@@ -96,9 +93,10 @@ export default function Profitpage() {
                         totalprofit: response?.totalProfit
                     }))
                 
-
+                setLoadingTable(false);
             } catch(err){
                 console.log(err);
+                setLoadingTable(false);
             }
         };
 
@@ -108,7 +106,6 @@ export default function Profitpage() {
         const fetchData = async () => {
             try {
                 const response = await getAllowners();
-                console.log(response);
                 setListallOwners(response.result);
             }catch(err){
                 console.log(err);
@@ -126,7 +123,7 @@ export default function Profitpage() {
                     <Statisticaltype>
                         <div>
                             <h5>Kiểu thống kê</h5>
-                            <Select placeholder="Chọn kiểu thống kê" size="large" style={{width:"40%",marginTop:"10px"}} allowClear value={statisticalType} onChange={(value) => setStatisticalType(value)}>
+                            <Select placeholder="Chọn kiểu thống kê" size="large" className="fieldDataProfit" allowClear value={statisticalType} onChange={(value) => setStatisticalType(value)}>
                                 <Select.Option value="day">Theo ngày</Select.Option>
                                 <Select.Option value="month">Theo tháng</Select.Option>
                                 <Select.Option value="quarter">Theo quý</Select.Option>
@@ -137,24 +134,49 @@ export default function Profitpage() {
                             statisticalType === "day" ? (
                                 <div>
                                     <h5>Chọn ngày</h5>
-                                    <DatePicker.RangePicker style={{width:"40%",marginTop:"10px"}} size="large"
-                                        onChange={(date,dateStrings) => {
-                                            if (!dateStrings?.[0] || !dateStrings?.[1]) {
-                                                resettable()
-                                            }
-                                            setDatafilter({
-                                                
-                                                    startDate: dateStrings?.[0],
-                                                    endDate: dateStrings?.[1]
+                                    <WrapperStatisticaldatenotmobile>
+                                        <DatePicker.RangePicker className="fieldDataProfit" size="large"
+                                            onChange={(date,dateStrings) => {
+                                                if (!dateStrings?.[0] || !dateStrings?.[1]) {
+                                                    resettable()
                                                 }
-                                            )
-                                        }}
-                                    />
+                                                setDatafilter({
+                                                        startDate: dateStrings?.[0],
+                                                        endDate: dateStrings?.[1]
+                                                    }
+                                                )
+                                            }}
+                                        />
+                                    </WrapperStatisticaldatenotmobile>
+                                    <WrapperStatisticaldatemobile>
+                                        <DatePicker 
+                                            className="fieldDataProfit" 
+                                            size="large" 
+                                            placeholder="Ngày bắt đầu"
+                                            onChange={(date,dateString) => {
+                                                setDatafilter(prev => ({
+                                                    ...prev,
+                                                    startDate: dateString,
+                                                }))
+                                            }}
+                                        />
+                                        <DatePicker 
+                                            className="fieldDataProfit" 
+                                            size="large" 
+                                            placeholder="Ngày kết thúc"
+                                            onChange={(date,dateString) => {
+                                                setDatafilter(prev => ({
+                                                    ...prev,
+                                                    endDate: dateString,
+                                                }))
+                                            }}
+                                        />
+                                    </WrapperStatisticaldatemobile>
                                 </div>
                             ) : statisticalType === "month" ? (
                                 <div>
                                     <h5>Chọn tháng</h5>
-                                    <DatePicker picker="month" style={{width:"40%",marginTop:"10px"}} size="large"
+                                    <DatePicker picker="month" className="fieldDataProfit" size="large"
                                         onChange={(date,dateStrings) => {
                                             if(!dateStrings){
                                                 resettable()
@@ -170,7 +192,7 @@ export default function Profitpage() {
                             ) : statisticalType === "quarter" ? (
                                 <div>
                                     <h5>Chọn quý</h5>
-                                    <DatePicker picker="quarter" style={{width:"40%",marginTop:"10px"}} size="large"
+                                    <DatePicker picker="quarter" className="fieldDataProfit" size="large"
                                         onChange={(date,dateStrings) => {
                                             if(!dateStrings){
                                                 resettable()
@@ -186,7 +208,7 @@ export default function Profitpage() {
                             ) : statisticalType === "year" && (
                                 <div>
                                     <h5>Chọn năm</h5>
-                                    <DatePicker picker="year" style={{width:"40%",marginTop:"10px"}} size="large"
+                                    <DatePicker picker="year" className="fieldDataProfit" size="large"
                                         onChange={(date,dateStrings) => {
                                             if(!dateStrings){
                                                 resettable()
@@ -206,7 +228,7 @@ export default function Profitpage() {
                             <div>
                                 <h5>Chọn người cần thống kê trong danh sách</h5>
                                 <Select 
-                                    style={{width:"40%",marginTop:"10px"}} size="large"
+                                    className="fieldDataProfit" size="large"
                                     value={userSelected}
                                     onChange={(value) => setUserselected(value)}
                                 >
@@ -230,13 +252,14 @@ export default function Profitpage() {
                     </Statisticaltype>
                     <Table 
                         columns={column} 
+                        scroll={{ x: 800 }}
                         dataSource={Datastatistical?.items} 
                         pagination={{current: Datastatistical?.pageCurrent,pageSize:Datastatistical?.limit,total: Datastatistical.totalitem}} 
                         onChange={handleTableChange}
                         style={{marginTop:"20px"}}/>
-                    <div style={{display:"flex",justifyContent:"flex-end",marginTop:"20px"}}>
-                        <h3>Tổng doanh thu: {formatPrice(Datastatistical.totalprofit || 0)}</h3>
-                    </div>
+                        <div style={{display:"flex",justifyContent:"flex-end",marginTop:"20px"}}>
+                            <h3>Tổng doanh thu: {formatPrice(Datastatistical.totalprofit || 0)}</h3>
+                        </div>
                 </ProfitBody>
             </ProfitContainer>
         </WrapperProfit>

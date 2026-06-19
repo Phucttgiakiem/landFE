@@ -7,12 +7,13 @@ import * as UserService from "../../services/UserService";
 import {useMutationHook} from '../../hooks/useMutationhook';
 import {updateUser} from "../../redux/slides/userSlide";
 import {useMessage} from "../../components/Message/Message";
+import Loading from "../../components/LoadingComponent/Loading";
 import {Progress} from "antd";
 export default function Changepass() {
     const [percent, setPercent] = useState(0);
     const user = useSelector(state => state.user);
     const dispatch = useDispatch()
-    
+    const token = localStorage.getItem("access_token");
     const [formdata, setFormdata] = useState({
         oldpassword: "",
         newpassword: "",
@@ -20,12 +21,9 @@ export default function Changepass() {
     });
     const message = useMessage();
     const mutation = useMutationHook(
-            (data) => {
-                const { id, access_token, ...rests } = data
-                UserService.changePassword(id, rests, access_token)
-            }
+            (data) => UserService.changePassword(data)
     )
-    const { isPending, isSuccess, isError } = mutation
+    const { isPending, isSuccess, isError,error } = mutation
     const handleChange = (name, value) => {
         setFormdata(prev => ({
             ...prev,
@@ -37,8 +35,9 @@ export default function Changepass() {
             id: user?.id, 
             oldpass: formdata.oldpassword, 
             newpass: formdata.newpassword, 
-            confirmpass: formdata.confirmPassword, 
-            access_token: user?.access_Token })
+            confirmpass: formdata.confirmPassword,
+            access_token:token 
+         })
     }
     const handleCancelChangePass = () => {
         setFormdata({
@@ -60,9 +59,9 @@ export default function Changepass() {
     useEffect(() => {
             if (isSuccess) {
                 message.success("Đổi mật khẩu thành công!");
-                handleGetDetailsUser(user?.id, user?.access_Token);
+                handleGetDetailsUser(user?.id, token);
             } else if (isError) {
-                message.error("Đổi mật khẩu thất bại!");
+                message.error(error?.response?.data?.message);
             }
             setFormdata({
                 oldpassword: "",
@@ -78,24 +77,26 @@ export default function Changepass() {
                     Đổi mật khẩu
                 </ChangePassTitle>
                 <ChangePassContent>
-                    <div>
+                    <Loading isLoading={isPending}>
+                        <div>
                         <Progress percent={percent} type="line" strokeColor="#02CBE0"/>
-                    </div>
-                    <div>
-                        <span>Mật khẩu cũ</span>
-                        <InputForm type="password" placeholder="Nhập mật khẩu cũ" size={"large"} TypePassword={true} value={formdata.oldpassword} handleOnChange={(value) => handleChange("oldpassword", value)} style={{marginTop: "0.5rem"}}/>
-                    </div>
-                    <div>
-                        <span>Mật khẩu mới</span>
-                        <InputForm type="password" placeholder="Nhập mật khẩu mới" size={"large"} TypePassword={true} value={formdata.newpassword} handleOnChange={(value) => handleChange("newpassword", value)} style={{marginTop: "0.5rem"}}/>
-                        <span style={{color:"rgba(160, 160, 160, 0.59)",fontSize:"1rem", display:"block", marginTop:"0.5rem"}}>
-                            Mật khẩu phải có từ 8 đến 16 ký tự, bao gồm chữ thường, chữ hoa, số và ký tự đặc biệt, không chứa khoảng trắng, ví dụ: Abcd@1234
-                        </span>
-                    </div>
-                    <div>
-                        <span>Xác nhận mật khẩu mới</span>
-                        <InputForm type="password" placeholder="Xác nhận mật khẩu mới" size={"large"} TypePassword={true} value={formdata.confirmPassword} handleOnChange={(value) => handleChange("confirmPassword", value)} style={{marginTop: "0.5rem"}}/>
-                    </div>
+                        </div>
+                        <div>
+                            <span>Mật khẩu cũ</span>
+                            <InputForm type="password" placeholder="Nhập mật khẩu cũ" size={"large"} TypePassword={true} value={formdata.oldpassword} handleOnChange={(value) => handleChange("oldpassword", value)} style={{marginTop: "0.5rem"}}/>
+                        </div>
+                        <div>
+                            <span>Mật khẩu mới</span>
+                            <InputForm type="password" placeholder="Nhập mật khẩu mới" size={"large"} TypePassword={true} value={formdata.newpassword} handleOnChange={(value) => handleChange("newpassword", value)} style={{marginTop: "0.5rem"}}/>
+                            <span style={{color:"rgba(160, 160, 160, 0.59)",fontSize:"1rem", display:"block", marginTop:"0.5rem"}}>
+                                Mật khẩu phải có từ 8 đến 16 ký tự, bao gồm chữ thường, chữ hoa, số và ký tự đặc biệt, không chứa khoảng trắng, ví dụ: Abcd@1234
+                            </span>
+                        </div>
+                        <div>
+                            <span>Xác nhận mật khẩu mới</span>
+                            <InputForm type="password" placeholder="Xác nhận mật khẩu mới" size={"large"} TypePassword={true} value={formdata.confirmPassword} handleOnChange={(value) => handleChange("confirmPassword", value)} style={{marginTop: "0.5rem"}}/>
+                        </div>
+                    </Loading>
                 </ChangePassContent>
                 {
                     formdata.oldpassword && formdata.newpassword && formdata.confirmPassword &&

@@ -30,21 +30,11 @@ export const DashboardSellerpropertybyMonth = styled.div`
 `
 
 export const DashboardChartWapper = styled.div`
-    width: 45%;
-    height: 30rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;   
-    align-items: stretch;         
-
-    overflow: hidden;              
-
-    h5 {
-        margin-top: 10px;
-        text-align: center;
-    }
-    @media screen and (max-width: 1199px) {
-        width: 100%;
+    width: 100%;
+    height: 29rem;       
+    overflow: hidden;    
+    @media screen and (max-width: 768px) {
+        overflow-x:scroll;
     }
 `
 /* ------------------ style for seller --------------------- */
@@ -67,16 +57,7 @@ export const DashboardAdminpropertybyMonth = styled.div`
     }
 `
 export const ChartContainer = styled.div`
-    display:flex;
-    flex-direction:row;
-    justify-content: space-between;
     margin-top:5rem;
-    @media screen and (min-width:768px) and (max-width:1199px){
-        flex-direction:column;
-    }
-    @media screen and (max-width:767px) {
-        flex-direction:column;    
-    }
 `
 /* ------------------ style for admin ---------------------- */
 /* ------------------style for user ------------------------ */

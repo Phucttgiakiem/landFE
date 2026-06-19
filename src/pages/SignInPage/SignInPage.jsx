@@ -4,7 +4,6 @@ import {useState,useEffect} from 'react';
 import { UserOutlined,LockOutlined} from '@ant-design/icons';
 import logo from "../../assets/images/real_state.png";
 import backgroundland from "../../assets/images/building_home.jpg";
-import GoogleIcon from "../../assets/images/google.png";
 import InputForm from "../../components/InputForm/InputForm";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { Link,useNavigate } from 'react-router-dom';
@@ -37,10 +36,10 @@ export default function SignInPage  ()  {
   const mutation = useMutationHook(
       data => UserService.loginUser(data)
   );
-  const {isPending,data,isSuccess} = mutation;
+  const {isPending,data,isSuccess,error} = mutation;
 
   useEffect(() => {
-    if(isSuccess && data?.status !== "error"){
+    if(isSuccess && !error){
       navigate("/");
       localStorage.setItem("access_token",JSON.stringify(data?.access_Token));
       if(data?.access_Token){
@@ -50,7 +49,11 @@ export default function SignInPage  ()  {
         }
       }
     }
-  },[isSuccess]);
+    else if(error?.response?.data?.code === "EMAIL_NOT_VERIFIED"){
+      localStorage.removeItem("access_token");
+      navigate("/resend-verification?type=login");
+    }
+  },[isSuccess,error]);
   const handleGetDetailsUser = async (id,token) => {
     const res = await UserService.getDetailsUser(id,token);
     dispatch(updateUser({...res?.data,access_Token: token}));
@@ -72,7 +75,7 @@ export default function SignInPage  ()  {
               <h3>Đăng nhập để tiếp tục</h3>
               <InputForm placeholder={"Nhập địa chỉ email"} value={email} handleOnChange={handleOnchangeEmail} prefix={<UserOutlined/>} size={"large"} TypePassword={false} style={{marginBottom: "16px"}}/>
               <InputForm placeholder={"Mật khẩu"} size={"large"} value={password} handleOnChange={handleOnchangePassword} prefix={<LockOutlined/>} TypePassword={true}/>
-              {data?.status === "error" && <span style={{ color: "red"}}>{data?.message}</span>}
+              {error?.response?.data?.status === "error" && <span style={{ color: "red"}}>{error?.response?.data?.message}</span>}
               <Loading isLoading={isPending}>  
                 <ButtonComponent 
                   disabled={!email.length || !password.length} 
@@ -91,7 +94,7 @@ export default function SignInPage  ()  {
                       <span>Nhớ tài khoản</span>
                   </div>
                   <div>
-                      <span>Quên mật khẩu?</span>
+                      <span onClick={() => navigate("/resend-verification?type=reset-password")}>Quên mật khẩu?</span>
                   </div>
               </WrapperRememberandForgot>
           </div>

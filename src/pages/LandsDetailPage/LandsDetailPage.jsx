@@ -1,81 +1,62 @@
 import {
     LandDetail,WrapperSimilarLands,
-    WrapperContactBox,AvatarArea,AgentInfor,AgentName,ContactLink,ContactInfo,  
+    WrapperContactBox,AvatarArea,AgentInfor,AgentName,ContactInfo,  
     WrapperConfig,ConfigItem,ConfigItemTitle,ConfigItemValue,
     SpecItemTitle,SpecItemValue,WrapperSpecs,SpecTitle,SpecBody,SpecItem,BodyDescription,
-    WrapperDiscriptionLand,TitleDescription,ActionIcon,WrapperAction,
+    WrapperDiscriptionLand,TitleDescription,
     InfoItemExtend,InfoItemValue,InfoItemTitle,InfoLand,InfoItem,
     Nameland,LocationLand,WrapperSlider, SliderContent,Sliderbottom,
-   InfoContact,ImageUser } from "./style";
+   InfoContact,ImageUser,WrapperCtBup,InformationBroker,DetailInfor,PhoneInfor
+   ,SwitchTypeproperty,SwitchItem,Titlewrapper } from "./style";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useParams,Link,useNavigate } from "react-router-dom";
+import { useParams,Link} from "react-router-dom";
 import {useState,useEffect} from "react";
 import { useDispatch,useSelector } from "react-redux";
 import { Row,Col, Skeleton,Pagination,Breadcrumb} from "antd";
-import {HeartOutlined,DollarOutlined,LoadingOutlined } from "@ant-design/icons";
+import {DollarOutlined,PhoneOutlined } from "@ant-design/icons";
 import DOMPurify from "dompurify";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBuilding,faPenRuler,faHouse,faBed,faChair,faToilet,faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faBuilding,faPenRuler,faHouse,faBed,faChair,faToilet } from '@fortawesome/free-solid-svg-icons';
 import useravatar from "../../assets/images/user_avatar_3607444.png";
 import icon_google from "../../assets/images/google.png";
+import icon_vip from "../../assets/images/vip.png";
 import * as ListingService from "../../services/ListingService";
 import * as ImageService from "../../services/ImageService";
 import * as HomeService from "../../services/HomeService";
 import { formatDateVN,formatacreage,formatPriceToString } from "../../utils";
-import {setEntities, setLoading,setRelated,setLoadingRelated,setPageRelated,setUpdatelike,setUpadtelikeRelated} from "../../redux/slides/HomeSlide";
+import {setEntities, setLoading,setRelated,setLoadingRelated,setPageRelated} from "../../redux/slides/HomeSlide";
 
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CardsmallComponent from "../../components/CardsmallComponent/CardsmallComponent";
 import SlickEffectComponent from "../../components/SlickEffectComponent/SlickEffectComponent";
-import * as FavoriteService from "../../services/FavoriteService";
-import {formatDate} from "../../utils";
+import {formatDate,getJoinedTime} from "../../utils";
 import Noimage from "../../assets/images/not_image.jpg"
 export default function LandsDetailPage () {
   const { id } = useParams();
   const user = useSelector(state => state.user);
   const entity = useSelector(state => state.home.entities[id]);
-  const [loadingLike, setLoadingLike] = useState(false);
+  const CommuneID = entity?.Address?.Commune?.id;
+  const CityID = entity?.Address?.City?.id;
+  const ownerId = entity?.UserInfo?._id;
+  const [typeproperty,setTypeproperty] = useState("Nhà đất bán");
   const loadingDetail = useSelector(state => state.home.loading.detail);
   const {items,isLoading,page,limit,total} = useSelector(state => state.home.related);
-
-  console.log("entity: ",entity);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [imageClick, setImageclick] = useState("");
   const [imagesland, setImagesland] = useState([]);
   const [isimagesLoading, setImagesLoading] = useState(false);
- 
-  const handleUpdatelikeitem = (idproperty,status) =>{
-          dispatch(setUpadtelikeRelated({idListing:idproperty,status}))
-          dispatch(setUpdatelike({idListing:idproperty,status}))
-      }
-  
-  const handleLikeProperty = async(item) => {
-          if(loadingLike) return;
-  
-          if(!user.access_Token){ 
-              navigate('/sign-in');
-              return;
-          }
-          const prev = item;
-          const status = !prev;
-  
-          setLoadingLike(true);
-          handleUpdatelikeitem(id,status);
-  
-          try {
-              if(prev){
-                  await FavoriteService.deleteFavoriteofuser(user,id);
-              } else {
-                  await FavoriteService.createnewFavorite(user,id);
-              }
-          } catch(err){
-              handleUpdatelikeitem(id,prev);
-          } finally {
-              setLoadingLike(false);
-          }
-      };
+  const [newsofBroker,setNewsofBroker] = useState({
+        loadingnews: false,
+        items: [],
+        page: 1,
+        limit: 6,
+        total: 0
+  })
+    
+
+
+    
   const handleReplaceString = (value) => {
     const wordsToRemove = ["Phường ", "Thành phố ", "Xã "];
     const regex = new RegExp(wordsToRemove.join('|'), 'gi');
@@ -116,6 +97,7 @@ export default function LandsDetailPage () {
         ImageService.getAllImage(id)
       ]);
 
+      
       // set redux 1 lần
       dispatch(setEntities([{ ...listingRes.data.data }]));
 
@@ -139,24 +121,19 @@ export default function LandsDetailPage () {
   
 
     useEffect(() => {
-        if (!entity) return;
-
-        const CommuneID = entity.Address?.Commune?.id;
-        const CityID = entity.Address?.City?.id;
 
         if (!CommuneID || !CityID) return;
 
         const fetchDataRelated = async () => {
             try {
                 dispatch(setLoadingRelated(true));
-
                 const res = await HomeService.getListingRelated({
                     page,
                     limit,
                     CommuneID,
                     CityID
                 });
-
+                console.log("relative: ",res.data);
                 dispatch(setRelated(res.data));
             } catch (e) {
                 console.log(e);
@@ -166,7 +143,37 @@ export default function LandsDetailPage () {
         };
 
         fetchDataRelated();
-}, [page, limit, entity]);
+    }, [page, limit,CommuneID,CityID]);
+
+    useEffect(() => {
+        if(!ownerId) return;
+        const fetchDataofBroker = async () => {
+            try {
+                setNewsofBroker(prev => ({
+                    ...prev,
+                    loadingnews:true,
+                }));
+                const data = {
+                    page: newsofBroker.page,
+                    limit: newsofBroker.limit,
+                    filter: typeproperty,
+                    idowner: ownerId
+                }
+                const result = await HomeService.getPropertyofBroker(data);
+                setNewsofBroker(prev => ({
+                    ...prev,
+                    loadingnews:false,
+                    items: result?.listings,
+                    page: result?.pageCurrent,
+                    total:result?.total,
+                }));
+
+            }catch(e){
+                console.log(e);
+            }
+        }
+        fetchDataofBroker();
+    },[newsofBroker.page,newsofBroker.limit,ownerId,typeproperty])
   return (
     <LandDetail>
       <Row gutter={[8,16]} style={{marginBottom:"10rem",marginTop:"1rem"}}>
@@ -224,49 +231,65 @@ export default function LandsDetailPage () {
                 </Col>
                 <Col xs={0} sm={0} md={0} lg={0} xl={6} xxl={6}>
                     <WrapperContactBox>
-                        <AvatarArea>
-                            {
-                                loadingDetail ? (
-                                    <Skeleton active avatar paragraph={{rows: 1,width:150}} title={{width:200}} />
-                                ) : (
-                                    <>
-                                        <AgentInfor>
-                                            <Link rel="icon" href="#" >
+                        <WrapperCtBup>
+                            <AvatarArea>
+                                {
+                                    loadingDetail ? (
+                                        <Skeleton active avatar paragraph={{rows: 1,width:150}} title={{width:200}} />
+                                    ) : (
+                                        <>
+                                            <AgentInfor>
                                                 <img src={useravatar} alt="avatar"/>
-                                            </Link>
-                                        </AgentInfor>
-                                        <AgentName>
-                                            <Link href="#" style={{color:"#000000ff",fontWeight:"600",fontSize:"16px"}}>
-                                                {entity?.UserInfo?.fullname}
-                                            </Link>
-                                            <ContactLink>
-                                                <Link href="#" style={{color:"#000000ff"}}>Xem {entity?.UserInfo?.countnew} tin khác</Link>
-                                            </ContactLink>
-                                        </AgentName>
+                                            </AgentInfor>
+                                            <AgentName>
+                                                <span>
+                                                    {entity?.UserInfo?.fullname}
+                                                </span>
+                                            </AgentName>
+                                        </>
+                                    )
+                                }
+                            </AvatarArea>
+                            <InformationBroker>
+                                <DetailInfor>
+                                    <h5 style={{margin:0}}>Thời gian tham gia</h5>
+                                    <h3 style={{marginTop:"3px"}}>{getJoinedTime(entity?.UserInfo?.createdAt)}</h3>
+                                </DetailInfor>
+                                <DetailInfor>
+                                    <h5 style={{margin:0}}>Tin đăng đang có</h5>
+                                    <h3 style={{marginTop:"3px"}}>{entity?.UserInfo?.countnew}</h3>
+                                </DetailInfor>
+                            </InformationBroker>
+                            <ContactInfo>
+                                {
+                                    loadingDetail ? (
+                                        <Skeleton.Button active style={{width:260}}/>
+                                    ) : 
+                                    <>
+                                        { user?.id && <Link to={`https://mail.google.com/mail/?view=cm&fs=1&to=${entity?.UserInfo?.email}`} style={{marginTop:"16px"}}>
+                                            <ButtonComponent leftIcon={<img src={icon_google} alt="zaloicon" style={{width:"18px",height:"18px"}}/>} size="large" textButton={"liên hệ qua gmail"} styleButton={{width:"100%"
+                                            }}/>
+                                        </Link> }
+                                        <PhoneInfor><PhoneOutlined/> {entity?.UserInfo?.phone}</PhoneInfor>
                                     </>
-                                )
-                            }
-                        </AvatarArea>
-                        <ContactInfo>
-                            {
-                                loadingDetail ? (
-                                    <Skeleton.Button active style={{width:260}}/>
-                                ) : 
-                                <Link to={`https://mail.google.com/mail/?view=cm&fs=1&to=${entity?.UserInfo?.email}`} style={{marginTop:"16px"}}>
-                                    <ButtonComponent leftIcon={<img src={icon_google} alt="zaloicon" style={{width:"18px",height:"18px"}}/>} size="large" textButton={"liên hệ qua gmail"} styleButton={{width:"100%"
-                                    }}/>
-                                </Link>
-                            }
-                        </ContactInfo>
+                                    
+                                }
+                            </ContactInfo>
+                        </WrapperCtBup>
                     </WrapperContactBox>
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={18} xxl={18}>
                     {
                         loadingDetail ? 
                             <Skeleton avatar={false} active paragraph={false} title={{ width: "100%", style: { height: 30 } }}/> :
-                        <Nameland>
-                            {entity && entity?.Title}
-                        </Nameland>
+                        <Titlewrapper>
+                            <Nameland>
+                                {entity && entity?.Title}
+                            </Nameland>
+                            {entity && entity?.type === "vip" && 
+                            <img src={icon_vip} style={{width:"30px",height:"30px"}} alt="icon_vip" /> }
+                        </Titlewrapper>
+                        
                     }
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={18} xxl={18}>
@@ -298,15 +321,6 @@ export default function LandsDetailPage () {
                                 <InfoItemTitle>Phòng ngủ</InfoItemTitle>
                                 <InfoItemValue>{entity?.bedroom} PN</InfoItemValue>
                             </InfoItem>
-                            < WrapperAction>
-                            <ActionIcon onClick={() => handleLikeProperty(entity?.isFavorite)}>
-                                {
-                                    loadingLike ? <LoadingOutlined /> :
-                                    entity?.isFavorite ? <FontAwesomeIcon icon={faHeart} style={{color: "red"}}/> :
-                                    <HeartOutlined/>
-                                }
-                            </ActionIcon>
-                            </WrapperAction>
                         </InfoLand>
                     }
                 </Col>
@@ -408,54 +422,107 @@ export default function LandsDetailPage () {
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={18} xxl={18}>
                     <div>
-                        
-                           
-                                    <SpecTitle>Bất động sản khác</SpecTitle>
-                                    <WrapperSimilarLands>
-                                        
-                                        {
-                                          isLoading ? Array(3).fill(0).map((_, index) => (
-                                                <CardsmallComponent 
-                                                loading={true}
-                                                style={{width:"100%"}} 
-                                                
-                                                bodyStyle={{padding:"12px 16px 16px 16px"}}/>
-                                            )) :
-
-                                            items && items?.map((rs,index) => (
-                                                <CardsmallComponent 
-                                                    key={rs._id}
-                                                    Id={rs._id}
-                                                    Title={rs.Title}
-                                                    Price={rs.Price}
-                                                    likeCard={rs?.isFavorite}
-                                                    Login={user}
-                                                    Area={rs.Address.Commune.name+" / "+rs.Address.City.name}
-                                                    createdAt={formatDate(rs.createdAt)}
-                                                    handlelike={handleUpdatelikeitem}
-                                                    Img={<img src={rs?.images[0]?.URL || Noimage}
-                                                    alt={`imagebuilding${index}`} className="image-land"/>}
-                                                    className="card-small-component"
-                                                    Acreage={formatacreage(rs.horizontal,rs.vertical)}
-                                                />
-                                            ))
-                                        }
-                                        
-                                        
-                                    </WrapperSimilarLands>
+                            <SpecTitle>Bất động sản khác</SpecTitle>
+                            <WrapperSimilarLands>
+                                
                                 {
-                                    total > limit && 
+                                    isLoading ? Array(3).fill(0).map((_, index) => (
+                                        <CardsmallComponent 
+                                        loading={true}
+                                        style={{width:"100%"}} 
+                                        
+                                        bodyStyle={{padding:"12px 16px 16px 16px"}}/>
+                                    )) :
+
+                                    items && items?.map((rs,index) => {
+                                        console.log(rs._id, rs.isFavorite);
+                                        return (
+                                        <CardsmallComponent 
+                                            key={rs._id}
+                                            Id={rs._id}
+                                            Title={rs.Title}
+                                            Price={rs.Price}
+                                            Area={rs.Address.Commune.name+" / "+rs.Address.City.name}
+                                            createdAt={formatDate(rs.createdAt)}
+                                            Img={<img src={rs?.images[0]?.URL || Noimage}
+                                            alt={`imagebuilding${index}`} className="image-land"/>}
+                                            className="card-small-component"
+                                            Acreage={formatacreage(rs.horizontal,rs.vertical)}
+                                        />
+                                    )
+                                })
+                            }
+                                
+                            </WrapperSimilarLands>
+                        {
+                            total > limit && 
+                            <Pagination
+                                align="center"
+                                current={page}
+                                total={total}
+                                pageSize={limit}
+                                onChange={(page) => {
+                                    dispatch(setPageRelated(page));
+                                }}
+                            />
+                        }
+                                   
+                    </div>
+                </Col>
+                 <Col xs={24} sm={24} md={24} lg={24} xl={18} xxl={18}>
+                    <div>
+                        <SpecTitle>Bất động của chủ sở hữu</SpecTitle>
+                        <SwitchTypeproperty>
+                            <SwitchItem 
+                                className={typeproperty === "Nhà đất bán" ? "active" : ""}
+                                onClick={() => {setTypeproperty("Nhà đất bán"); setNewsofBroker(prev => ({...prev,page: 1}))}}
+                            >Bán</SwitchItem>
+                            <SwitchItem 
+                                className={typeproperty === "Nhà đất cho thuê" ? "active" : ""}
+                                onClick={() => {setTypeproperty("Nhà đất cho thuê");setNewsofBroker(prev => ({...prev,page: 1}))}}
+                            >Cho thuê</SwitchItem>
+                        </SwitchTypeproperty>
+                        <WrapperSimilarLands>
+                                {
+                                    newsofBroker.loadingnews ? Array(3).fill(0).map((_, index) => (
+                                        <CardsmallComponent 
+                                        loading={true}
+                                        style={{width:"100%"}} 
+                                        
+                                        bodyStyle={{padding:"12px 16px 16px 16px"}}/>
+                                    )) :
+
+                                    newsofBroker?.items && newsofBroker?.items?.map((rs,index) => (
+                                        <CardsmallComponent 
+                                            key={rs._id}
+                                            Id={rs._id}
+                                            Title={rs.Title}
+                                            Price={rs.Price}
+                                            Area={rs.Address.Commune.name+" / "+rs.Address.City.name}
+                                            createdAt={formatDate(rs.createdAt)}
+                                            Img={<img src={rs?.thumbnail !== "no-image" ? rs?.thumbnail : Noimage}
+                                            alt={`imagebuilding${index}`} className="image-land"/>}
+                                            className="card-small-component"
+                                            Acreage={formatacreage(rs.horizontal,rs.vertical)}
+                                        />
+                                    ))
+                                }
+                            </WrapperSimilarLands>
+                            {
+                                newsofBroker.total > newsofBroker.limit && 
                                     <Pagination
                                         align="center"
-                                        current={page}
-                                        total={total}
-                                        pageSize={limit}
+                                        current={newsofBroker.page}
+                                        total={newsofBroker.total}
+                                        pageSize={newsofBroker.limit}
                                         onChange={(page) => {
-                                            dispatch(setPageRelated(page));
+                                            setNewsofBroker(prev => ({
+                                                ...prev,
+                                                page:page
+                                            }))
                                         }}
                                     />
-                                }
-                                   
+                            }
                     </div>
                 </Col>
             </Row>
