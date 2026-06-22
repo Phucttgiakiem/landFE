@@ -22,6 +22,13 @@ A modern web application that allows users to search, browse, and manage real es
 - Axios
 
 ## Live Demo
-
+VideoDemo:
+Linkweb:
+https://land-fe-omega.vercel.app
 ### Environment Variables
 REACT_APP_URL_BACKEND=https://landbe.onrender.com
+
+## Related Repository
+
+Backend:
+https://github.com/Phucttgiakiem/landBE.git
