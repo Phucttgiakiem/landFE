@@ -7,10 +7,9 @@ import HeaderSidebarComponent from './components/HeaderSidebarComponent/HeaderSi
 //import { isJsonString } from './utils';
 import * as UserService from "./services/UserService";
 import { jwtDecode } from "jwt-decode";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { updateUser } from './redux/slides/userSlide';
 export default function App() {
-  const user = useSelector(state => state.user);
   const dispatch = useDispatch();
   const handleGetDetailsUser = async (id) => {
       try {
