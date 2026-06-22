@@ -279,94 +279,98 @@ const HomePage = () => {
                         <div>
                             <h2>Nổi bật</h2>
                             <WrapperLandslist className="slider-container">
-                                 <SliderEffectComponent 
-                                    setting={{
-                                        dots: false,
-                                        infinite: true,
-                                        slidesToShow: 4,
-                                        slidesToScroll: 1,
-                                        arrows: true,
-                                        centerMode: false,
-                                        prevArrow:<SamplePrevArrow />,
-                                        nextArrow:<SampleNextArrow />,
-                                        responsive: [
-                                            {
-                                                breakpoint: 1199,
-                                                settings: {
-                                                slidesToShow: 2,
-                                                slidesToScroll: 2,
-                                                infinite: true,
-                                                }
-                                            },
-                                            {
-                                                breakpoint: 767,
-                                                settings: {
-                                                slidesToShow: 1,
-                                                slidesToScroll: 1
-                                                }
-                                            }
-                                        ]
-                                    }}
-                                >
                                 {
-                                    loading?.featured
-                                        ? (
-                                             Array(5).fill(null).map((_, index) => (
-                                                <div key={index}>
-                                                    <CardsmallComponent loading={true} />
+                                    featuredls && featuredls.length > 0 ? 
+                                    <SliderEffectComponent 
+                                        setting={{
+                                            dots: false,
+                                            infinite: true,
+                                            slidesToShow: 4,
+                                            slidesToScroll: 1,
+                                            arrows: true,
+                                            centerMode: false,
+                                            prevArrow:<SamplePrevArrow />,
+                                            nextArrow:<SampleNextArrow />,
+                                            responsive: [
+                                                {
+                                                    breakpoint: 1199,
+                                                    settings: {
+                                                    slidesToShow: 2,
+                                                    slidesToScroll: 2,
+                                                    infinite: true,
+                                                    }
+                                                },
+                                                {
+                                                    breakpoint: 767,
+                                                    settings: {
+                                                    slidesToShow: 1,
+                                                    slidesToScroll: 1
+                                                    }
+                                                }
+                                            ]
+                                        }}
+                                    >
+                                    {
+                                        loading?.featured
+                                            ? (
+                                                Array(5).fill(null).map((_, index) => (
+                                                    <div key={index}>
+                                                        <CardsmallComponent loading={true} />
+                                                    </div>
+                                                    ))
+                                            )
+                                            : featuredls.map((item, index) => (
+                                                <div key={item._id}>
+                                                    <CardsmallComponent 
+                                                        Id={item._id}
+                                                        loading={false}
+                                                        Title={item.Title}
+                                                        Price={item.Price}
+                                                        Area={item.Address.Commune.name+" / "+item.Address.City.name}
+                                                        createdAt={formatDate(item.createdAt)}
+                                                        Img={
+                                                            <div
+                                                                style={{position:"relative",
+                                                                overflow: "hidden"}}
+                                                            >   
+                                                                {
+                                                                    item?.type === "vip" ?  
+                                                                        <img src={Vipicon} alt="vip-icon" 
+                                                                            style={{
+                                                                                position: "absolute",
+                                                                                top: "10px",
+                                                                                left: "10px",
+                                                                                width:"35px",
+                                                                                height: "35px",
+                                                                                zIndex: 2,
+                                                                            }}/> : isNew(item.createdAt) && 
+                                                                        <img src={Newicon} alt="vip-icon" 
+                                                                            style={{
+                                                                                position: "absolute",
+                                                                                top: "10px",
+                                                                                left: "10px",
+                                                                                width:"35px",
+                                                                                height: "35px",
+                                                                                zIndex: 2,
+                                                                            }}/>
+                                                                }
+                                                                <img
+                                                                    src={item?.images?.URL || Noimage}
+                                                                    alt={`imagebuilding${index}`}
+                                                                    className={"image-land"}
+                                                                />
+                                                            </div>
+                                                            
+                                                        }
+                                                        Acreage={formatacreage(item.horizontal, item.vertical)}
+                                                        className="card-small-component"
+                                                    />
                                                 </div>
                                                 ))
-                                        )
-                                        : featuredls.map((item, index) => (
-                                            <div key={item._id}>
-                                                <CardsmallComponent 
-                                                    Id={item._id}
-                                                    loading={false}
-                                                    Title={item.Title}
-                                                    Price={item.Price}
-                                                    Area={item.Address.Commune.name+" / "+item.Address.City.name}
-                                                    createdAt={formatDate(item.createdAt)}
-                                                    Img={
-                                                        <div
-                                                            style={{position:"relative",
-                                                            overflow: "hidden"}}
-                                                        >   
-                                                            {
-                                                                item?.type === "vip" ?  
-                                                                    <img src={Vipicon} alt="vip-icon" 
-                                                                        style={{
-                                                                            position: "absolute",
-                                                                            top: "10px",
-                                                                            left: "10px",
-                                                                            width:"35px",
-                                                                            height: "35px",
-                                                                            zIndex: 2,
-                                                                        }}/> : isNew(item.createdAt) && 
-                                                                    <img src={Newicon} alt="vip-icon" 
-                                                                        style={{
-                                                                            position: "absolute",
-                                                                            top: "10px",
-                                                                            left: "10px",
-                                                                            width:"35px",
-                                                                            height: "35px",
-                                                                            zIndex: 2,
-                                                                        }}/>
-                                                            }
-                                                            <img
-                                                                src={item?.images?.URL || Noimage}
-                                                                alt={`imagebuilding${index}`}
-                                                                className={"image-land"}
-                                                            />
-                                                        </div>
-                                                        
-                                                    }
-                                                    Acreage={formatacreage(item.horizontal, item.vertical)}
-                                                    className="card-small-component"
-                                                />
-                                            </div>
-                                            ))
-                                    }
-                                </SliderEffectComponent>
+                                        }
+                                    </SliderEffectComponent> :
+                                    <span>Không có thông tin</span>
+                                }
                             </WrapperLandslist>
                         </div>
                     )

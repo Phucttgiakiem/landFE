@@ -6,15 +6,15 @@ import { useSelector } from "react-redux";
 import {MenuSidebar} from '../../constant/MenuOption';
 import { filterMenu } from './filterMenu';
 import userImage from "../../assets/images/user.png"
-const SidebarItem = ({item,level = 0}) => {
-    const [open,setOpen] = useState(false);
+const SidebarItem = ({item,level = 0,openMenu,setOpenMenu,}) => {
+    const isOpen = openMenu === item.label;
     const location = useLocation();
     const navigate = useNavigate();
     const isActive = item.path && location.pathname.includes(item.path);
     const handleClick = () => {
-        if(item.children){
-            setOpen(prev => !prev);
-        }else if (item.path){
+        if (item.children) {
+            setOpenMenu(isOpen ? null : item.label);
+        } else if (item.path) {
             navigate(item.path);
         }
     }
@@ -51,16 +51,17 @@ const SidebarItem = ({item,level = 0}) => {
                 {item.label}
             </span>
             {item.children && (
-                <span className={`arrow ${open ? "open" : ""}`}>
+                <span className={`arrow ${isOpen ? "open" : ""}`}>
                 <DownOutlined />
                 </span>
             )}
             </div>
 
-            {item.children && open && (
+            {item.children && isOpen && (
                 <div>
                     {item.children.map(child => (
-                        <SidebarItem key={child.label} item={child} level={level + 1} />
+                        <SidebarItem key={child.label} item={child} level={level + 1} openMenu={openMenu}
+                            setOpenMenu={setOpenMenu}/>
                     ))}
                 </div>
             )}
@@ -70,6 +71,8 @@ const SidebarItem = ({item,level = 0}) => {
 export default function SidebarComponent() { 
     const user = useSelector(state => state.user);
     const filteredMenu = filterMenu(MenuSidebar, user.role);
+
+    const [openMenu, setOpenMenu] = useState(null);
     return (
         <WrapperSidebar>
             <UserSection>
@@ -81,7 +84,12 @@ export default function SidebarComponent() {
             <Listfunction>
                 {
                     filteredMenu.map(item => (
-                        <SidebarItem key={item.label} item={item}/>
+                        <SidebarItem 
+                            key={item.label} 
+                            item={item}
+                            openMenu={openMenu}
+                            setOpenMenu={setOpenMenu}
+                        />
                     ))
                 }
             </Listfunction>

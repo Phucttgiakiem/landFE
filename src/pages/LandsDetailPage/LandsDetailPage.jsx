@@ -310,7 +310,7 @@ export default function LandsDetailPage () {
                         <InfoLand>
                             <InfoItem>
                                 <InfoItemTitle>Khoảng giá</InfoItemTitle>
-                                <InfoItemValue>{formatPriceToString(entity?.Price)}/tháng</InfoItemValue>
+                                <InfoItemValue>{entity?.Price ? formatPriceToString(entity?.Price)+'/tháng' : 'Thỏa thuận'}</InfoItemValue>
                             </InfoItem>
                             <InfoItem>
                                 <InfoItemTitle>Diện tích</InfoItemTitle>
@@ -360,7 +360,7 @@ export default function LandsDetailPage () {
                                     <SpecItem>
                                         <span><DollarOutlined /></span>
                                         <SpecItemTitle>Khoảng giá</SpecItemTitle>
-                                        <SpecItemValue>{formatPriceToString(entity?.Price)}/tháng</SpecItemValue>
+                                        <SpecItemValue>{entity?.Price ? formatPriceToString(entity?.Price)+'/tháng' : 'Thỏa thuận'}</SpecItemValue>
                                     </SpecItem>
                                     <SpecItem>
                                         <span><FontAwesomeIcon icon={faBuilding} /></span>

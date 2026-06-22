@@ -24,6 +24,7 @@ import DetailUserpage from "../pages/DetailUser/DetailUserpage";
 import ResendVerificationPage from "../pages/ResendVerificationPage/ResendVerificationPage";
 import VerifyEmailPage from "../pages/VerifyEmailPage/VerifyEmailPage";
 import forgetPasswordPage from "../pages/ForgotPassPage/ForgotPassPage";
+import ManageCategory from "../pages/ManageCategory/ManageCategorypage";
 export const routes = [
     {
         path: "/",
@@ -212,6 +213,14 @@ export const routes = [
     {
         path: '/Admin/DetailClient/:id',
         page:DetailUserpage,
+        isShowHeader:true,
+        isShowSidebar:true,
+        isPrivate:true,
+        allowedRoles:["admin"]
+    },
+    {
+        path: '/Admin/ManageCategory',
+        page:ManageCategory,
         isShowHeader:true,
         isShowSidebar:true,
         isPrivate:true,

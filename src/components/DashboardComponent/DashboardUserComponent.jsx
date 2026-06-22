@@ -1,26 +1,14 @@
-import {DashboardUserTitle,DashboardUserBody,WrapperLandslist,WrapperCardDashboard} from "./style";
+import {DashboardUserTitle,DashboardUserBody,WrapperLandslist} from "./style";
 import {useEffect,useState} from "react";
 import {getDashboarduseroverview} from "../../services/DashboardService";
 import SlickEffectComponent from "../SlickEffectComponent/SlickEffectComponent";
 import CardsmallComponent from "../CardsmallComponent/CardsmallComponent";
-import CardDashboardComponent from "../CardDashboardComponent/CardDashboardComponent"
 import {formatDate,formatacreage } from "../../utils";
 export default function DashboardUserComponent ({userinfo}){
     const [loadingSlickslide,setLoadingSlickslide] = useState(false);
     const [infoforyou,setInfoforyou] = useState({
-        totalpropertyislike: 0,
         topfivepropertynew: [],
     })
-    const handleUpdatelike = (idproperty, status) => {
-        setInfoforyou(prev => ({
-            totalpropertyislike: status ? prev.totalpropertyislike + 1 : prev.totalpropertyislike - 1,
-            topfivepropertynew: prev.topfivepropertynew.map(item =>
-            item._id === idproperty
-                ? { ...item, isFavorite: status }
-                : item
-            )
-        }));
-    };
     function SamplePrevArrow(props) {
         const { className, style, onClick } = props;
         return (
@@ -70,13 +58,11 @@ export default function DashboardUserComponent ({userinfo}){
                 setLoadingSlickslide(true);
                 const res = await getDashboarduseroverview(userinfo?.id);
                 setInfoforyou({
-                    totalpropertyislike: res.data?.totalpropertyislike,
                     topfivepropertynew:res.data?.topfivepropertynew,
                 });
                 setLoadingSlickslide(false)
             }catch(err){
                 setInfoforyou({
-                    totalpropertyislike: 0,
                     topfivepropertynew:null,
                 })
                 setLoadingSlickslide(false)
@@ -90,13 +76,6 @@ export default function DashboardUserComponent ({userinfo}){
                 <h4>Thông tin dành cho bạn</h4>
             </DashboardUserTitle>
             <DashboardUserBody>
-                <WrapperCardDashboard>
-                    <CardDashboardComponent styleComponent={{
-                        backgroundColor:"#4B0090",  
-                    }}
-                        content={`Số bài đăng đã like: ${infoforyou.totalpropertyislike}`}
-                    />
-                </WrapperCardDashboard>
                 {
                     infoforyou.topfivepropertynew?.length > 0 && 
                     (<>
@@ -141,11 +120,8 @@ export default function DashboardUserComponent ({userinfo}){
                                             loading={loadingSlickslide}
                                             Title={item.Title}
                                             Price={item.Price}
-                                            likeCard={item.isFavorite}
-                                            handlelike={handleUpdatelike}
                                             Area={item.Address.Commune.name+" / "+item.Address.City.name}
                                             createdAt={formatDate(item.createdAt)}
-                                            Login={userinfo}
                                             Img={
                                                 <img
                                                 src={item?.thumbnail}

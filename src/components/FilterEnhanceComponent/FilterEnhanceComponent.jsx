@@ -240,6 +240,7 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
         }
         fetchData();
     },[tempFilters?.province])
+    console.log("filteredCatagory: ",filteredCatagory);
     return (
         <FilterPersonalpageContainer>
             <FilterPersonalpageWrapper>

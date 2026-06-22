@@ -1,10 +1,10 @@
 import {useState,useEffect,useMemo} from "react";
 import { pdf } from "@react-pdf/renderer"
-import { Descriptions, Badge, Spin,Tag} from 'antd';
+import { Descriptions} from 'antd';
 import { useNavigate,useParams} from "react-router-dom";
 import {getContractByIdnotiduser} from "../../services/ContractService";
 import PreviewContractComponent from "../../components/previewContractComponent/previewContractComponent";
-import {formatDateVN} from "../../utils";
+import {formatDateVN,formatNumber} from "../../utils";
 import {WrapperDetailContract,DetailContractContainer,DetailContractHeader,DetailContractBody} from "./style";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { useSelector } from "react-redux";
@@ -70,7 +70,7 @@ export default function DetailContract() {
             {
                 key: 4,
                 label: detailcontract.typeContract === "rent" ? "Giá thuê" : "Giá bán",
-                children: detailcontract.price + " VND",
+                children: formatNumber(detailcontract.price) + " VND",
                 span: 3,
             },
             {
@@ -100,7 +100,7 @@ export default function DetailContract() {
             {
                 key: 9,
                 label: "Tiền cọc",
-                children: detailcontract?.rentalInfo?.deposit ? detailcontract.rentalInfo.deposit + " VND" : "N/A",
+                children: detailcontract?.rentalInfo?.deposit ? formatNumber(detailcontract.rentalInfo.deposit) + " VND" : "N/A",
                 span: 3,
             },
             {

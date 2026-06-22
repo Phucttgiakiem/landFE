@@ -157,6 +157,11 @@ export const comparedateInputwithtoday = (date) => {
     else if (now.getDate() - joinDate.getDate > 14) return false;
     else return true;
 }
+export const formatNumber = (number) => {
+        const [start, end] = `${number}`.split('.') || [];
+        const v = `${start}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return `${end ? `${v}.${end}` : `${v}`}`;
+};
 export const toSlug = (str) => {
   return str
     .normalize("NFD")

@@ -10,9 +10,9 @@ import { Pagination } from 'antd';
 import {Listpanel,Wrapperproperty} from "./style";
 import * as HomeService from '../../services/HomeService';
 import {setFiltered,setPageFiltered,setLoadingFiltered} from '../../redux/slides/HomeSlide';
-
 import { useFilters } from "../../hooks/useFiltershook";
 import {formatNumberaddZero,formatPriceToString} from "../../utils"
+import Not_image from "../../assets/images/not_image.jpg";
 const ListingPage = () => {
     const [searchParams,setSearchParams] = useSearchParams();
     const {type,category} = useParams();
@@ -163,12 +163,12 @@ const ListingPage = () => {
                             <CardComponent 
                                 idListing={vl._id}
                                 Title={vl?.Title} 
-                                Price={formatPriceToString(vl?.Price)}
+                                Price={vl.Price !== 0 ? formatPriceToString(vl?.Price) : "Thỏa thuận"}
                                 Bedroom={vl?.bedroom}
                                 Bathroom={vl?.bathroom}
                                 Address={vl?.Address?.Commune?.name+" - "+vl?.Address?.City?.name}
                                 Description={vl?.Description}
-                                ImageCard={vl?.thumbnail}
+                                ImageCard={vl?.thumbnail ?? Not_image}
                                 createdAt={vl?.createdAt}
                             />
                         )) : 

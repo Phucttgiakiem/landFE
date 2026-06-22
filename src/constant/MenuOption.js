@@ -1,6 +1,6 @@
-import { PieChartOutlined,MenuOutlined,SettingOutlined,RiseOutlined } from '@ant-design/icons';
+import { PieChartOutlined,MenuOutlined,SettingOutlined,RiseOutlined, } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import { faUserGroup,faFolder } from '@fortawesome/free-solid-svg-icons';
 
 export const listPricesell = [
     {key:'all',label: "Tất cả các giá", min:null,max:null },
@@ -62,6 +62,12 @@ export const MenuSidebar = [
         path: "/Contract",
         icon : <FontAwesomeIcon icon={faUserGroup}/>,
         roles: ["sell-user","admin"]
+    },
+    {
+        label: "Quản lý danh mục tin",
+        path: "/Admin/ManageCategory",
+        icon: <FontAwesomeIcon icon={faFolder}/>,
+        roles: ["admin"]
     },
     {
         label: "Lịch sử thuê, mua",

@@ -88,12 +88,6 @@ export default function SignInPage  ()  {
               </Loading>
               <WrapperRememberandForgot>
                   <div>
-                      <span >
-                          <Checkbox className="CheckOutlined" />
-                      </span>
-                      <span>Nhớ tài khoản</span>
-                  </div>
-                  <div>
                       <span onClick={() => navigate("/resend-verification?type=reset-password")}>Quên mật khẩu?</span>
                   </div>
               </WrapperRememberandForgot>

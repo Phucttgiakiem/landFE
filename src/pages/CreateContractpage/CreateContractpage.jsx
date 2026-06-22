@@ -103,6 +103,9 @@ export default function CreateContractpage () {
                 newErrors.transferDate = "Vui lòng chọn ngày chuyển khoản"
             }
         }
+        if(!dataCreateContract.price){
+            newErrors.price = "Vui lòng nhập giá thỏa thuận"
+        }
         return newErrors;
     }
     const handleAddvalueDatecreateContractonmobile = (value,key,errDate) => {
@@ -245,7 +248,31 @@ export default function CreateContractpage () {
         }
         mutation.mutate({userid:user.id,token:token,formdata:{...dataCreateContract}});
     }
-
+    const handleResetContract = () => {
+        setDatacreatecontract(prev => ({
+            ...prev,
+            idproperty:null,
+            titleproperty:null,
+            areaproperty:null,
+            addressproperty:null,
+            idtenant:null,
+            fullnametenant:null,
+            idNumbertenant:null,
+            addresstenant:null,
+            idbuyer:null,
+            fullnamebuyer:null,
+            idNumberbuyer:null,
+            addressbuyer:null,
+            price:null,
+            deposit:null,
+            startdate:null,
+            enddate:null,
+            paymentMethod:null,
+            transferDate:null,
+            statusContract:null,
+            term:null
+        }))
+    }
     useEffect(() => {
         if (!user?.id) return;
         const fetchData = async () => {
@@ -277,6 +304,11 @@ export default function CreateContractpage () {
             );
         }
     },[isSuccess,isError])
+    const formatNumber = (value) => {
+        const [start, end] = `${value}`.split('.') || [];
+        const v = `${start}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return `${end ? `${v}.${end}` : `${v}`}`;
+    };
     return (
         <WrapperCreateContract>
             <CreateContractContainer>
@@ -298,6 +330,7 @@ export default function CreateContractpage () {
                                 ]}
                                 onChange={(value) =>{
                                     handleAddvalueinformdata(value,"typecontract");
+                                    handleResetContract();
                                 }}
                                 allowClear
                             />
@@ -401,7 +434,29 @@ export default function CreateContractpage () {
                             
                             <div>
                                 <h5 style={{margin:"0 0 10px 0"}}>Giá {dataCreateContract.typecontract === "rent" ? "thuê" : "bán"}</h5>
-                                <InputNumber min={0} placeholder="giá" value={dataCreateContract.price} prefix="VND" size="large" style={{width:"100%"}} disabled/>
+                                    
+                                    
+                                        <InputNumber 
+                                            min={0} 
+                                            placeholder="Nhập giá thỏa thuận" 
+                                            formatter={formatNumber}
+                                            value={dataCreateContract.price} 
+                                            parser={(value) => value?.toString().replace(/,/g, '')}
+                                            prefix="VND" 
+                                            size="large" 
+                                            style={{width:"100%"}}
+                                            onChange={(value) => {console.log(value); handleAddvalueinformdata(value,"price")}}
+                                        />
+                                        {
+                                            errors.price && (
+                                                <span style={{ color: "red", marginBottom: 10 }}>
+                                                    {errors.price}
+                                                </span>
+                                            )
+                                        }
+                                    
+                                
+                                
                             </div>
                             
                             {

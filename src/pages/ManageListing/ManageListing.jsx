@@ -114,7 +114,6 @@ export default function ManageListing() {
     const [keywordfind,setKeywordfind] = useState("");
     const [loading,setLoading] = useState(false);
     const [listowner,setListowner] = useState([]);
-   // const [selectedowner,setSelectedowner] = useState("");
     const user = useSelector(state => state.user);
     const [searchParams, setSearchParams] = useSearchParams();
     const selectedowner =
