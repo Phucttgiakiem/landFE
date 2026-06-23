@@ -13,6 +13,7 @@ import {FilterPersonalpageContainer, FilterPersonalpageWrapper,FilterPersonalpag
 import * as CatagoryService from "../../services/CategoriesService";
 import {formatNumberaddZero} from "../../utils"
 import {listPricesell,listPriceRent,listacreage} from "../../constant/MenuOption";
+import {getProvinces,getCommunes} from "../../services/AddressService";
 export default function FilterEnhanceComponent ({CloseDialog}) {
     const [listProvince,setListProvince] = useState({
         isloading: false,
@@ -188,7 +189,7 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
                     isloading: true,
                     items: []
                 })
-                const res = await axios.get("https://production.cas.so/address-kit/2025-07-01/provinces");
+                const res = await getProvinces();
                 const provinces = res.data?.provinces.map(item => ({
                     value: item.code,
                     label: item.name
@@ -202,7 +203,6 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
                     isloading:false,
                     items:[]
                 })
-                console.log(e);
             }
         }
         fetchData();
@@ -221,7 +221,7 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
                     isloading:true,
                     items:[]
                 });
-                const res = await axios.get(`https://production.cas.so/address-kit/2025-07-01/provinces/${formatNumberaddZero(tempFilters?.province)}/communes`)
+                const res = await getCommunes(formatNumberaddZero(tempFilters?.province));
                 const wards = res.data?.communes.map(item => ({
                         value: item.code,
                         label: item.name
@@ -231,7 +231,6 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
                     items:wards
                 })
             }catch(e){
-                console.log(e);
                 setListcommune({
                     isloading:false,
                     items:[]
