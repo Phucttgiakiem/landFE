@@ -16,6 +16,7 @@ import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import DashboardNotFound from "../../pages/NotFoundPage/DashboardNotFoundPage";
 import * as ListingService from "../../services/ListingService";
 import * as ImageService from "../../services/ImageService";
+import {getProvinces,getCommunes} from "../../services/AddressService";
 const getBase64 = file =>
         new Promise((resolve,reject) => {
             const reader = new FileReader();
@@ -499,10 +500,8 @@ export default function EditListing () {
     }, [id]);
     useEffect(() => {
         const fetchdata = async () => {
-          const data = await axios.get(
-                "https://production.cas.so/address-kit/2025-07-01/provinces"
-            )
-            const { provinces } = data.data;
+            const res = await getProvinces();
+            const { provinces } = res.data;
            
             
             const list = provinces.map((item) => {
@@ -519,10 +518,8 @@ export default function EditListing () {
     useEffect(() => {
         const fetchdata = async () => {
             if (formdata.CityID) {
-                const data = await axios.get(
-                    `https://production.cas.so/address-kit/2025-07-01/provinces/${formdata.CityID}/communes`
-                );
-                const { communes } = data.data;
+                const res = await getCommunes(formdata.CityID);
+                const { communes } = res.data;
                 const list = communes.map((item) => {
                     return {
                         code: item.code,

@@ -10,6 +10,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import {useMessage} from "../../components/Message/Message";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import * as ListingService from "../../services/ListingService";
+import {getProvinces,getCommunes} from "../../services/AddressService";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/LoadingComponent/Loading";
@@ -393,10 +394,8 @@ export default function CreateListing() {
     }
     useEffect(() => {
         const fetchdata = async () => {
-          const data = await axios.get(
-                "https://production.cas.so/address-kit/2025-07-01/provinces"
-            )
-            const { provinces } = data.data;
+            const res = await getProvinces();
+            const { provinces } = res.data;
            
             const list = provinces.map((item) => {
                 return {
@@ -411,10 +410,8 @@ export default function CreateListing() {
     useEffect(() => {
         const fetchdata = async () => {
             if (formdata.City) {
-                const data = await axios.get(
-                    `https://production.cas.so/address-kit/2025-07-01/provinces/${formdata.City.split('-')[0]}/communes`
-                );
-                const { communes } = data.data;
+                const res = await getCommunes(formdata.City.split('-')[0]);
+                const { communes } = res.data;
                 const list = communes.map((item) => {
                     return {
                         code: item.code,

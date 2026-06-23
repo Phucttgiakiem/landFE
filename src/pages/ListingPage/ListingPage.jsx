@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useEffect,useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useDispatch,useSelector } from 'react-redux';
@@ -9,6 +8,7 @@ import { CardComponent } from '../../components/CardComponent/CardComponent';
 import { Pagination } from 'antd';
 import {Listpanel,Wrapperproperty} from "./style";
 import * as HomeService from '../../services/HomeService';
+import {getProvinces,getCommunes} from "../../services/AddressService";
 import {setFiltered,setPageFiltered,setLoadingFiltered} from '../../redux/slides/HomeSlide';
 import { useFilters } from "../../hooks/useFiltershook";
 import {formatNumberaddZero,formatPriceToString} from "../../utils"
@@ -111,7 +111,7 @@ const ListingPage = () => {
             // call api province
             setMenuProvince(prev => ({ ...prev, isloading: true }));
             try {
-                const res = await axios.get("https://production.cas.so/address-kit/2025-07-01/provinces");
+                const res = await getProvinces();
                
                 const provinces = res.data?.provinces.map(item => ({
                     value: item.code,
@@ -131,7 +131,7 @@ const ListingPage = () => {
                         ...prev,
                         isloading:true
                     }))
-                    const res = await axios.get(`https://production.cas.so/address-kit/2025-07-01/provinces/${formatNumberaddZero(query?.province)}/communes`);
+                    const res = await getCommunes(formatNumberaddZero(query?.province));
                     const wards = res.data?.communes.map(item => ({
                         value: item.code,
                         label: item.name
