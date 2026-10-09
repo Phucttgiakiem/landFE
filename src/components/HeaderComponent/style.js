@@ -123,7 +123,6 @@ export const HeaderMenuItemsubMenu = styled.li`
 
 export const HeaderMenuItem = styled.li`
     list-style: none;
-    margin-right: 20px;
     font-size: 16px;
     font-weight: 500;
     position: relative;
@@ -166,7 +165,8 @@ export const HeaderLink = styled.a`
   color: #fff;
   text-decoration: none;
   font-size: 16px;
-  min-width: 5rem;
+  width: 5rem;
+  text-align: center;
   font-weight: 500;
   padding: 10px;
   display: inline-block;

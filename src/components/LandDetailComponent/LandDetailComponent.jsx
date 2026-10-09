@@ -15,20 +15,17 @@ import {
     SpecItemTitle,SpecItemValue,WrapperSpecs,SpecTitle,SpecBody,SpecItem,BodyDescription,
     WrapperDiscriptionLand,TitleDescription,ActionIcon,WrapperAction,
     InfoItemExtend,InfoItemValue,InfoItemTitle,InfoLand,InfoItem,
-    Nameland,LocationLand,WrapperSlider,ImageSlider, SliderContent,Sliderbottom,
-    SmallImageSlider,SmallImageWrapper,Arrow,InfoContact,ImageUser } from "./style";
+    Nameland,LocationLand,WrapperSlider, SliderContent,Sliderbottom,
+    InfoContact,ImageUser } from "./style";
 import useravatar from "../../assets/images/user_avatar_3607444.png";
 import icon_zalo from "../../assets/images/icon_zalo.png";
 import no_image from "../../assets/images/No_image.png";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
-import CardsmallComponent from "../CardsmallComponent/CardsmallComponent";
-import { formatArea,buildMap,formatDateVN,formatacreage,formatPriceToString } from "../../utils";
+import { formatDateVN,formatacreage,formatPriceToString } from "../../utils";
 export default function LandDetailComponent({loading,listing,images}) {
-    //console.log("listing: ",listing);
     const [imageClick ,setImageclick] = useState("");
     const [nav1, setNav1] = useState(null);
     let sliderRef1 = useRef(null);
-    let sliderRef2 = useRef(null);
     useEffect(() => {
         setNav1(sliderRef1.current);
     }, []);
@@ -103,7 +100,7 @@ export default function LandDetailComponent({loading,listing,images}) {
                                                 {listing?.UserInfo.fullname}
                                             </Link>
                                             <ContactLink>
-                                                <Link href="#" style={{color:"#000000ff"}}>Xem {listing?.UserInfo.countnew} tin khác</Link>
+                                                <Link href="#" style={{color:"#000000ff"}}>View {listing?.UserInfo.countnew} other properties</Link>
                                             </ContactLink>
                                         </AgentName>
                                     </>
@@ -116,7 +113,7 @@ export default function LandDetailComponent({loading,listing,images}) {
                                     <Skeleton.Button active style={{width:260}}/>
                                 ) : 
                                 <Link href="#" style={{marginTop:"16px"}}>
-                                    <ButtonComponent leftIcon={<img src={icon_zalo} alt="zaloicon" style={{width:"25px",height:"25px"}}/>} size="large" textButton={"Chat qua Zalo"} styleButton={{width:"100%"}}/>
+                                    <ButtonComponent leftIcon={<img src={icon_zalo} alt="zaloicon" style={{width:"25px",height:"25px"}}/>} size="large" textButton={"Chat via Zalo"} styleButton={{width:"100%"}}/>
                                 </Link>
                             }
                         </ContactInfo>
@@ -260,42 +257,6 @@ export default function LandDetailComponent({loading,listing,images}) {
                     <div>
                         <SpecTitle>Bất động sản khác</SpecTitle>
                         <WrapperSimilarLands>
-                            {/* <CardsmallComponent 
-                                Title={"Europe Street beat"} 
-                                style={{width:"100%"}} 
-                                Img={<img draggable={false} alt="example" src={arrImages[0]} className="image-land"/>}
-                                bodyStyle={{padding:"12px 16px 16px 16px"}}
-                            />
-                            <CardsmallComponent 
-                                Title={"Europe Street beat"} 
-                                style={{width:"100%"}} 
-                                Img={<img draggable={false} alt="example" src={arrImages[0]} className="image-land"/>}
-                                bodyStyle={{padding:"12px 16px 16px 16px"}}
-                            />
-                            <CardsmallComponent 
-                                Title={"Europe Street beat"} 
-                                style={{width:"100%"}} 
-                                Img={<img draggable={false} alt="example" src={arrImages[0]} className="image-land"/>}
-                                bodyStyle={{padding:"12px 16px 16px 16px"}}
-                            />
-                            <CardsmallComponent 
-                                Title={"Europe Street beat"} 
-                                style={{width:"100%"}} 
-                                Img={<img draggable={false} alt="example" src={arrImages[0]} className="image-land"/>}
-                                bodyStyle={{padding:"12px 16px 16px 16px"}}
-                            />
-                            <CardsmallComponent 
-                                Title={"Europe Street beat"} 
-                                style={{width:"100%"}} 
-                                Img={<img draggable={false} alt="example" src={arrImages[0]} className="image-land"/>}
-                                bodyStyle={{padding:"12px 16px 16px 16px"}}
-                            />
-                            <CardsmallComponent 
-                                Title={"Europe Street beat"} 
-                                style={{width:"100%"}} 
-                                Img={<img draggable={false} alt="example" src={arrImages[0]} className="image-land"/>}
-                                bodyStyle={{padding:"12px 16px 16px 16px"}}
-                            /> */}
                         </WrapperSimilarLands>
                     </div>
                 </Col>

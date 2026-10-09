@@ -10,45 +10,45 @@ import { useSelector } from 'react-redux';
 import {formatDateVN} from "../../utils";
 const columns = [
     {
-        title: 'Họ và tên',
+        title: 'Full Name',
         dataIndex: 'fullname',
         width:290,
     },
     {
-        title: 'Điện thoại',
+        title: 'Phone Number',
         dataIndex: 'phone',
         width:200,
     },
     {
-        title: 'Ngày tham gia',
+        title: 'Join Date',
         dataIndex: 'createdAt',
         render: (value) => formatDateVN(value),
         width:250,
         sorter: true,
     },
     {
-        title: 'Ngày cập nhật gần đây',
+        title: 'Last Updated',
         dataIndex: 'updatedAt',
         render: (value) => formatDateVN(value),
         width:250,
     },
     {
-        title: 'Quyền',
+        title: 'Permissions',
         dataIndex: 'role',
         width: 150,
         filters: [
             {
-                text: 'Khách',
+                text: 'client',
                 value: 'user',
             },
             {
-                text: 'Chủ bất động sản',
+                text: 'Owner',
                 value: 'sell-user',
             },
         ],
     },
     {
-        title: 'Hành động',
+        title: 'Actions',
         key: 'x',
         width:260,
         render: (_, record) => (
@@ -131,7 +131,7 @@ export default function ManageClientPage () {
         <WrapperManageClient>
             <ManageClientContainer>
                 <ManageClientHeader>
-                    <h2>Quản lý người dùng</h2>
+                    <h2>Manage Clients</h2>
                     <ManageClientHeaderContent>
                         <SearchContainer>
                             <SearchButton onClick={() => setListclient(prev => ({...prev,search:keyword}))}>
@@ -139,7 +139,7 @@ export default function ManageClientPage () {
                             </SearchButton>
                             <input 
                                 type="text" 
-                                placeholder="Tìm kiếm người dùng..." 
+                                placeholder="Search clients..." 
                                 onChange={(e) => {
                                     if(e.target.value.trim() === "" && listClient.search === "") return;
                                     setKeyword(e.target.value.trim())}

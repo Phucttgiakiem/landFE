@@ -163,7 +163,7 @@ const ListingPage = () => {
                             <CardComponent 
                                 idListing={vl._id}
                                 Title={vl?.Title} 
-                                Price={vl.Price !== 0 ? formatPriceToString(vl?.Price) : "Thỏa thuận"}
+                                Price={vl.Price !== 0 ? formatPriceToString(vl?.Price) : "Negotiable"}
                                 Bedroom={vl?.bedroom}
                                 Bathroom={vl?.bathroom}
                                 Address={vl?.Address?.Commune?.name+" - "+vl?.Address?.City?.name}
@@ -172,7 +172,7 @@ const ListingPage = () => {
                                 createdAt={vl?.createdAt}
                             />
                         )) : 
-                        <span>Không có thông tin tìm thấy</span>
+                        <span>No results found</span>
                     }
                 </div>
                 {

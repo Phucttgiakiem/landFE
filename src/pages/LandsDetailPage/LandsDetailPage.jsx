@@ -39,7 +39,7 @@ export default function LandsDetailPage () {
   const CommuneID = entity?.Address?.Commune?.id;
   const CityID = entity?.Address?.City?.id;
   const ownerId = entity?.UserInfo?._id;
-  const [typeproperty,setTypeproperty] = useState("Nhà đất bán");
+  const [typeproperty,setTypeproperty] = useState("Sale");
   const loadingDetail = useSelector(state => state.home.loading.detail);
   const {items,isLoading,page,limit,total} = useSelector(state => state.home.related);
   const dispatch = useDispatch();
@@ -98,10 +98,10 @@ export default function LandsDetailPage () {
       ]);
 
       
-      // set redux 1 lần
+      
       dispatch(setEntities([{ ...listingRes.data.data }]));
 
-      // set local state 1 lần (không cần useEffect nữa)
+      
       const images = imageRes.data.data || [];
       setImagesland(images);
       setImageclick(images?.[0]?.URL || Noimage);
@@ -114,7 +114,7 @@ export default function LandsDetailPage () {
     }
   };
   
-    // chỉ chạy khi id đổi
+    // the useEffect below will run when the component mounts and whenever the id changes
     useEffect(() => {
         fetchDetailland();
     }, [id]);
@@ -133,7 +133,6 @@ export default function LandsDetailPage () {
                     CommuneID,
                     CityID
                 });
-                console.log("relative: ",res.data);
                 dispatch(setRelated(res.data));
             } catch (e) {
                 console.log(e);
@@ -223,8 +222,6 @@ export default function LandsDetailPage () {
                                             </div>
                                         ))
                                 }
-                                
-                                
                             </SlickEffectComponent>
                         </Sliderbottom>
                     </WrapperSlider>
@@ -252,11 +249,11 @@ export default function LandsDetailPage () {
                             </AvatarArea>
                             <InformationBroker>
                                 <DetailInfor>
-                                    <h5 style={{margin:0}}>Thời gian tham gia</h5>
+                                    <h5 style={{margin:0}}>Time Joined</h5>
                                     <h3 style={{marginTop:"3px"}}>{getJoinedTime(entity?.UserInfo?.createdAt)}</h3>
                                 </DetailInfor>
                                 <DetailInfor>
-                                    <h5 style={{margin:0}}>Tin đăng đang có</h5>
+                                    <h5 style={{margin:0}}>Active Listings</h5>
                                     <h3 style={{marginTop:"3px"}}>{entity?.UserInfo?.countnew}</h3>
                                 </DetailInfor>
                             </InformationBroker>
@@ -267,7 +264,7 @@ export default function LandsDetailPage () {
                                     ) : 
                                     <>
                                         { user?.id && <Link to={`https://mail.google.com/mail/?view=cm&fs=1&to=${entity?.UserInfo?.email}`} style={{marginTop:"16px"}}>
-                                            <ButtonComponent leftIcon={<img src={icon_google} alt="zaloicon" style={{width:"18px",height:"18px"}}/>} size="large" textButton={"liên hệ qua gmail"} styleButton={{width:"100%"
+                                            <ButtonComponent leftIcon={<img src={icon_google} alt="zaloicon" style={{width:"18px",height:"18px"}}/>} size="large" textButton={"Contact via Gmail"} styleButton={{width:"100%"
                                             }}/>
                                         </Link> }
                                         <PhoneInfor><PhoneOutlined/> {entity?.UserInfo?.phone}</PhoneInfor>
@@ -309,17 +306,17 @@ export default function LandsDetailPage () {
                         :
                         <InfoLand>
                             <InfoItem>
-                                <InfoItemTitle>Khoảng giá</InfoItemTitle>
-                                <InfoItemValue>{entity?.Price ? formatPriceToString(entity?.Price)+'/tháng' : 'Thỏa thuận'}</InfoItemValue>
+                                <InfoItemTitle>Price</InfoItemTitle>
+                                <InfoItemValue>{entity?.Price ? formatPriceToString(entity?.Price)+'/month' : 'Negotiable'}</InfoItemValue>
                             </InfoItem>
                             <InfoItem>
-                                <InfoItemTitle>Diện tích</InfoItemTitle>
+                                <InfoItemTitle>Area</InfoItemTitle>
                                 <InfoItemValue>{formatacreage(entity?.horizontal,entity?.vertical)} m²</InfoItemValue>
-                                <InfoItemExtend>Mặt tiền {entity?.front_street} m</InfoItemExtend>
+                                <InfoItemExtend>Frontage {entity?.front_street} m</InfoItemExtend>
                             </InfoItem>
                             <InfoItem>
-                                <InfoItemTitle>Phòng ngủ</InfoItemTitle>
-                                <InfoItemValue>{entity?.bedroom} PN</InfoItemValue>
+                                <InfoItemTitle>Bedrooms</InfoItemTitle>
+                                <InfoItemValue>{entity?.bedroom}</InfoItemValue>
                             </InfoItem>
                         </InfoLand>
                     }
@@ -334,7 +331,7 @@ export default function LandsDetailPage () {
                                     paragraph={{rows: 8,width:"100%"}} 
                                     title={{ width: "50%"}}/>
                             : <>
-                                <TitleDescription>Thông tin mô tả</TitleDescription>
+                                <TitleDescription>Description</TitleDescription>
                                 <BodyDescription
                                     dangerouslySetInnerHTML={{
                                         __html: DOMPurify.sanitize(entity?.Description),
@@ -355,42 +352,42 @@ export default function LandsDetailPage () {
                                     paragraph={{rows: 8,width:"100%"}} 
                                     title={{ width: "50%"}}/>
                             : <>
-                                <SpecTitle>Đặc điểm bất động sản</SpecTitle>
+                                <SpecTitle>Property Details</SpecTitle>
                                 <SpecBody>
                                     <SpecItem>
                                         <span><DollarOutlined /></span>
-                                        <SpecItemTitle>Khoảng giá</SpecItemTitle>
-                                        <SpecItemValue>{entity?.Price ? formatPriceToString(entity?.Price)+'/tháng' : 'Thỏa thuận'}</SpecItemValue>
+                                        <SpecItemTitle>Price Range</SpecItemTitle>
+                                        <SpecItemValue>{entity?.Price ? formatPriceToString(entity?.Price)+'/month' : 'Negotiable'}</SpecItemValue>
                                     </SpecItem>
                                     <SpecItem>
                                         <span><FontAwesomeIcon icon={faBuilding} /></span>
-                                        <SpecItemTitle>Số tầng</SpecItemTitle>
+                                        <SpecItemTitle>Floors</SpecItemTitle>
                                         <SpecItemValue>{entity?.floor}</SpecItemValue>
                                     </SpecItem>
                                     <SpecItem>
                                         <span><FontAwesomeIcon icon={faPenRuler}/></span>
-                                        <SpecItemTitle>Diện tích</SpecItemTitle>
+                                        <SpecItemTitle>Area</SpecItemTitle>
                                         <SpecItemValue>{formatacreage(entity?.horizontal,entity?.vertical)} m²</SpecItemValue>
                                     </SpecItem>
                                     <SpecItem>
                                         <span><FontAwesomeIcon icon={faHouse}/></span>
-                                        <SpecItemTitle>mặt tiền</SpecItemTitle>
+                                        <SpecItemTitle>Frontage</SpecItemTitle>
                                         <SpecItemValue>{entity?.front_street} m</SpecItemValue>
                                     </SpecItem>
                                     <SpecItem>
                                         <span><FontAwesomeIcon icon={faBed}/></span>
-                                        <SpecItemTitle>Số phòng ngủ</SpecItemTitle>
-                                        <SpecItemValue>{entity?.bedroom} phòng</SpecItemValue>
+                                        <SpecItemTitle>Bedrooms</SpecItemTitle>
+                                        <SpecItemValue>{entity?.bedroom}</SpecItemValue>
                                     </SpecItem>
                                     <SpecItem>
                                         <span><FontAwesomeIcon icon={faChair}/></span>
-                                        <SpecItemTitle>Nội thất</SpecItemTitle>
-                                        <SpecItemValue>Trang bị đầy đủ nhất</SpecItemValue>
+                                        <SpecItemTitle>Furniture</SpecItemTitle>
+                                        <SpecItemValue>Full</SpecItemValue>
                                     </SpecItem>
                                     <SpecItem>
                                         <span><FontAwesomeIcon icon={faToilet}/></span>
-                                        <SpecItemTitle>Số phòng vệ sinh</SpecItemTitle>
-                                        <SpecItemValue>{entity?.Toilet} phòng</SpecItemValue>
+                                        <SpecItemTitle>Bathrooms</SpecItemTitle>
+                                        <SpecItemValue>{entity?.Toilet} rooms</SpecItemValue>
                                     </SpecItem>
                                 </SpecBody>
                             </>
@@ -405,13 +402,13 @@ export default function LandsDetailPage () {
                             : 
                             <>
                                 <ConfigItem>
-                                    <ConfigItemTitle>Ngày đăng</ConfigItemTitle>
+                                    <ConfigItemTitle>Listing Date</ConfigItemTitle>
                                     <ConfigItemValue>{formatDateVN(entity?.createdAt)}</ConfigItemValue>
                                 </ConfigItem>
                                 {
                                     isValidMongoDate(entity?.ExpiredAt) &&
                                     <ConfigItem>
-                                        <ConfigItemTitle>Ngày hết hạn</ConfigItemTitle>
+                                        <ConfigItemTitle>Expiration Date</ConfigItemTitle>
                                         <ConfigItemValue>{formatDateVN(entity?.ExpiredAt)}</ConfigItemValue>
                                     </ConfigItem>
                                 }
@@ -422,65 +419,68 @@ export default function LandsDetailPage () {
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={18} xxl={18}>
                     <div>
-                            <SpecTitle>Bất động sản khác</SpecTitle>
-                            <WrapperSimilarLands>
-                                
-                                {
-                                    isLoading ? Array(3).fill(0).map((_, index) => (
-                                        <CardsmallComponent 
-                                        loading={true}
-                                        style={{width:"100%"}} 
-                                        
-                                        bodyStyle={{padding:"12px 16px 16px 16px"}}/>
-                                    )) :
-
-                                    items && items?.map((rs,index) => {
-                                        console.log(rs._id, rs.isFavorite);
-                                        return (
-                                        <CardsmallComponent 
-                                            key={rs._id}
-                                            Id={rs._id}
-                                            Title={rs.Title}
-                                            Price={rs.Price}
-                                            Area={rs.Address.Commune.name+" / "+rs.Address.City.name}
-                                            createdAt={formatDate(rs.createdAt)}
-                                            Img={<img src={rs?.images[0]?.URL || Noimage}
-                                            alt={`imagebuilding${index}`} className="image-land"/>}
-                                            className="card-small-component"
-                                            Acreage={formatacreage(rs.horizontal,rs.vertical)}
-                                        />
-                                    )
-                                })
-                            }
-                                
-                            </WrapperSimilarLands>
                         {
-                            total > limit && 
-                            <Pagination
-                                align="center"
-                                current={page}
-                                total={total}
-                                pageSize={limit}
-                                onChange={(page) => {
-                                    dispatch(setPageRelated(page));
-                                }}
-                            />
-                        }
-                                   
+                            items.length > 0 && (
+                                <>
+                                    <SpecTitle>Other Properties</SpecTitle>
+                                    <WrapperSimilarLands>
+                                            
+                                            {
+                                                isLoading ? Array(3).fill(0).map((_, index) => (
+                                                    <CardsmallComponent 
+                                                    loading={true}
+                                                    style={{width:"100%"}} 
+                                                    bodyStyle={{padding:"12px 16px 16px 16px"}}/>
+                                                )) :
+
+                                                items.length > 0 && items?.map((rs,index) => {
+                                                    return (
+                                                    <CardsmallComponent 
+                                                        key={rs._id}
+                                                        Id={rs._id}
+                                                        Title={rs.Title}
+                                                        Price={rs.Price}
+                                                        Area={rs.Address.Commune.name+" / "+rs.Address.City.name}
+                                                        createdAt={formatDate(rs.createdAt)}
+                                                        Img={<img src={rs?.images[0]?.URL || Noimage}
+                                                        alt={`imagebuilding${index}`} className="image-land"/>}
+                                                        className="card-small-component"
+                                                        Acreage={formatacreage(rs.horizontal,rs.vertical)}
+                                                    />
+                                                ) 
+                                            })
+                                        }
+                                            
+                                        </WrapperSimilarLands>
+                                    {
+                                        total > limit && 
+                                        <Pagination
+                                            align="center"
+                                            current={page}
+                                            total={total}
+                                            pageSize={limit}
+                                            onChange={(page) => {
+                                                dispatch(setPageRelated(page));
+                                            }}
+                                        />
+                                    }
+                                </>
+                            )
+                        }          
                     </div>
                 </Col>
                  <Col xs={24} sm={24} md={24} lg={24} xl={18} xxl={18}>
                     <div>
-                        <SpecTitle>Bất động của chủ sở hữu</SpecTitle>
+                        <SpecTitle>Other Properties of the Owner</SpecTitle>
                         <SwitchTypeproperty>
                             <SwitchItem 
-                                className={typeproperty === "Nhà đất bán" ? "active" : ""}
-                                onClick={() => {setTypeproperty("Nhà đất bán"); setNewsofBroker(prev => ({...prev,page: 1}))}}
-                            >Bán</SwitchItem>
+                                className={typeproperty === "Sale" ? "active" : ""}
+                                onClick={() => {setTypeproperty("Sale"); setNewsofBroker(prev => ({...prev,page: 1}))}}
+                            >Sale</SwitchItem>
                             <SwitchItem 
-                                className={typeproperty === "Nhà đất cho thuê" ? "active" : ""}
-                                onClick={() => {setTypeproperty("Nhà đất cho thuê");setNewsofBroker(prev => ({...prev,page: 1}))}}
-                            >Cho thuê</SwitchItem>
+                                className={typeproperty === "Rental" ? "active" : ""}
+                                onClick={() => {setTypeproperty("Rental");setNewsofBroker(prev => ({...prev,page: 1}))}}
+                            >Rental</SwitchItem>
                         </SwitchTypeproperty>
                         <WrapperSimilarLands>
                                 {
@@ -533,7 +533,7 @@ export default function LandsDetailPage () {
                     </Link>
                 </ImageUser>
                 <Link to={`https://mail.google.com/mail/?view=cm&fs=1&to=${entity?.UserInfo?.email}`} style={{flexGrow:1}}>
-                    <ButtonComponent leftIcon={<img src={icon_google} alt="zaloicon" style={{width:"25px",height:"25px"}}/>} size="large" textButton={"liên hệ qua gmail"} styleButton={{width:"100%"}}/>
+                    <ButtonComponent leftIcon={<img src={icon_google} alt="zaloicon" style={{width:"25px",height:"25px"}}/>} size="large" textButton={"Contact via Gmail"} styleButton={{width:"100%"}}/>
                 </Link>
             </InfoContact>
     </LandDetail>

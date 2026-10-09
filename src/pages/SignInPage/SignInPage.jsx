@@ -1,5 +1,5 @@
 
-import { WrapperContainerLeft,WrapperContainerRight, WrapperRememberandForgot,WrapperAnotherSignin,WrapperSignInPage } from "./style";
+import { WrapperContainerLeft,WrapperContainerRight, WrapperRememberandForgot,WrapperSignInPage } from "./style";
 import {useState,useEffect} from 'react';
 import { UserOutlined,LockOutlined} from '@ant-design/icons';
 import logo from "../../assets/images/real_state.png";
@@ -7,7 +7,6 @@ import backgroundland from "../../assets/images/building_home.jpg";
 import InputForm from "../../components/InputForm/InputForm";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import { Link,useNavigate } from 'react-router-dom';
-import { Checkbox } from 'antd';
 import * as UserService from "../../services/UserService";
 import { useMutationHook } from "../../hooks/useMutationhook";
 import Loading from "../../components/LoadingComponent/Loading";
@@ -65,35 +64,35 @@ export default function SignInPage  ()  {
             <img src={backgroundland} alt="background land" style={{width: '100%',height:"100%", objectFit:'fill'}}/>
             <img src={logo} alt="logo" style={{position: 'absolute', top: '20px', left: '20px', width: '120px'}}/>
             <div style={{position: 'absolute', top: '20px', left: '160px', color:'rgba(21,71,132,1)'}}>
-                <h4>Tìm nhà đất</h4>
-                <h4>Batdongsan.com.vn dẫn lối</h4>
+                <h4>Find Real Estate</h4>
+                <h4>Batdongsan.com.vn leads the way</h4>
             </div>
         </WrapperContainerLeft>
         <WrapperContainerRight>
           <div>
-              <h5>Xin chào bạn</h5>
-              <h3>Đăng nhập để tiếp tục</h3>
-              <InputForm placeholder={"Nhập địa chỉ email"} value={email} handleOnChange={handleOnchangeEmail} prefix={<UserOutlined/>} size={"large"} TypePassword={false} style={{marginBottom: "16px"}}/>
-              <InputForm placeholder={"Mật khẩu"} size={"large"} value={password} handleOnChange={handleOnchangePassword} prefix={<LockOutlined/>} TypePassword={true}/>
+              <h5>Hello there!</h5>
+              <h3>Sign in to continue</h3>
+              <InputForm placeholder={"Enter your email"} value={email} handleOnChange={handleOnchangeEmail} prefix={<UserOutlined/>} size={"large"} TypePassword={false} style={{marginBottom: "16px"}}/>
+              <InputForm placeholder={"Password"} size={"large"} value={password} handleOnChange={handleOnchangePassword} prefix={<LockOutlined/>} TypePassword={true}/>
               {error?.response?.data?.status === "error" && <span style={{ color: "red"}}>{error?.response?.data?.message}</span>}
               <Loading isLoading={isPending}>  
                 <ButtonComponent 
                   disabled={!email.length || !password.length} 
                   className={`btn-login ${email.length && password.length ? 'active' : 'disabled'}`} 
                   size="large" 
-                  textButton={"Đăng nhập"} 
+                  textButton={"Sign in"} 
                   styleButton={{width:"100%"}}
                   onClick={handleSignIn}
                 />
               </Loading>
               <WrapperRememberandForgot>
                   <div>
-                      <span onClick={() => navigate("/resend-verification?type=reset-password")}>Quên mật khẩu?</span>
+                      <span onClick={() => navigate("/resend-verification?type=reset-password")}>Forgot password?</span>
                   </div>
               </WrapperRememberandForgot>
           </div>
           <div className="signup_member">
-              <span>Chưa là thành viên? <Link rel="icon" onClick={(e) => handleNavigateSignUp(e)}>Đăng ký</Link> Tại đây</span>
+              <span>Not a member yet? <Link rel="icon" onClick={(e) => handleNavigateSignUp(e)}>Sign up</Link> here</span>
           </div>
         </WrapperContainerRight>
       </WrapperSignInPage>

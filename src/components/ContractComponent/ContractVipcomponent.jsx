@@ -12,60 +12,60 @@ const { RangePicker } = DatePicker;
 const tabsData = [
     {
         key: 'all',
-        label: 'Tất cả',
+        label: 'All',
     },
     {
-        key: 'Sale',
-        label: 'Bán',
+        key: 'sale',
+        label: 'Sale',
         field: 'typeContract',
         value: 'sale',
     },
     {
-        key: 'Rent',
-        label: 'Cho thuê',
+        key: 'rent',
+        label: 'Rent',
         field: 'typeContract',
         value: 'rent',
         
     },
     {
-        key: 'Mới tạo',
-        label: 'Mới tạo',
+        key: 'new',
+        label: 'New',
         field: 'status',
-        value: 'mới tạo'
+        value: 'new'
     },
     {
-        key: 'đã ký',
-        label: 'đã ký',
+        key: 'signed',
+        label: 'Signed',
         field: 'status',
-        value: 'đã ký'
+        value: 'signed'
     },
     {
-        key: 'hủy',
-        label: 'hủy',
+        key: 'cancelled',
+        label: 'Canceled',
         field: 'status',
-        value: 'hủy'
+        value: 'cancelled'
     },
 ]
 const getColumns = (role,iduser) => [
     {
-        title: 'Tên bất động sản',
+        title: 'Name Contract',
         dataIndex: ['propertySnapshot', 'title'],
         width: 300
     },
     {
-        title: 'Ngày tạo hợp đồng',
+        title: 'Date Created',
         dataIndex: 'createdAt',
         render: (value) => formatDateVN(value),
         sorter: true,
         width: 100
     },
     {
-        title: 'Trạng thái',
+        title: 'Status',
         dataIndex: 'status', 
         width: 100   
     },
     {
-        title: 'Hành động',
+        title: 'Actions',
         dataIndex: '',
         key: 'x',
         render: (_, record) => 
@@ -177,7 +177,7 @@ export default function ContractVipcomponent () {
                     />
                     
                     <ButtonComponent 
-                        textButton="Tìm" 
+                        textButton="Find" 
                         size="large" 
                         color="danger" 
                         variant="solid"  
@@ -187,14 +187,13 @@ export default function ContractVipcomponent () {
                                 ...contracts.filter,
                             };
 
-                            // có chọn ngày mới add createdAt
+                            
                             if (filterdate.startDate || filterdate.endDate) {
                                 newFilter.createdAt = {
                                     gte: filterdate.startDate,
                                     lte: filterdate.endDate,
                                 };
                             } else {
-                                // xoá filter ngày
                                 delete newFilter.createdAt;
                             }
 
@@ -251,7 +250,7 @@ export default function ContractVipcomponent () {
                     />
                     <div style={{display:"flex",flexDirection:"row",gap:10}}>
                         <ButtonComponent 
-                            textButton="Tìm" 
+                            textButton="Find" 
                             size="large" 
                             color={filterdate.startDate && filterdate.endDate ? "danger" : "default"} 
                             variant={filterdate.startDate && filterdate.endDate ? "solid": "filled"}  
@@ -261,14 +260,14 @@ export default function ContractVipcomponent () {
                                     ...contracts.filter,
                                 };
 
-                                // có chọn ngày mới add createdAt
+                                
                                 if (filterdate.startDate || filterdate.endDate) {
                                     newFilter.createdAt = {
                                         gte: filterdate.startDate,
                                         lte: filterdate.endDate,
                                     };
                                 } else {
-                                    // xoá filter ngày
+                                
                                     delete newFilter.createdAt;
                                 }
 
@@ -289,7 +288,7 @@ export default function ContractVipcomponent () {
                 {
                     user?.role !== "user" && 
                     <ButtonComponent 
-                        textButton="Tạo mới" 
+                        textButton="Create" 
                         size="large" 
                         className="btn-create"
                         onClick={() => navigate("/Contract/Create")}
@@ -354,7 +353,7 @@ export default function ContractVipcomponent () {
                                             item => item !== tab.value
                                         );
 
-                                    // hết value => xoá field
+                                    
                                     if (updatedValues.length > 0) {
 
                                         newFilter[tab.field] =

@@ -29,40 +29,40 @@ export default function EditContractpage() {
     const validate = () => {
         let newErrors = {};
         if(!editedContract.idNumberowner){
-            newErrors.idNumberowner = "Vui lòng nhập số căn cước công dân chủ sở hữu"
+            newErrors.idNumberowner = "Please enter the owner's ID number"
         }
         if(editedContract.idNumberowner && !handleCheckIDNumber(editedContract.idNumberowner)){
-            newErrors.idNumberowner = "Vui lòng nhập số căn cước công dân đủ 12 số"
+            newErrors.idNumberowner = "Please enter a valid 12-digit ID number"
         }
         if(!editedContract.statusContract){
-            newErrors.statusContract = "Vui lòng chọn trạng thái hợp đồng"
+            newErrors.statusContract = "Please select the contract status"
         }
         
         if(editedContract.typecontract === "rent"){    
             if(!editedContract.idNumbertenant){
-                newErrors.idNumbertenant = "Vui lòng nhập căn cước công dân người thuê"
+                newErrors.idNumbertenant = "Please enter the tenant's ID number"
             }
             if(editedContract.idNumbertenant && !handleCheckIDNumber(editedContract.idNumbertenant)){
-                newErrors.idNumbertenant = "Vui lòng nhập số căn cước công dân người thuê đủ 12 số"
+                newErrors.idNumbertenant = "Please enter a valid 12-digit ID number"
             }
             if(!editedContract.startdate || !editedContract.enddate){
-                newErrors.errdate = "Vui lòng nhập đủ thông tin thời hạn hợp đồng"
+                newErrors.errdate = "Please enter the complete contract duration information"
             }
             if(!editedContract.deposit){
-                newErrors.deposit = "Vui lòng nhập đủ số tiền cọc"
+                newErrors.deposit = "Please enter the deposit amount"
             }
         }else {
             if(!editedContract.idNumberbuyer){
-                newErrors.idNumberbuyer = "Vui lòng nhập số căn cước công dân người mua"
+                newErrors.idNumberbuyer = "Please enter the buyer's ID number"
             }
             if(editedContract.idNumberbuyer && !handleCheckIDNumber(editedContract.idNumberbuyer)){
-                newErrors.idNumberbuyer = "Vui lòng nhập số căn cước công dân người mua đủ 12 số"
+                newErrors.idNumberbuyer = "Please enter a valid 12-digit ID number"
             }
             if(!editedContract.paymentMethod){
-                newErrors.paymentMethod = "Vui lòng chọn phương thức thanh toán"
+                newErrors.paymentMethod = "Please select the payment method"
             }
             if(!editedContract.transferDate){
-                newErrors.transferDate = "Vui lòng chọn ngày chuyển khoản"
+                newErrors.transferDate = "Please select the transfer date"
             }
         }
         return newErrors;
@@ -192,7 +192,7 @@ export default function EditContractpage() {
     }, [id,user.id]);
     useEffect(() => {
         if (isSuccess) {
-            message.success("cập nhật hợp đồng thành công !");
+            message.success("Contract updated successfully!");
             setTimeout(()=>{
                 navigate("/Contract");
             },2000)
@@ -200,7 +200,7 @@ export default function EditContractpage() {
         if (isError) {
             message.error(
                 error?.response?.data?.message || 
-                "tạo mới hợp đồng thất bại!"
+                "Failed to update contract!"
             );
         }
     },[isSuccess,isError])
@@ -208,47 +208,47 @@ export default function EditContractpage() {
         <WrapperUpdateContract>
             <UpdateContractContainer>
                 <UpdateContractHeader>
-                    <h2>Chỉnh sửa hợp đồng</h2>
-                    <ButtonComponent textButton={"Quay lại"} size="large" color="cyan" variant="solid" onClick={() => navigate("/Contract")}/>
+                    <h2>Edit Contract</h2>
+                    <ButtonComponent textButton={"Back"} size="large" color="cyan" variant="solid" onClick={() => navigate("/Contract")}/>
                 </UpdateContractHeader>
                 <Loading isLoading={isPending}>
                     <UpdateContractBody>
                         <MainContentofContract>
                             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                <h5 style={{margin:"0 0 10px 0"}}>Loại hợp đồng</h5>
+                                <h5 style={{margin:"0 0 10px 0"}}>Contract Type</h5>
                                 <Input value={editedContract?.typecontract} disabled size="large"/>
                             </div>
                             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                <h5 style={{margin:"0 0 10px 0"}}>Tên mặt bằng, nhà ở</h5>
+                                <h5 style={{margin:"0 0 10px 0"}}>Property Name</h5>
                                 <Input value={editedContract?.titleproperty} disabled size="large"/>
                             </div>
                             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ mặt bằng, nhà ở</h5>
+                                <h5 style={{margin:"0 0 10px 0"}}>Property Address</h5>
                                 <Input value={editedContract?.addressproperty} disabled size="large"/>
                             </div>
                             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                <h5 style={{margin:"0 0 10px 0"}}>Diện tích mặt bằng, nhà ở</h5>
+                                <h5 style={{margin:"0 0 10px 0"}}>Property Area</h5>
                                 <Input value={editedContract?.areaproperty} disabled size="large"/>
                             </div>
                             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                <h5 style={{margin:"0 0 10px 0"}}>Giá {editedContract?.typecontract === "rent" ? "thuê" : "mua"} mặt bằng, nhà ở</h5>
+                                <h5 style={{margin:"0 0 10px 0"}}>Price {editedContract?.typecontract === "Rental" ? "to Rent" : "to Buy"} Property</h5>
                                 <InputNumber value={editedContract?.price} prefix="VND" formatter={formatNumber} disabled size="large" style={{width: "100%"}}/>
                             </div>
                             {
-                                editedContract?.typecontract === "rent" ? (
+                                editedContract?.typecontract === "Rental" ? (
                                     <>
                                         <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Tên người thuê</h5>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Tenant Name</h5>
                                             <Input value={editedContract?.fullnametenant} disabled size="large"/>
                                         </div>
                                         <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Số căn cước công dân</h5>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Tenant ID Number</h5>
                                             <Input value={editedContract?.idNumbertenant} allowClear
                                                 onChange={(e) => {
                                                     if(e.target.value === " ") return;
                                                     handleAddvalueinformdata(e.target.value,"idNumbertenant");
                                                 }} 
-                                                style={{width:"100%"}} placeholder="Nhập số căn cước công dân người thuê"
+                                                style={{width:"100%"}} placeholder="Enter tenant's ID number"
                                                 size="large"
                                             />
                                             {
@@ -260,12 +260,12 @@ export default function EditContractpage() {
                                             }
                                         </div>
                                         <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ cư trú</h5>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Tenant Address</h5>
                                             <Input value={editedContract?.addresstenant} disabled size="large"/>
                                         </div>
                                         <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Tiền đặt cọc</h5>
-                                            <InputNumber min={0} size="large" value={editedContract?.deposit} onChange={(value) => handleAddvalueinformdata(value,"deposit")} prefix="VND" style={{width:"100%"}} placeholder="Nhập số tiền đặt cọc"/>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Security Deposit</h5>
+                                            <InputNumber min={0} size="large" value={editedContract?.deposit} onChange={(value) => handleAddvalueinformdata(value,"deposit")} prefix="VND" style={{width:"100%"}} placeholder="Enter security deposit amount"/>
                                             {
                                                 errors.deposit && (
                                                     <span style={{ color: "red", marginBottom: 10 }}>
@@ -275,7 +275,7 @@ export default function EditContractpage() {
                                             }
                                         </div>
                                         <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Ngày bắt đầu và kết thúc hợp đồng</h5>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Contract Start and End Dates</h5>
                                             <WrapperDatecreateContractipad>
                                                 <DatePicker.RangePicker
                                                         value={[
@@ -303,7 +303,7 @@ export default function EditContractpage() {
                                                         handleAddvalueDatecreateContractonmobile(date ? date.toISOString() : null,"startdate","errdate")
                                                     }}
                                                     format="DD/MM/YYYY"
-                                                    placeholder="Ngày bắt đầu"
+                                                    placeholder="Contract Start Date"
                                                     style={{width:"100%"}}
                                                     size="large"
                                                     allowClear
@@ -314,7 +314,7 @@ export default function EditContractpage() {
                                                     onChange={(date,dateString) => {
                                                         handleAddvalueDatecreateContractonmobile(date ? date.toISOString() : null,"enddate","errdate")
                                                     }}
-                                                    placeholder="Ngày kết thúc"
+                                                    placeholder="Contract End Date"
                                                     style={{width:"100%"}}
                                                     size="large"
                                                     allowClear
@@ -332,12 +332,12 @@ export default function EditContractpage() {
                                 ) : (
                                     <>
                                         <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Tên người mua</h5>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Tenant Name</h5>
                                             <Input value={editedContract?.fullnamebuyer} disabled size="large"/>
                                         </div>
                                         <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Số căn cước công dân</h5>
-                                            <Input size="large" value={editedContract?.idNumberbuyer} onChange={(e) => handleAddvalueinformdata(e.target.value,"idNumberbuyer")} style={{width:"100%"}} placeholder="Nhập số căn cước công dân người mua" allowClear/>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Tenant ID Number</h5>
+                                            <Input size="large" value={editedContract?.idNumberbuyer} onChange={(e) => handleAddvalueinformdata(e.target.value,"idNumberbuyer")} style={{width:"100%"}} placeholder="Enter tenant's ID number" allowClear/>
                                             {
                                                 errors.idNumberbuyer && (
                                                     <span style={{ color: "red", marginBottom: 10 }}>
@@ -347,19 +347,19 @@ export default function EditContractpage() {
                                             }
                                         </div>
                                         <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ cư trú</h5>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Tenant Address</h5>
                                             <Input size="large" value={editedContract?.addressbuyer} disabled/>
                                         </div>
                                         <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Phương thức thanh toán</h5>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Payment Method</h5>
                                             <Select 
-                                                placeholder="chọn phương thức thanh toán"
+                                                placeholder="Select payment method"
                                                 size="large"
                                                 style={{width:"100%"}}
                                                 value={editedContract?.paymentMethod}
                                                 options={[
-                                                    {value:"chuyển khoản",label:"Chuyển khoản"},
-                                                    {value: "tiền mặt",label:"tiền mặt"},
+                                                    {value:"chuyển khoản",label:"Transfer"},
+                                                    {value: "tiền mặt",label:"Cash"},
                                                 ]}
                                                 onChange={(value) => handleAddvalueinformdata(value,"paymentMethod")}
                                                 allowClear
@@ -373,7 +373,7 @@ export default function EditContractpage() {
                                             }
                                         </div>
                                         <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Ngày chuyển khoản</h5>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Transfer Date</h5>
                                             <DatePicker size="large" style={{width:"100%"}}
                                                 value={editedContract?.transferDate
                                                     ? dayjs(editedContract?.transferDate)
@@ -398,12 +398,12 @@ export default function EditContractpage() {
                                 )
                             }
                         <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                <h5 style={{margin:"0 0 10px 0"}}>Tên người lập hợp đồng</h5>
+                                <h5 style={{margin:"0 0 10px 0"}}>Contract Creator Name</h5>
                                 <Input value={editedContract?.fullnameowner} disabled size="large"/>
                             </div>
                             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                <h5 style={{margin:"0 0 10px 0"}}>Số căn cước công dân</h5>
-                                <Input size="large" value={editedContract?.idNumberowner} onChange={(e) => handleAddvalueinformdata(e.target.value,"idNumberowner")} placeholder="Nhập số căn cước công dân" allowClear/>
+                                <h5 style={{margin:"0 0 10px 0"}}>ID Number</h5>
+                                <Input size="large" value={editedContract?.idNumberowner} onChange={(e) => handleAddvalueinformdata(e.target.value,"idNumberowner")} placeholder="Enter ID number" allowClear/>
                                 {
                                     errors.idNumberowner && (
                                         <span style={{ color: "red", marginBottom: 10 }}>
@@ -413,26 +413,26 @@ export default function EditContractpage() {
                                 }
                             </div>
                             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ cư trú</h5>
+                                <h5 style={{margin:"0 0 10px 0"}}>Tenant Address</h5>
                                 <Input size="large" value={editedContract?.addressowner} disabled/>
                             </div>
                             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                <h5 style={{margin:"0 0 10px 0"}}>Điều khoản hợp đồng</h5>
+                                <h5 style={{margin:"0 0 10px 0"}}>Contract Terms</h5>
                                 <Input.TextArea size="large" value={editedContract?.term} onChange={(e)=> handleAddvalueinformdata(e.target.value,"term")} allowClear/>
                             </div>
                             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                                <h5 style={{margin:"0 0 10px 0"}}>Tình trạng hợp đồng</h5>
+                                <h5 style={{margin:"0 0 10px 0"}}>Contract Status</h5>
                                 <Select 
-                                    placeholder="chọn trạng thái hợp đồng"
+                                    placeholder="Select contract status"
                                     size="large"
                                     style={{width:"100%"}}
                                     value={editedContract?.statusContract}
                                     onChange={(value) => handleAddvalueinformdata(value,"statusContract")}
                                     options={[
-                                        {value:"mới tạo",label:"mới tạo",disabled:contractoriginal?.status === "xong" || contractoriginal?.status === "hủy"},
-                                        {value: "đã ký",label:"đã ký",disabled:contractoriginal?.status === "xong" || contractoriginal?.status === "hủy"},
-                                        {value:"xong",label:"hoàn thành",disabled:contractoriginal?.status === "hủy"},
-                                        {value:"hủy",label:"hủy",disabled:contractoriginal?.status === "mới tạo" || contractoriginal?.status === "đã ký"},
+                                        {value:"new",label:"New",disabled:contractoriginal?.status === "completed" || contractoriginal?.status === "cancelled" || contractoriginal?.status === "signed"},
+                                        {value: "signed",label:"Signed",disabled:contractoriginal?.status === "completed" || contractoriginal?.status === "cancelled"},
+                                        {value:"completed",label:"Completed",disabled:contractoriginal?.status === "cancelled"},
+                                        {value:"cancelled",label:"Cancelled",disabled:contractoriginal?.status !== "cancelled"},
                                     ]}
                                     
                                     allowClear
@@ -448,8 +448,8 @@ export default function EditContractpage() {
                         </MainContentofContract>
                     </UpdateContractBody>
                     <UpdateContractFooter>
-                        <ButtonComponent textButton={"Cập nhật"} size="large" type="primary" onClick={handleUpdateContract}/>
-                        <ButtonComponent textButton={"Hủy"} size="large" color="default" variant="solid" onClick={handleResetForm}/>
+                        <ButtonComponent textButton={"Update"} size="large" type="primary" onClick={handleUpdateContract}/>
+                        <ButtonComponent textButton={"Cancel"} size="large" color="default" variant="solid" onClick={handleResetForm}/>
                     </UpdateContractFooter>
                 </Loading>
             </UpdateContractContainer>

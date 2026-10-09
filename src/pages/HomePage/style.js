@@ -60,9 +60,9 @@ export const WrapperSearch = styled.div`
 `
 export const MenuItem = styled.li`
   min-width: 6rem;
-  text-align: center;
   list-style: none;
   line-height: 3rem;
+  text-align: center;
   color: #fff;
   cursor: pointer;
   position: relative;

@@ -2,7 +2,7 @@ import { Input } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 //import {useState} from 'react';
 
-const InputForm = ({placeholder = "Nhập Text",size,prefix,TypePassword = true,...rests}) => {
+const InputForm = ({placeholder = "Type here",size,prefix,TypePassword = true,...rests}) => {
     
     // const [valueInput,setValueInput] = useState("");
     const handleOnChangeInput = (e) => {

@@ -2,7 +2,7 @@ import {useEffect,useState} from 'react'
 import { useSelector,useDispatch } from 'react-redux';
 import { SearchOutlined,WarningTwoTone } from '@ant-design/icons';
 import { Table,Space,Select,Modal,Button,Flex, Spin } from "antd";
-import { Link,useNavigate,useLocation } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 import {useMessage} from "../../components/Message/Message";
 import { useMutationHook } from "../../hooks/useMutationhook";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
@@ -14,24 +14,24 @@ import { WrapperDeletedListing, DeletedListingContainer, DeletedListingHeader, D
 
 const getColumns  = (openConfirmModal) => [
     {
-        title: 'Tên bất động sản',
+        title: 'Title of listing',
         dataIndex: 'Title',
         width:400
     },
     {
-        title: 'Ngày tạo',
+        title: 'Date Created',
         dataIndex: 'createdAt',
         sorter: true,
         width:150
     },
     {
-        title: 'Ngày xóa',
+        title: 'Date Deleted',
         dataIndex: 'deletedAt',
         sorter: true,
         width:150
     },
     {
-        title: 'Hành động',
+        title: 'Actions',
         dataIndex: '',
         key: 'x',
         width:200,
@@ -108,11 +108,11 @@ export default function DeleteListingPage() {
     };
     const handleActionSelected = () => {
         if(!selectedAction) {
-            message.warning("Vui lòng chọn hành động để áp dụng");
+            message.warning("Please select an action to continue");
             return;
         }
         if(selectedRowKeys.length === 0) {
-            message.warning("Vui lòng chọn ít nhất một tin đăng để "+selectedAction);
+            message.warning("Please select at least one listing to " + selectedAction);
             return;
         }  
         openConfirmModal(selectedRowKeys, selectedAction);
@@ -124,7 +124,7 @@ export default function DeleteListingPage() {
         selections: [
             {
                 key: 'all',
-                text: 'Chọn tất cả',
+                text: 'Select All',
                 onSelect: (changeableRowKeys) => {
                     setSelectedRowKeys(prev => [
                     ...new Set([...prev, ...changeableRowKeys])
@@ -133,7 +133,7 @@ export default function DeleteListingPage() {
             },
             {
                 key: 'none',
-                text: 'Bỏ chọn tất cả',
+                text: 'Deselect All',
                 onSelect: (changeableRowKeys) => {
                     setSelectedRowKeys(prev => prev.filter(key => !changeableRowKeys.includes(key)));   
                 }
@@ -196,14 +196,14 @@ export default function DeleteListingPage() {
                             <Button 
                                 size="large" 
                                 onClick={() => setConfirmModal(false)}>
-                                    Hủy
+                                    Cancel
                             </Button>
                             <Button 
                                 size="large" 
                                 type="primary" 
                                 danger={pendingData.action === "Xóa"}
                                 onClick={() => { setLoadingModal(true); executeAction(pendingData.ids,pendingData.action)}}>
-                                    Xác nhận
+                                    Confirm
                             </Button>
                         </Space>
                     </div>
@@ -216,8 +216,8 @@ export default function DeleteListingPage() {
                             <>
                                 <WarningTwoTone twoToneColor="#eb2f2f" style={{ fontSize: '40px' }} />
                                 <p style={{ textAlign: 'center',fontSize:"20px" }}>{pendingData.action === "Xóa" 
-                                ? "Việc này sẽ xóa vĩnh viễn bài đăng, bạn có chắc không?" 
-                                : "Bạn có chắc muốn khôi phục bài đăng này không?"}</p>
+                                ? "This will permanently delete the listing, are you sure?" 
+                                : "Are you sure you want to restore this listing?"}</p>
                             </>
                         ): (
                             <Flex gap="middle" vertical>
@@ -232,9 +232,9 @@ export default function DeleteListingPage() {
             <WrapperDeletedListing>
                 <DeletedListingContainer>
                     <DeletedListingHeader>
-                        <h2>Danh sách đã xóa</h2>
+                        <h2>Deleted Listings</h2>
                         <ButtonComponent 
-                            textButton={"Quay lại"} 
+                            textButton={"Back"} 
                             size="large" 
                             color="cyan" 
                             variant="solid" 
@@ -246,23 +246,23 @@ export default function DeleteListingPage() {
                                 <SearchButton>
                                     <SearchOutlined/>
                                 </SearchButton>
-                                <input type="text" placeholder="Tìm kiếm tin đã xóa..."/>
+                                <input type="text" placeholder="Search deleted listings..."/>
                             </SearchContainer>
                     </DeletedListingHeaderContent>
                     <div style={{margin: ' 10px 20px', display: 'flex', gap: '10px'}}>
                         <Select
                             value={selectedAction}
-                            placeholder="--- lựa chọn ---"
+                            placeholder="--- Select ---"
                             style={{ width: 180 }}
                             options={[
-                                { value: 'Xóa', label: 'Xóa' },
-                                { value: 'Khôi phục', label: 'Khôi phục' },
+                                { value: 'Xóa', label: 'Delete' },
+                                { value: 'Khôi phục', label: 'Restore' },
                             ]}
                             size="large"
                             onChange={(value) => setSelectedAction(value)}
                         />
                         <ButtonComponent 
-                            textButton="Áp dụng" 
+                            textButton="Apply" 
                             size="large"
                             color="danger" 
                             variant="outlined"

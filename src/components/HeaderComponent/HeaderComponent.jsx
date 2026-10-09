@@ -53,8 +53,8 @@ export default function HeaderComponent () {
     }
     const content = () => (
         <div>
-            <WrapperPopupitem onClick={() => navigate('/Dashboard')}>Thông tin cá nhân</WrapperPopupitem>
-            <WrapperPopupitem onClick={()=> handleLogout()}>Đăng xuất</WrapperPopupitem>
+            <WrapperPopupitem onClick={() => navigate('/Dashboard')}>Information</WrapperPopupitem>
+            <WrapperPopupitem onClick={()=> handleLogout()}>Logout</WrapperPopupitem>
         </div>
     )
     useEffect(() => {
@@ -89,7 +89,7 @@ export default function HeaderComponent () {
                                                 CategoriItems[0] 
                                                     && 
                                                     <HeaderMenuItem
-                                                        $active={location.pathname.includes("Nha-dat-cho-thue")}
+                                                        $active={location.pathname.includes("Sale-property")}
                                                     >
                                                         <HeaderLink
                                                             href={`/listing/${CategoriItems[0].TypeSlug}`}
@@ -110,7 +110,7 @@ export default function HeaderComponent () {
                                                 CategoriItems[1] 
                                                     && 
                                                     <HeaderMenuItem
-                                                        $active={location.pathname.includes("Nha-dat-ban")}
+                                                        $active={location.pathname.includes("Rental-property")}
                                                     >
                                                         <HeaderLink
                                                             href={`/listing/${CategoriItems[1].TypeSlug}`}
@@ -152,8 +152,8 @@ export default function HeaderComponent () {
                                 
                             ):(
                                 <WrapperHeaderAccount onClick={handleNavigationLogin}>
-                                    <HeaderLink>Đăng nhập</HeaderLink>
-                                    <HeaderLink>Đăng ký</HeaderLink>
+                                    <HeaderLink>Sign in</HeaderLink>
+                                    <HeaderLink>Sign up</HeaderLink>
                                 </WrapperHeaderAccount>
                             )
                         }

@@ -39,7 +39,7 @@ export default function DetailUserpage (){
         return [
             {
                 key: "1",
-                label: "Họ & tên",
+                label: "Full Name",
                 children: detailclient.fullname
             },
             {
@@ -49,33 +49,33 @@ export default function DetailUserpage (){
             },
             {
                 key: "3",
-                label: "Điện thoại",
+                label: "Phone Number",
                 children: detailclient.phone
             },
             {
                 key: "4",
-                label: "Địa chỉ",
+                label: "Address",
                 span: 2,
                 children: detailclient.address
             },
             {
                 key: "5",
-                label: "Ngày sinh",
+                label: "Date of Birth",
                 children: formatDate(detailclient.dateOfBirth)
             },
             {
                 key: "6",
-                label: "Số căn cước công dân",
+                label: "ID Number",
                 children: detailclient.idNumber || "N/A"
             },
             {
                 key: "7",
-                label: "Ngày tạo",
+                label: "Creation Date",
                 children: formatDate(detailclient.idIssuedDate)
             },
             {
                 key: "8",
-                label: "Đơn vị cung cấp",
+                label: "Issuing Authority",
                 span: 3,
                 children: detailclient.idIssuedPlace || "N/A"
             }
@@ -85,9 +85,9 @@ export default function DetailUserpage (){
         <WrapperDetailClient>
             <DetailClientContainer>
                 <DetailClientHeader>
-                    <h2>Chi tiết thông tin tài khoản</h2>
+                    <h2>Detail User</h2>
                     <ButtonComponent 
-                        textButton={"Quay lại"} 
+                        textButton={"Back"} 
                         size="large" 
                         color="cyan" 
                         variant="solid" 
@@ -95,11 +95,6 @@ export default function DetailUserpage (){
                         />
                 </DetailClientHeader>
                 <DetailClientBody>
-                    {/* {loading ? (
-                        <Spin size="large"/>
-                        ) : (
-                        <Descriptions bordered items={items} />
-                    )} */}
                     <Descriptions layout="vertical" items={items}/>
                 </DetailClientBody>
             </DetailClientContainer>

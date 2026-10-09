@@ -51,116 +51,117 @@ export default function DetailContract() {
         return [
             {
                 key: 1,
-                label: "Tên bất động sản",
+                label: "Title",
                 children: detailcontract.propertySnapshot.title,
                 span: 3,
             },
             {
                 key: 2,
-                label: "Địa chỉ",
+                label: "Address",
                 children: detailcontract.propertySnapshot.address,
                 span: 2,
             },
             {
                 key: 3,
-                label: "Diện tích",
+                label: "Area",
                 children: detailcontract.propertySnapshot.area,
                 span: 1,
             },
             {
                 key: 4,
-                label: detailcontract.typeContract === "rent" ? "Giá thuê" : "Giá bán",
+                label: detailcontract.typeContract === "rent" ? "Rental Price" : "Sale Price",
                 children: formatNumber(detailcontract.price) + " VND",
                 span: 3,
             },
             {
                 key: 5,
-                label: "Tên người thuê/mua",
+                label: "Tenant/Buyer Name",
                 children: detailcontract.typeContract === "rent" ? detailcontract?.tenantSnapshot?.fullName : detailcontract?.buyerSnapshot?.fullName,
                 span: 2,
             },
             {
                 key: 6,
-                label: "mã số căn cước công dân người thuê/mua",
+                label: "ID Number",
                 children: detailcontract.typeContract === "rent" ? detailcontract?.tenantSnapshot?.idNumber : detailcontract?.buyerSnapshot?.idNumber,
                 span: 2,
             },
             {
                 key: 7,
-                label: "Địa chỉ thường trú người thuê/mua",
+                label: "Address of Tenant/Buyer",
                 children: detailcontract.typeContract === "rent" ? detailcontract?.tenantSnapshot?.address : detailcontract?.buyerSnapshot?.address,
                 span: 3,
             },
             {
                 key: 8,
-                label: "Hạn hợp đồng",
+                label: "Contract Expiry",
                 children: detailcontract?.rentalInfo?.startDate && detailcontract?.rentalInfo?.endDate ? `${formatDateVN(detailcontract.rentalInfo.startDate)} - ${formatDateVN(detailcontract.rentalInfo.endDate)}` : "N/A",
                 span: 3,
             },
             {
                 key: 9,
-                label: "Tiền cọc",
+                label: "Deposit",
                 children: detailcontract?.rentalInfo?.deposit ? formatNumber(detailcontract.rentalInfo.deposit) + " VND" : "N/A",
                 span: 3,
             },
             {
                 key: 10,
-                label: "Ngày chuyển khoản",
+                label: "Transfer Date",
                 children: detailcontract?.saleInfo?.transferDate ? formatDateVN(detailcontract?.saleInfo?.transferDate) : "N/A",
                 span: 3,
             },
             {
                 key: 11,
-                label: "Phương thức thanh toán",
+                label: "Payment Method",
                 children: detailcontract?.saleInfo?.paymentMethod ? detailcontract.saleInfo.paymentMethod : "N/A",
                 span: 1,
             },
             {
                 key: 12,
-                label: "Tên người lập đơn",
+                label: "Owner Name",
                 children: detailcontract?.ownerSnapshot?.fullName,
                 span: 2,
             },
             {
                 key: 13,
-                label: "mã số căn cước công dân người lập đơn",
+                label: "ID Number",
                 children: detailcontract?.ownerSnapshot?.idNumber,
                 span: 3,
             },
             {
                 key: 14,
-                label: "Địa chỉ thường trú người lập đơn",
+                label: "Address of Owner",
                 children: detailcontract?.ownerSnapshot?.address,
                 span: 3,
             },
             {
                 key: 15,
-                label: "Trạng thái hợp đồng",
+                label: "Contract Status",
                 children: detailcontract?.status,
                 span: 3,
             },
             {
                 key: 16,
-                label: "Điều khoản hợp đồng",
+                label: "Contract Terms",
                 children: detailcontract?.terms,
                 span: 3,
             }
         ]
     })
+    console.log("detailcontract",detailcontract)
     return (
         <WrapperDetailContract>
             <DetailContractContainer>
                 <DetailContractHeader>
-                    <h2>Chi tiết hợp đồng</h2>
+                    <h2>Detail Contract</h2>
                     <ButtonComponent 
-                        textButton={"Quay lại"} 
+                        textButton={"Back"} 
                         size="large" 
                         color="cyan" 
                         variant="solid" 
                         onClick={() => {user.role !== "user" ? navigate("/Contract") : navigate("/Contract-history")}}    
                     />
                     <ButtonComponent
-                        textButton={"Tải hợp đồng"} 
+                        textButton={"Download Contract"} 
                         size="large" 
                         color="cyan" 
                         variant="solid"

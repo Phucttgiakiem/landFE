@@ -69,55 +69,55 @@ export default function EditListing () {
     const validate = () => {
         let newErrors = {};
         if(!formdata.Title.trim()){
-            newErrors.Title = "Vui lòng nhập tên dự án";
+            newErrors.Title = "Please enter the title of the project";
         }
         if(!formdata.Description.trim()){
-            newErrors.Description = "Vui lòng nhập mô tả dự án";
+            newErrors.Description = "Please enter the description of the project";
         }
         if(formdata.vertical == null || formdata.vertical <= 0){
-            newErrors.vertical = "Vui lòng nhập chiều dài"
+            newErrors.vertical = "Please enter the vertical dimension"
         }
         if(formdata.horizontal == null || formdata.horizontal <= 0){
-            newErrors.horizontal = "Vui lòng nhập chiều rộng";
+            newErrors.horizontal = "Please enter the horizontal dimension";
         }
         if(formdata.front_street == null || formdata.front_street <= 0){
-            newErrors.front_street = "Vui lòng nhập chiều dài mặt tiền"
+            newErrors.front_street = "Please enter the front street dimension"
         }
         if(!formdata.numberhouse.trim()){
-            newErrors.numberhouse = "Vui lòng nhập mã số thửa đất"
+            newErrors.numberhouse = "Please enter the lot number"
         }
         if(!formdata.CityID){
-            newErrors.CityID = "Vui lòng chọn đơn vị hành chính tỉnh";
+            newErrors.CityID = "Please select the provincial administrative unit";
         }
         if(!formdata.CommuneID){
-            newErrors.CommuneID = "Vui lòng chọn đợn vị hành chính cấp địa phương";
+            newErrors.CommuneID = "Please select the local administrative unit";
         }
         if(formdata.floor == null || formdata.floor <= 0){
-            newErrors.floor = "Vui lòng nhập số tầng";
+            newErrors.floor = "Please enter the number of floors";
         }
         if(formdata.bathroom == null || formdata.bathroom <= 0 ){
-            newErrors.bathroom = "Vui lòng nhập số phòng tắm";
+            newErrors.bathroom = "Please enter the number of bathrooms";
         }
         if(formdata.bedroom == null || formdata.bedroom <= 0 ){
-            newErrors.bedroom = "Vui lòng nhập số phòng ngủ";
+            newErrors.bedroom = "Please enter the number of bedrooms";
         }
         if(formdata.Toilet == null || formdata.Toilet <= 0){
-            newErrors.Toilet = "Vui lòng nhập số toilet";
+            newErrors.Toilet = "Please enter the number of toilets";
         }
         if(!formdata.CatagoryProperty.trim()){
-            newErrors.CatagoryProperty = "Vui lòng chọn loại bất động sản";
+            newErrors.CatagoryProperty = "Please select the property category";
         }
         if(!formdata.Legal.trim()){
-            newErrors.Legal = "Vui lòng chọn loại hợp đồng mua bán";
+            newErrors.Legal = "Please select the legal status";
         }
         if(fileList.length === 0){
-            newErrors.Images = "Vui lòng chọn ít nhất một ảnh cho bất động sản";
+            newErrors.Images = "Please select at least one image for the project";
         }
         if(!formdata.visibility_status){
-            newErrors.visibility_status = "Vui lòng chọn trạng thái bài đăng";
+            newErrors.visibility_status = "Please select the visibility status";
         }
         if(!formdata.type) {
-            newErrors.typenews = "Vui lòng chọn loại tin đăng";
+            newErrors.typenews = "Please select the type of listing";
         }
         return newErrors;
     }
@@ -341,7 +341,7 @@ export default function EditListing () {
         }else if(newFileList.length === 0){
             setErrors(prev => ({
                 ...prev,
-                Images: "Vui lòng chọn ít nhất một ảnh cho bất động sản"
+                Images: "Please select at least one image for the project"
             }))
         }
     };
@@ -551,13 +551,13 @@ export default function EditListing () {
     },[]);
     useEffect(() => {
         if (isSuccess) {
-            message.success("Cập nhật thông tin bất động sản thành công !");
+            message.success("Update property information successfully!");
             setTimeout(()=>{
                 navigate('/manage-listing');
             },2000)
         } else if (isError) {
             console.log(error);
-            message.error(error?.response?.data?.message || "Cập nhật thông tin thất bại!");
+            message.error(error?.response?.data?.message || "Update information failed!");
         }
     },[isSuccess, isError])
     const uploadButton = (
@@ -575,9 +575,9 @@ export default function EditListing () {
                 <WrapperEditListing>
                     <EditListingContainer>
                         <EditListingHeader>
-                            <h2>Thông tin bất động sản chỉnh sửa</h2>
+                            <h2>Edit Property Information</h2>
                             <ButtonComponent 
-                                textButton={"Quay lại"} 
+                                textButton={"Back"} 
                                 size="large" 
                                 color="cyan" 
                                 variant="solid" 
@@ -586,8 +586,8 @@ export default function EditListing () {
                         <Loading isLoading={isPending}>
                             <EditListingBody>
                                     <div>
-                                        <span className="label">Tiêu đề bất động sản</span>
-                                        <InputForm placeholder="Nhập tiêu đề bất động sản" size={"large"} 
+                                        <span className="label">Title</span>
+                                        <InputForm placeholder="Enter property title" size={"large"} 
                                         value={formdata?.Title}
                                         TypePassword={false} 
                                         handleOnChange={handleChangeTitle}
@@ -602,7 +602,7 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Mô tả bất động sản</span>
+                                        <span className="label">Description</span>
                                         <SunEditor
                                             setOptions={{
                                                 buttonList: [
@@ -625,13 +625,13 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Giá (đơn vị: đồng)</span>
+                                        <span className="label">Price (Unit: VND)</span>
                                         <InputNumber
                                             min={0}
                                             value={formdata?.Price}
                                             formatter={formatNumber}
                                             parser={(value) => value?.toString().replace(/\s?Đ|(,*)/g, '')}
-                                            placeholder="Nhập giá bất động sản" 
+                                            placeholder="Enter property price"
                                             size={"large"}
                                             style={{width:"100%"}}
                                             onChange={handleChangePrice}
@@ -646,8 +646,8 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Chiều dài (m)</span>
-                                        <InputForm type="number" placeholder="Nhập chiều dài bất động sản" size={"large"} 
+                                        <span className="label">Length (m)</span>
+                                        <InputForm type="number" placeholder="Enter property length" size={"large"} 
                                         min={0}
                                         value={formdata?.vertical}
                                         TypePassword={false} 
@@ -663,8 +663,8 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Chiều rộng (m)</span>
-                                        <InputForm type="number" placeholder="Nhập chiều rộng bất động sản" size={"large"} 
+                                        <span className="label">Width (m)</span>
+                                        <InputForm type="number" placeholder="Enter property width" size={"large"} 
                                         min={0}
                                         value={formdata?.horizontal}
                                         TypePassword={false}
@@ -680,8 +680,8 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Mặt tiền (m)</span>
-                                        <InputForm type="number" placeholder="Nhập mặt tiền bất động sản" size={"large"} 
+                                        <span className="label">Front Street (m)</span>
+                                        <InputForm type="number" placeholder="Enter front street length" size={"large"} 
                                         min={0}
                                         value={formdata?.front_street}
                                         TypePassword={false} 
@@ -697,8 +697,8 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Số nhà</span>
-                                        <InputForm placeholder="Nhập số nhà bất động sản" size={"large"}
+                                        <span className="label">House Number</span>
+                                        <InputForm placeholder="Enter property house number" size={"large"}
                                         value={formdata?.numberhouse} 
                                         TypePassword={false}
                                         handleOnChange={handleChangeNumberHouse}
@@ -713,9 +713,9 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Tỉnh, thành phố</span>
+                                        <span className="label">Province, City</span>
                                         <Select 
-                                            placeholder="--- Chọn tỉnh, thành phố ---"
+                                            placeholder="--- Select Province, City ---"
                                             options={listProvince?.map((item) => ({
                                                 value: item.code,
                                                 label: item.name,
@@ -735,9 +735,9 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Phường, xã</span>
+                                        <span className="label">Ward, District</span>
                                         <Select 
-                                            placeholder="--- Chọn phường, xã ---"
+                                            placeholder="--- Select Ward, District ---"
                                             options={listCommune?.map((item) => ({
                                                 value: item.code,
                                                 label: item.name,
@@ -758,8 +758,8 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Số tầng</span>
-                                        <InputForm type="number" placeholder="Nhập số tầng bất động sản" 
+                                        <span className="label">Number of Floors</span>
+                                        <InputForm type="number" placeholder="Enter number of floors" 
                                         min={0}
                                         value={formdata?.floor}
                                         size={"large"} TypePassword={false} 
@@ -775,8 +775,8 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Số phòng ngủ</span>
-                                        <InputForm type="number" placeholder="Nhập số phòng ngủ bất động sản" 
+                                        <span className="label">Number of Bedrooms</span>
+                                        <InputForm type="number" placeholder="Enter number of bedrooms" 
                                         min={0}
                                         value={formdata?.bedroom}
                                         size={"large"} TypePassword={false} 
@@ -792,8 +792,8 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Số phòng tắm</span>
-                                        <InputForm type="number" placeholder="Nhập số phòng tắm bất động sản" 
+                                        <span className="label">Number of Bathrooms</span>
+                                        <InputForm type="number" placeholder="Enter number of bathrooms" 
                                         min={0}
                                         value={formdata?.bathroom}
                                         size={"large"} TypePassword={false}
@@ -809,8 +809,8 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Số toilet</span>
-                                        <InputForm type="number" placeholder="Nhập số toilet bất động sản"
+                                        <span className="label">Number of Toilets</span>
+                                        <InputForm type="number" placeholder="Enter number of toilets"
                                         min={0}
                                         value={formdata?.Toilet}
                                         size={"large"} TypePassword={false}
@@ -826,9 +826,9 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Loại bất động sản</span>
+                                        <span className="label">Type of Real Estate</span>
                                         <Select 
-                                            placeholder="--- Chọn loại bất động sản ---"
+                                            placeholder="--- Select Type of Real Estate ---"
                                             options={typeListing}
                                             value={formdata?.CatagoryProperty}
                                             style={{ width: '100%' }}
@@ -845,15 +845,15 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Loại giấy tờ</span>
+                                        <span className="label">Type of Paper</span>
                                         <Select 
-                                            placeholder="--- Chọn loại giấy tờ ---"
+                                            placeholder="--- Select Type of Paper ---"
                                             options={[
-                                                { value: null, label: '--- Chọn loại giấy tờ ---' },
-                                                { value: 'sổ đỏ', label: 'Sổ đỏ' },
-                                                { value: 'sổ hồng', label: 'Sổ hồng' },
-                                                { value: 'hợp đồng mua bán', label: 'Hợp đồng mua bán' },
-                                                { value: 'đang chờ sổ', label: 'Đang chờ sổ' },
+                                                { value: null, label: '--- Select Type of Paper ---' },
+                                                { value: 'RC', label: 'Red Certificate' },
+                                                { value: 'PIC', label: 'Pink Certificate' },
+                                                { value: 'SC', label: 'Sales Contract' },
+                                                { value: 'PEC', label: 'Pending Certificate' },
                                             ]}
                                             value={formdata?.Legal}
                                             style={{ width: '100%' }}
@@ -872,7 +872,7 @@ export default function EditListing () {
                                     {
                                         formdata?.User === user.id && 
                                         <div>
-                                            <span className="label">Chọn ảnh</span>
+                                            <span className="label">Select Images</span>
                                             <Upload
                                                 listType="picture-card"
                                                 accept="image/*"
@@ -910,20 +910,20 @@ export default function EditListing () {
                                     }
                                     
                                     <div>
-                                        <span className="label">Trạng thái bài đăng</span>
+                                        <span className="label">Visibility Status</span>
                                         <Select 
-                                            placeholder="--- Chọn trạng thái bài đăng ---"
+                                            placeholder="--- Select Visibility Status ---"
                                             options={[
-                                                { value: null, label: '--- Chọn trạng thái bài đăng ---' },
-                                                { value: 'công khai', label: 'Công khai',disabled: user?.id !== formdata?.User },
-                                                { value: 'ẩn', label: 'Ẩn' },
-                                                { value: 'hết hạn', label: 'Hết hạn'},
-                                                { value: 'bị khóa', label: 'Bị khóa',disabled: user?.role !== "admin" },
+                                                { value: null, label: '--- Select Visibility Status ---' },
+                                                { value: 'public', label: 'Public',disabled: user?.id !== formdata?.User },
+                                                { value: 'private', label: 'Private' },
+                                                { value: 'expired', label: 'Expired'},
+                                                { value: 'blocked', label: 'Blocked',disabled: user?.role !== "admin" },
                                             ]}
                                             value={formdata?.visibility_status}
                                             style={{ width: '100%' }}
                                             size="large"
-                                            disabled={user?.role !== "admin" && formdata?.visibility_status === 'bị khóa'}
+                                            disabled={user?.role !== "admin" && formdata?.visibility_status === 'blocked'}
                                             onChange={handleVisibilityStatusChange}
                                         />
                                         {
@@ -935,13 +935,13 @@ export default function EditListing () {
                                         }
                                     </div>
                                     <div>
-                                        <span className="label">Loại tin đăng</span>
+                                        <span className="label">Type of Listing</span>
                                         <Select 
-                                            placeholder="--- Chọn loại tin đăng ---"
+                                            placeholder="--- Select Type of Listing ---"
                                             options={[
-                                                { value: null, label: '--- Chọn loại tin đăng ---' },
-                                                { value: 'vip', label: 'tin vip' },
-                                                { value: 'normal', label: 'tin thường' },
+                                                { value: null, label: '--- Select Type of Listing ---' },
+                                                { value: 'vip', label: 'VIP Listing' },
+                                                { value: 'normal', label: 'Normal Listing' },
                                             ]}
                                             value={formdata?.type}
                                             style={{ width: '100%' }}
@@ -959,15 +959,15 @@ export default function EditListing () {
                                     {
                                         user?.role === "admin" && (
                                                 <div>
-                                                    <span className="label">Tình trạng bài đăng</span>
+                                                    <span className="label">Approval Status</span>
                                                     <Select 
-                                                        placeholder="--- Chọn tình trạng bài đăng ---"
+                                                        placeholder="--- Select Approval Status ---"
                                                         value={formdata?.approval_status}
                                                         options={[
-                                                            { value: null, label: '--- Chọn tình trạng bài đăng ---' },
-                                                            { value: 'chưa xác thực', label: 'chưa xác thực' },
-                                                            { value: 'đã xác thực', label: 'đã xác thực' },
-                                                            { value: 'từ chối', label: 'bị từ chối'},
+                                                            { value: null, label: '--- Select Approval Status ---' },
+                                                            { value: 'pending', label: 'Pending Approval' },
+                                                            { value: 'approved', label: 'Approved' },
+                                                            { value: 'rejected', label: 'Rejected'},
                                                         ]}
                                                         onChange={handleApprovalStatusChange}
                                                         style={{ width: '100%' }}
@@ -977,7 +977,7 @@ export default function EditListing () {
                                         )
                                     }
                                     <div>
-                                        <span className="label">Chọn thời hạn tin đăng còn hiệu lực</span>
+                                        <span className="label">Select Listing Expiration Date</span>
                                         <DatePicker 
                                             value={
                                                 formdata?.ExpiredAt &&
@@ -986,7 +986,7 @@ export default function EditListing () {
                                                     : null}
                                             format="DD/MM/YYYY" 
                                             size='large' 
-                                            placeholder="thời hạn tin đăng còn hiệu lực" 
+                                            placeholder="Select Listing Expiration Date" 
                                             style={{width:"100%"}} 
                                             onChange={(date, dateString) => handleExpiredDate(date ? date.toISOString() : null)}
                                             disabled={user?.role !== "admin"}
@@ -1002,13 +1002,13 @@ export default function EditListing () {
                                             ) || initialDataRef.current.countImage !== fileList.length || removedImages.length > 0) &&
                                             <>
                                                 <ButtonComponent 
-                                                    textButton={"Hủy"} 
+                                                    textButton={"Cancel"} 
                                                     size="large" 
                                                     color="default" 
                                                     variant="solid"
                                                     onClick={() => {fetchListing()}}
                                                 />
-                                                <ButtonComponent textButton={"Cập nhật"} size="large" type="primary" onClick={handleUpdateListing}/>
+                                                <ButtonComponent textButton={"Update"} size="large" type="primary" onClick={handleUpdateListing}/>
                                             </>
                                         }
                                     </div>

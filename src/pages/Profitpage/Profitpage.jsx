@@ -9,29 +9,29 @@ import {formatDateVN,formatPrice} from "../../utils";
 import {getdataStatisticalbytype,getAllowners} from "../../services/StatisticalService";
 const column = [
     {
-        title: "Mã hợp đồng",
+        title: "ID of contract",
         dataIndex: "_id",
         width:280
     },
     {
-        title: "Ngày lập hợp đồng",
+        title: "date of contract",
         dataIndex: "createdAt",
         render: (value) => formatDateVN(value),
          width:280
     },
     {
-        title: "Ngày cập nhật mới nhất",
+        title: "date of last update",
         dataIndex: "updatedAt",
         render: (value) => formatDateVN(value),
          width:280
     },
     {
-        title: "Loại hợp đồng",
+        title: "Type of contract",
         dataIndex: "typeContract",
          width:280
     },
     {
-        title: "Giá trị hợp đồng",
+        title: "all money of contract",
         dataIndex: "price",
         render: (value) => formatPrice(value),
         width:280
@@ -117,23 +117,23 @@ export default function Profitpage() {
         <WrapperProfit>
             <ProfitContainer>
                 <ProfitHeader>
-                    <h2>Thống kê doanh thu</h2>
+                    <h2>Profit Statistics</h2>
                 </ProfitHeader>
                 <ProfitBody>
                     <Statisticaltype>
                         <div>
-                            <h5>Kiểu thống kê</h5>
-                            <Select placeholder="Chọn kiểu thống kê" size="large" className="fieldDataProfit" allowClear value={statisticalType} onChange={(value) => setStatisticalType(value)}>
-                                <Select.Option value="day">Theo ngày</Select.Option>
-                                <Select.Option value="month">Theo tháng</Select.Option>
-                                <Select.Option value="quarter">Theo quý</Select.Option>
-                                <Select.Option value="year">Theo năm</Select.Option>
+                            <h5>Statistical Type</h5>
+                            <Select placeholder="Select statistical type" size="large" className="fieldDataProfit" allowClear value={statisticalType} onChange={(value) => setStatisticalType(value)}>
+                                <Select.Option value="day">Daily</Select.Option>
+                                <Select.Option value="month">Monthly</Select.Option>
+                                <Select.Option value="quarter">Quarterly</Select.Option>
+                                <Select.Option value="year">Yearly</Select.Option>
                             </Select>
                         </div>
                         {
                             statisticalType === "day" ? (
                                 <div>
-                                    <h5>Chọn ngày</h5>
+                                    <h5>Select Date</h5>
                                     <WrapperStatisticaldatenotmobile>
                                         <DatePicker.RangePicker className="fieldDataProfit" size="large"
                                             onChange={(date,dateStrings) => {
@@ -152,7 +152,7 @@ export default function Profitpage() {
                                         <DatePicker 
                                             className="fieldDataProfit" 
                                             size="large" 
-                                            placeholder="Ngày bắt đầu"
+                                            placeholder="Start Date"
                                             onChange={(date,dateString) => {
                                                 setDatafilter(prev => ({
                                                     ...prev,
@@ -163,7 +163,7 @@ export default function Profitpage() {
                                         <DatePicker 
                                             className="fieldDataProfit" 
                                             size="large" 
-                                            placeholder="Ngày kết thúc"
+                                            placeholder="End Date"
                                             onChange={(date,dateString) => {
                                                 setDatafilter(prev => ({
                                                     ...prev,
@@ -175,7 +175,7 @@ export default function Profitpage() {
                                 </div>
                             ) : statisticalType === "month" ? (
                                 <div>
-                                    <h5>Chọn tháng</h5>
+                                    <h5>Select Month</h5>
                                     <DatePicker picker="month" className="fieldDataProfit" size="large"
                                         onChange={(date,dateStrings) => {
                                             if(!dateStrings){
@@ -191,7 +191,7 @@ export default function Profitpage() {
                                 </div>
                             ) : statisticalType === "quarter" ? (
                                 <div>
-                                    <h5>Chọn quý</h5>
+                                    <h5>Select Quarter</h5>
                                     <DatePicker picker="quarter" className="fieldDataProfit" size="large"
                                         onChange={(date,dateStrings) => {
                                             if(!dateStrings){
@@ -207,7 +207,7 @@ export default function Profitpage() {
                                 </div>
                             ) : statisticalType === "year" && (
                                 <div>
-                                    <h5>Chọn năm</h5>
+                                    <h5>Select Year</h5>
                                     <DatePicker picker="year" className="fieldDataProfit" size="large"
                                         onChange={(date,dateStrings) => {
                                             if(!dateStrings){
@@ -226,14 +226,14 @@ export default function Profitpage() {
                         {
                             user.role === "admin" && 
                             <div>
-                                <h5>Chọn người cần thống kê trong danh sách</h5>
+                                <h5>Select User for Statistics</h5>
                                 <Select 
                                     className="fieldDataProfit" size="large"
                                     value={userSelected}
                                     onChange={(value) => setUserselected(value)}
                                 >
                                     <Select.Option value="">
-                                        Tất cả
+                                        All Users
                                     </Select.Option>
 
                                     {
@@ -258,7 +258,7 @@ export default function Profitpage() {
                         onChange={handleTableChange}
                         style={{marginTop:"20px"}}/>
                         <div style={{display:"flex",justifyContent:"flex-end",marginTop:"20px"}}>
-                            <h3>Tổng doanh thu: {formatPrice(Datastatistical.totalprofit || 0)}</h3>
+                            <h3>Total Revenue: {formatPrice(Datastatistical.totalprofit || 0)}</h3>
                         </div>
                 </ProfitBody>
             </ProfitContainer>

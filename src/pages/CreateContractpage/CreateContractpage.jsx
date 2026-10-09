@@ -55,56 +55,56 @@ export default function CreateContractpage () {
         let newErrors = {};
 
         if(!dataCreateContract.typecontract){
-            newErrors.typecontract = "Vui lòng chọn loại hợp đồng"
+            newErrors.typecontract = "Please select contract type"
         }
         if(!dataCreateContract.idproperty){
-            newErrors.idproperty = "Vui lòng chọn bất động sản"
+            newErrors.idproperty = "Please select real estate"
         }
         if(!dataCreateContract.idNumberowner){
-            newErrors.idNumberowner = "Vui lòng nhập số căn cước công dân chủ sở hữu"
+            newErrors.idNumberowner = "Please enter the owner's ID number"
         }
         if(dataCreateContract.idNumberowner && !handleCheckIDNumber(dataCreateContract.idNumberowner)){
-            newErrors.idNumberowner = "Vui lòng nhập số căn cước công dân đủ 12 số"
+            newErrors.idNumberowner = "Please enter a valid 12-digit ID number"
         }
         if(!dataCreateContract.statusContract){
-            newErrors.statusContract = "Vui lòng chọn trạng thái hợp đồng"
+            newErrors.statusContract = "Please select contract status"
         }
         
-        if(dataCreateContract.typecontract === "rent"){    
+        if(dataCreateContract.typecontract === "Rental"){    
             if(!dataCreateContract.idtenant){
-                newErrors.idtenant = "Vui lòng chọn người thuê"
+                newErrors.idtenant = "Please select the tenant"
             }
             if(!dataCreateContract.idNumbertenant){
-                newErrors.idNumbertenant = "Vui lòng nhập căn cước công dân người thuê"
+                newErrors.idNumbertenant = "Please enter the tenant's ID number"
             }
             if(dataCreateContract.idNumbertenant && !handleCheckIDNumber(dataCreateContract.idNumbertenant)){
-                newErrors.idNumbertenant = "Vui lòng nhập số căn cước công dân người thuê đủ 12 số"
+                newErrors.idNumbertenant = "Please enter a valid 12-digit ID number"
             }
             if(!dataCreateContract.startdate || !dataCreateContract.enddate){
-                newErrors.errdate = "Vui lòng nhập đủ thông tin thời hạn hợp đồng"
+                newErrors.errdate = "Please enter the contract duration"
             }
             if(!dataCreateContract.deposit){
-                newErrors.deposit = "Vui lòng nhập đủ số tiền cọc"
+                newErrors.deposit = "Please enter the deposit amount"
             }
         }else {
             if(!dataCreateContract.idbuyer){
-                newErrors.idbuyer = "Vui lòng chọn người mua"
+                newErrors.idbuyer = "Please select the buyer"
             }
             if(!dataCreateContract.idNumberbuyer){
-                newErrors.idNumberbuyer = "Vui lòng nhập số căn cước công dân người mua"
+                newErrors.idNumberbuyer = "Please enter the buyer's ID number"
             }
             if(dataCreateContract.idNumberbuyer && !handleCheckIDNumber(dataCreateContract.idNumberbuyer)){
-                newErrors.idNumberbuyer = "Vui lòng nhập số căn cước công dân người mua đủ 12 số"
+                newErrors.idNumberbuyer = "Please enter a valid 12-digit ID number"
             }
             if(!dataCreateContract.paymentMethod){
-                newErrors.paymentMethod = "Vui lòng chọn phương thức thanh toán"
+                newErrors.paymentMethod = "Please select the payment method"
             }
             if(!dataCreateContract.transferDate){
-                newErrors.transferDate = "Vui lòng chọn ngày chuyển khoản"
+                newErrors.transferDate = "Please select the transfer date"
             }
         }
         if(!dataCreateContract.price){
-            newErrors.price = "Vui lòng nhập giá thỏa thuận"
+            newErrors.price = "Please enter the agreed price"
         }
         return newErrors;
     }
@@ -189,7 +189,7 @@ export default function CreateContractpage () {
             const guest = listuser.find(i => i._id === value);
             if (!guest) return prev;
 
-            if (prev.typecontract === "rent") {
+            if (prev.typecontract === "Rental") {
                 return {
                 ...prev,
                 idtenant: guest._id,
@@ -291,7 +291,7 @@ export default function CreateContractpage () {
     },[user?.id,user.name,user.idnumber,user.address]);
     useEffect(() => {
         if (isSuccess) {
-            message.success("tạo mới hợp đồng thành công !");
+            message.success("Contract created successfully!");
             setTimeout(()=>{
                 navigate('/Contract');
             },2000)
@@ -300,7 +300,7 @@ export default function CreateContractpage () {
 
             message.error(
                 error?.response?.data?.message || 
-                "tạo mới hợp đồng thất bại!"
+                "Failed to create contract!"
             );
         }
     },[isSuccess,isError])
@@ -313,20 +313,20 @@ export default function CreateContractpage () {
         <WrapperCreateContract>
             <CreateContractContainer>
                 <CreateContractHeader>
-                    <h2>Tạo hợp đồng mới</h2>
-                    <ButtonComponent textButton={"Quay lại"} size="large" color="cyan" variant="solid" onClick={()=> navigate("/Contract")}/>
+                    <h2>Create New Contract</h2>
+                    <ButtonComponent textButton={"Back"} size="large" color="cyan" variant="solid" onClick={()=> navigate("/Contract")}/>
                 </CreateContractHeader>
                 <Loading isLoading={isPending}> 
                     <CreateContractBody>
                         <div style={{display:"flex",flexDirection:"column",justifyContent:"center",marginBottom:"10px"}}>
-                            <h5 style={{margin:"0 0 10px 0"}}>Lựa chọn hợp đồng</h5>
+                            <h5 style={{margin:"0 0 10px 0"}}>Contract Type</h5>
                             <Select 
-                                placeholder="--------- Lựa chọn ----------"
+                                placeholder="--------- Select ----------"
                                 value={dataCreateContract.typecontract}
                                 size="large"
                                 options={[
-                                    {value: "sale",label:"hợp đồng bán"},
-                                    {value: "rent",label:"hợp đồng thuê"},
+                                    {value: "Sale",label:"Sale Contract"},
+                                    {value: "Rental",label:"Rent Contract"},
                                 ]}
                                 onChange={(value) =>{
                                     handleAddvalueinformdata(value,"typecontract");
@@ -344,9 +344,9 @@ export default function CreateContractpage () {
                         </div>
                         <MainContentofContract>
                             <div>
-                                <h5 style={{margin:"0 0 10px 0"}}>Chọn bất động sản</h5>
+                                <h5 style={{margin:"0 0 10px 0"}}>Select Property</h5>
                                 <Select 
-                                    placeholder="--------- Lựa chọn ----------"
+                                    placeholder="--------- Select ----------"
                                     size="large"
                                     style={{width:"100%"}}
                                     value={dataCreateContract.idproperty}
@@ -355,8 +355,8 @@ export default function CreateContractpage () {
                                 >
                                     {listproperty
                                         ?.filter(item => {
-                                            if (dataCreateContract.typecontract === "rent") return item.Catalog === "Nhà đất cho thuê";
-                                            if (dataCreateContract.typecontract === "sale") return item.Catalog === "Nhà đất bán";
+                                            if (dataCreateContract.typecontract === "Rental") return item.Catalog === "Rental";
+                                            if (dataCreateContract.typecontract === "Sale") return item.Catalog === "Sale";
                                             return false;
                                         })
                                         .map(item => (
@@ -375,11 +375,11 @@ export default function CreateContractpage () {
                                 }
                             </div>
                             {
-                                dataCreateContract.typecontract === "rent" ? (
+                                dataCreateContract.typecontract === "Rental" ? (
                                     <div>
-                                        <h5 style={{margin:"0 0 10px 0"}}>Chọn người thuê</h5>
+                                        <h5 style={{margin:"0 0 10px 0"}}>Select Tenant</h5>
                                         <Select 
-                                            placeholder="--------- Lựa chọn trong danh sách ----------"
+                                            placeholder="--------- Select from the list ----------"
                                             value={dataCreateContract.idtenant}
                                             size="large"
                                             style={{width:"100%"}}
@@ -402,11 +402,11 @@ export default function CreateContractpage () {
                                             )
                                         }
                                     </div>
-                                ) : dataCreateContract.typecontract === "sale" && (
+                                ) : dataCreateContract.typecontract === "Sale" && (
                                     <div>
-                                        <h5 style={{margin:"0 0 10px 0"}}>Chọn người mua</h5>
+                                        <h5 style={{margin:"0 0 10px 0"}}>Select Buyer</h5>
                                         <Select 
-                                            placeholder="--------- Lựa chọn trong danh sách ----------"
+                                            placeholder="--------- Select from the list ----------"
                                             value={dataCreateContract.idbuyer}
                                             size="large"
                                             style={{width:"100%"}}
@@ -433,12 +433,12 @@ export default function CreateContractpage () {
                             }
                             
                             <div>
-                                <h5 style={{margin:"0 0 10px 0"}}>Giá {dataCreateContract.typecontract === "rent" ? "thuê" : "bán"}</h5>
+                                <h5 style={{margin:"0 0 10px 0"}}>{dataCreateContract.typecontract === "Rental" ? "Rental" : "Selling"} price</h5>
                                     
                                     
                                         <InputNumber 
                                             min={0} 
-                                            placeholder="Nhập giá thỏa thuận" 
+                                            placeholder="Enter the agreed price" 
                                             formatter={formatNumber}
                                             value={dataCreateContract.price} 
                                             parser={(value) => value?.toString().replace(/,/g, '')}
@@ -460,11 +460,11 @@ export default function CreateContractpage () {
                             </div>
                             
                             {
-                                dataCreateContract.typecontract === "rent" ? (
+                                dataCreateContract.typecontract === "Rental" ? (
                                     <>
                                         <div>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Tiền cọc</h5>
-                                            <InputNumber min={0} value={dataCreateContract.deposit} onChange={(value) => handleAddvalueinformdata(value,"deposit")} prefix="VND" size="large" style={{width:"100%"}} placeholder="Nhập số tiền đặt cọc"/>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Deposit</h5>
+                                            <InputNumber min={0} value={dataCreateContract.deposit} onChange={(value) => handleAddvalueinformdata(value,"deposit")} prefix="VND" size="large" style={{width:"100%"}} placeholder="Enter the deposit amount"/>
                                             {
                                                 errors.deposit && (
                                                     <span style={{ color: "red", marginBottom: 10 }}>
@@ -474,7 +474,7 @@ export default function CreateContractpage () {
                                             }
                                         </div>
                                         <div>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Ngày bắt đầu hợp đồng có hiệu lực và hết hiệu lực</h5>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Contract Period</h5>
                                             <WrapperDatecreateContractipad>
                                                 <RangePicker size="large" style={{width:"100%"}}
                                                     value={[
@@ -504,7 +504,7 @@ export default function CreateContractpage () {
                                                             date ? date.toISOString() : null,"startdate","errdate")
                                                     }}
                                                     format="DD/MM/YYYY"
-                                                    placeholder="Ngày bắt đầu"
+                                                    placeholder="date start"
                                                     style={{width:"100%"}}
                                                     allowClear
                                                 />
@@ -515,7 +515,7 @@ export default function CreateContractpage () {
                                                             date ? date.toISOString() : null,"enddate","errdate")
                                                     }}
                                                     format="DD/MM/YYYY"
-                                                    placeholder="Ngày kết thúc"
+                                                    placeholder="date end"
                                                     style={{width:"100%"}}
                                                     allowClear
                                                 />
@@ -529,14 +529,14 @@ export default function CreateContractpage () {
                                             }
                                         </div>
                                         <fieldset style={{ border: "1px solid #ccc", padding: "16px",borderRadius:"8px" }}>
-                                            <legend>Thông tin người thuê</legend>
+                                            <legend>Tenant Information</legend>
                                             <div>
-                                                <h5 style={{margin:"0 0 10px 0"}}>Họ và tên</h5>
-                                                <Input size="large" style={{width:"100%"}} placeholder="Nhập họ tên người thuê" value={dataCreateContract.fullnametenant} disabled/>
+                                                <h5 style={{margin:"0 0 10px 0"}}>Full Name</h5>
+                                                <Input size="large" style={{width:"100%"}} placeholder="Enter tenant's full name" value={dataCreateContract.fullnametenant} disabled/>
                                             </div>
                                             <div>
-                                                <h5 style={{margin:"0 0 10px 0"}}>Căn cước công dân</h5>
-                                                <Input size="large" style={{width:"100%"}} placeholder="Nhập số căn cước công dân người thuê" 
+                                                <h5 style={{margin:"0 0 10px 0"}}>National ID</h5>
+                                                <Input size="large" style={{width:"100%"}} placeholder="Enter tenant's national ID" 
                                                     onChange={(e) => {
                                                         if(e.target.value === " ") return;
                                                         handleAddvalueinformdata(e.target.value,"idNumbertenant");
@@ -551,23 +551,23 @@ export default function CreateContractpage () {
                                                 }
                                             </div>
                                             <div>
-                                                <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ</h5>
-                                                <Input size="large" style={{width:"100%"}} placeholder="Nhập địa chỉ cư trú hiện tại người thuê" value={dataCreateContract.addresstenant} disabled/>
+                                                <h5 style={{margin:"0 0 10px 0"}}>Address</h5>
+                                                <Input size="large" style={{width:"100%"}} placeholder="Enter tenant's current address" value={dataCreateContract.addresstenant} disabled/>
                                             </div>
                                         </fieldset>
                                     </>
-                                ) : dataCreateContract.typecontract === "sale" && (
+                                ) : dataCreateContract.typecontract === "Sale" && (
                                     <>
                                         <div>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Phương thức thanh toán</h5>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Payment Method</h5>
                                             <Select 
-                                                placeholder="chọn phương thức thanh toán"
+                                                placeholder="Select payment method"
                                                 size="large"
                                                 style={{width:"100%"}}
                                                 value={dataCreateContract.paymentMethod}
                                                 options={[
-                                                    {value:"chuyển khoản",label:"Chuyển khoản"},
-                                                    {value: "tiền mặt",label:"tiền mặt"},
+                                                    {value:"chuyển khoản",label:"Bank Transfer"},
+                                                    {value: "tiền mặt",label:"Cash"},
                                                 ]}
                                                 onChange={(value) => handleAddvalueinformdata(value,"paymentMethod")}
                                                 allowClear
@@ -581,7 +581,7 @@ export default function CreateContractpage () {
                                             }
                                         </div>
                                         <div>
-                                            <h5 style={{margin:"0 0 10px 0"}}>Ngày thanh toán</h5>
+                                            <h5 style={{margin:"0 0 10px 0"}}>Payment Date</h5>
                                             <DatePicker size="large" style={{width:"100%"}}
                                                 value={dataCreateContract.transferDate
                                                     ? dayjs(dataCreateContract.transferDate, "DD/MM/YYYY")
@@ -599,17 +599,17 @@ export default function CreateContractpage () {
                                         </div>
                                         
                                         <fieldset style={{ border: "1px solid #ccc", padding: "16px",borderRadius:"8px" }}>
-                                            <legend>Thông tin người mua</legend>
+                                            <legend>Buyer Information</legend>
                                             <div>
-                                                <h5 style={{margin:"0 0 10px 0"}}>Họ và tên</h5>
-                                                <Input size="large" style={{width:"100%"}} placeholder="Nhập họ tên người mua" value={dataCreateContract.fullnamebuyer} disabled/>
+                                                <h5 style={{margin:"0 0 10px 0"}}>Full Name</h5>
+                                                <Input size="large" style={{width:"100%"}} placeholder="Enter buyer's full name" value={dataCreateContract.fullnamebuyer} disabled/>
                                             </div>
                                             <div>
-                                                <h5 style={{margin:"0 0 10px 0"}}>Căn cước công dân</h5>
+                                                <h5 style={{margin:"0 0 10px 0"}}>ID Number</h5>
                                                 <Input size="large" style={{width:"100%"}} onChange={(e) => {
                                                     if(e.target.value === " ") return;
                                                     handleAddvalueinformdata(e.target.value,"idNumberbuyer");
-                                                }} placeholder="Nhập số căn cước công dân người mua" value={dataCreateContract.idNumberbuyer}/>
+                                                }} placeholder="Enter buyer's ID number" value={dataCreateContract.idNumberbuyer}/>
                                                 {
                                                     errors.idNumberbuyer && (
                                                         <span style={{ color: "red", marginBottom: 10 }}>
@@ -619,8 +619,8 @@ export default function CreateContractpage () {
                                                 }
                                             </div>
                                             <div>
-                                                <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ</h5>
-                                                <Input size="large" style={{width:"100%"}} placeholder="Nhập địa chỉ cư trú hiện tại người mua" value={dataCreateContract.addressbuyer} disabled/>
+                                                <h5 style={{margin:"0 0 10px 0"}}>Address</h5>
+                                                <Input size="large" style={{width:"100%"}} placeholder="Enter buyer's current address" value={dataCreateContract.addressbuyer} disabled/>
                                             </div>
                                         </fieldset>
                                     </>
@@ -628,14 +628,14 @@ export default function CreateContractpage () {
                             }
                             
                             <fieldset style={{ border: "1px solid #ccc", padding: "16px",borderRadius:"8px" }}>
-                                <legend>Thông tin chủ sở hữu</legend>
+                                <legend>Owner Information</legend>
                                 <div>
-                                    <h5 style={{margin:"0 0 10px 0"}}>Họ và tên</h5>
+                                    <h5 style={{margin:"0 0 10px 0"}}>Full Name</h5>
                                     <Input size="large" style={{width:"100%"}} value={dataCreateContract.fullnameowner} disabled/>
                                 </div>
                                 <div>
-                                    <h5 style={{margin:"0 0 10px 0"}}>Căn cước công dân</h5>
-                                    <Input size="large" placeholder="Nhập số căn cước công dân" style={{width:"100%"}} 
+                                    <h5 style={{margin:"0 0 10px 0"}}>ID Number</h5>
+                                    <Input size="large" placeholder="Enter owner's ID number" style={{width:"100%"}} 
                                         onChange={(e) => {
                                             if(e.target.value === " ") return;
                                             handleAddvalueinformdata(e.target.value,"idNumberowner");
@@ -649,55 +649,55 @@ export default function CreateContractpage () {
                                     }
                                 </div>
                                 <div>
-                                    <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ</h5>
+                                    <h5 style={{margin:"0 0 10px 0"}}>Address</h5>
                                     <Input size="large" style={{width:"100%"}} value={dataCreateContract.addressowner} disabled/>
                                 </div>
                             </fieldset>
                             <fieldset style={{ border: "1px solid #ccc", padding: "16px",borderRadius:"8px" }}>
-                                <legend>Thông tin bất động sản</legend>
+                                <legend>Property Information</legend>
                                 <div>
-                                    <h5 style={{margin:"0 0 10px 0"}}>Tiêu đề</h5>
+                                    <h5 style={{margin:"0 0 10px 0"}}>Title</h5>
                                     <Input size="large" style={{width:"100%"}} 
-                                        placeholder="Nhập tiêu đề bất động sản" 
+                                        placeholder="Enter property title" 
                                         value={dataCreateContract.titleproperty}
                                         disabled
                                     />
                                 </div>
                                 <div>
-                                    <h5 style={{margin:"0 0 10px 0"}}>Diện tích</h5>
+                                    <h5 style={{margin:"0 0 10px 0"}}>Area</h5>
                                     <Input size="large" style={{width:"100%"}}
-                                        placeholder="Nhập diện tích bất động sản"
+                                        placeholder="Enter property area"
                                         value={dataCreateContract.areaproperty}
                                         disabled
                                     />
                                 </div>
                                 <div>
-                                    <h5 style={{margin:"0 0 10px 0"}}>Địa chỉ</h5>
+                                    <h5 style={{margin:"0 0 10px 0"}}>Address</h5>
                                     <Input size="large" style={{width:"100%"}}
-                                        placeholder="Nhập địa chỉ bất động sản"
+                                        placeholder="Enter property address"
                                         value={dataCreateContract.addressproperty}
                                         disabled
                                     />
                                 </div>
                             </fieldset>
                             <div>
-                                <h5 style={{margin:"0 0 10px 0"}}>Điều khoản</h5>
+                                <h5 style={{margin:"0 0 10px 0"}}>Terms and Conditions</h5>
                                 <Input.TextArea size="large" style={{width:"100%"}} 
-                                    placeholder="Nhập điều khoản" 
+                                    placeholder="Enter terms and conditions" 
                                     onChange={(e)=> handleAddvalueinformdata(e.target.value,"term")}/>
                             </div>
                             <div>
-                                <h5 style={{margin:"0 0 10px 0"}}>Trạng thái hợp đồng</h5>
+                                <h5 style={{margin:"0 0 10px 0"}}>Contract Status</h5>
                                 <Select 
-                                    placeholder="chọn trạng thái hợp đồng"
+                                    placeholder="Select contract status"
                                     size="large"
                                     style={{width:"100%"}}
                                     value={dataCreateContract.statusContract}
                                     options={[
-                                        {value:"mới tạo",label:"mới tạo"},
-                                        {value: "đã ký",label:"đã ký"},
-                                        {value:"xong",label:"hoàn thành"},
-                                        {value:"hủy",label:"hủy",disabled:true}
+                                        {value:"new",label:"Newly Created"},
+                                        {value: "signed",label:"Signed"},
+                                        {value:"completed",label:"Completed"},
+                                        {value:"cancelled",label:"Cancelled",disabled:true}
                                     ]}
                                     onChange={(value) => handleAddvalueinformdata(value,"statusContract")}
                                     allowClear
@@ -713,8 +713,8 @@ export default function CreateContractpage () {
                         </MainContentofContract>
                     </CreateContractBody>
                     <CreateContractFooter>
-                        <ButtonComponent textButton={"Tạo mới"} size="large" type="primary" onClick={handleCreateContract}/>
-                        <ButtonComponent textButton={"Hủy"} size="large" color="default" variant="solid"/>
+                        <ButtonComponent textButton={"Create New"} size="large" type="primary" onClick={handleCreateContract}/>
+                        <ButtonComponent textButton={"Cancel"} size="large" color="default" variant="solid"/>
                     </CreateContractFooter>
                 </Loading>
                 

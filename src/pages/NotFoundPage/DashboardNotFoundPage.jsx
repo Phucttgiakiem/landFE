@@ -9,7 +9,7 @@ export default function DashboadNotFoundPage () {
                 <Result
                     status="404"
                     title="404"
-                    subTitle="Trang này không tồn tại hoặc bạn không có quyền truy cập"
+                    subTitle="the page you are looking for does not exist."
                     extra={<Button type="primary" onClick={() => navigate("/Dashboard")}>Back Home</Button>}
                 />
             </NotfoundDashboardContainer>

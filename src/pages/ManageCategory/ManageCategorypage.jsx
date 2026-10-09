@@ -14,51 +14,51 @@ import {useMessage} from "../../components/Message/Message";
 const tabsData = [
     {
         key: 'all',
-        label: 'Tất cả',
+        label: 'All',
         filter: {}
     },
     {
-        key: 'Nhà đất bán',
-        label: 'Nhà đất bán',
+        key: 'Sale',
+        label: 'Selling Land',
         filter: {
-            Type: "Nhà đất bán"
+            Type: "Sale"
         }
     },
     {
-        key: "Nhà đất cho thuê",
-        label: "Nhà đất cho thuê",
+        key: "Rental",
+        label: "Rental Land",
         filter: {
-            Type: "Nhà đất cho thuê"
+            Type: "Rental"
         }
     }
 ]
 const getColumns = (handleEditClick,openConfirmModal) => [
     {
-        title: 'Tên Danh mục',
+        title: 'Name',
         dataIndex: 'Name',
         width:400,
     },
     {
-        title: 'Loại danh mục',
+        title: 'Category Type',
         dataIndex: "Type",
         width: 150,
     },
     {
-        title: 'Ngày tạo',
+        title: 'Created Date',
         dataIndex: "createdAt",
         render: (value) => formatDateVN(value),
         sorter: true,
         width: 150,
     },
     {
-        title: "Ngày cập nhật",
+        title: "Updated Date",
         dataIndex: "updatedAt",
         render: (value) => formatDateVN(value),
         sorter: true,
         width: 150,
     },
     {
-        title: "Hành động",
+        title: "Actions",
         dataIndex: '',
         key: 'x',
         render: (_, record) =>
@@ -132,7 +132,7 @@ export default function ManageCategorypage () {
         try {
             setLoadingModal(true);
             await createCategory(payload);
-            message.success("Tạo mới danh mục thành công");
+            message.success("Create new category successfully");
             setOpen(false);
             fetchData();
             updateCategoryheaderwebsite();
@@ -157,7 +157,7 @@ export default function ManageCategorypage () {
         try {
             setLoadingModal(true)
             await updateCategory(id, payload);
-            message.success("Cập nhật danh mục thành công");
+            message.success("Update category successfully");
             setOpen(false);
             fetchData();
             updateCategoryheaderwebsite();
@@ -170,7 +170,7 @@ export default function ManageCategorypage () {
     const handleDeleteCategory = async () => {
         try {
             await deleteCategory(pendingData);
-            message.success("Xóa danh mục đã chọn thành công");
+            message.success("Delete category successfully");
             fetchData();
             updateCategoryheaderwebsite();
         }catch(error){
@@ -214,14 +214,14 @@ export default function ManageCategorypage () {
                             <Button 
                                 size="large" 
                                 onClick={() => setOpenModaldelete(false)}>
-                                    Hủy
+                                    Cancel
                             </Button>
                             <Button 
                                 size="large" 
                                 type="primary" 
                                 danger={true}
                                 onClick={() => { setLoadingModalDelete(true); handleDeleteCategory(); }}>
-                                    Xác nhận
+                                    Confirm
                             </Button>
                         </Space>
                     </div>
@@ -234,8 +234,8 @@ export default function ManageCategorypage () {
                             <>
                                 <WarningTwoTone twoToneColor="#eb2f2f" style={{ fontSize: '40px' }} />
                                 <p style={{ textAlign: 'center',fontSize:"20px" }}>
-                                        Việc này sẽ xóa vĩnh viễn danh mục, bao gồm các nội dung khác có liên kết với danh mục sẽ xóa
-                                         bạn cần cân nhắc !!! </p>
+                                        the action will permanently delete the category, including all associated content. 
+                                        Please consider carefully !!! </p>
                             </>
                         ): (
                             <Flex gap="middle" vertical>
@@ -250,9 +250,9 @@ export default function ManageCategorypage () {
             <WrapperManageCategory>
                 <ManageCategoryContainer>
                     <ManageCategoryHeader>
-                        <h2>Quản lý danh mục tin</h2>
+                        <h2>Manage Category</h2>
                         <ButtonComponent 
-                            textButton="Tạo mới" 
+                            textButton="Create New" 
                             size="large" 
                             color="danger" 
                             variant="solid"   

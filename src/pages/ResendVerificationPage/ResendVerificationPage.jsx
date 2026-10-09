@@ -28,7 +28,7 @@ export default function ResendVerificationPage () {
         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center',background:'rgba(0,0,0,0.53)',height: '100vh'}}>
             <WrapperResendVerifyPage>
                 <WrapperContainerLeft>
-                    <h3>Xác thực qua email</h3>
+                    <h3>Resend Verification Email</h3>
                     {
                         data ? (
                             <WrapperInformationSuccess>
@@ -37,7 +37,7 @@ export default function ResendVerificationPage () {
                             </WrapperInformationSuccess>
                         ) : (
                             <>
-                                <InputForm status={error?.response?.data?.status === 'error' ? 'error' : undefined} placeholder="Nhập email của bạn" label="Email" size="large" TypePassword={false} handleOnChange={handleOnchangeEmail}/>
+                                <InputForm status={error?.response?.data?.status === 'error' ? 'error' : undefined} placeholder="Enter your email" label="Email" size="large" TypePassword={false} handleOnChange={handleOnchangeEmail}/>
                                 {error?.response?.data?.status === 'error' && (
                                     <span style={{ color: "red", marginTop: "8px" }}>{error?.response?.data?.message}</span>
                                 )}
@@ -45,11 +45,11 @@ export default function ResendVerificationPage () {
                                     <ButtonComponent 
                                         size="large"
                                         className={`btn-submit`} 
-                                        textButton={"Gửi"} 
+                                        textButton={"Resend"} 
                                         onClick={handleResendVerification}
                                     />
                                     <span className="back-to-login" onClick={() => navigate('/sign-in')}>
-                                        Quay lại đăng nhập
+                                        Back to Login
                                     </span>
                                 </WrapperLeftButton>
                             </>
@@ -61,8 +61,8 @@ export default function ResendVerificationPage () {
                     <img src={backgroundland} alt="background land" style={{width: '100%',height:"100%", objectFit:'fill'}}/>
                     <img src={logo} alt="logo" style={{position: 'absolute', top: '20px', left: '20px', width: '120px'}}/>
                     <div style={{position: 'absolute', top: '20px', left: '160px', color:'rgba(21,71,132,1)'}}>
-                        <h4>Tìm nhà đất</h4>
-                        <h4>Batdongsan.com.vn dẫn lối</h4>
+                        <h4>Find Real Estate</h4>
+                        <h4>Batdongsan.com.vn leads the way</h4>
                     </div>
                 </WrapperContainerRight>
             </WrapperResendVerifyPage>

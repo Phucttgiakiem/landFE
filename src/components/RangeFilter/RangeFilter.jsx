@@ -112,18 +112,18 @@ export default function RangeFilter({
               <span>
               {valueInputGroup.min === null 
                 ? minLabel
-                :"Từ: " + formatValue(toReal(valueInputGroup.min))}
+                :"From: " + formatValue(toReal(valueInputGroup.min))}
             </span>
 
             <span>
               {valueInputGroup.max === null
                 ? maxLabel
-                :"Đến: " + formatValue(toReal(valueInputGroup.max))}
+                :"To: " + formatValue(toReal(valueInputGroup.max))}
             </span>
           </div>
           <div>
               <InputNumber size="large"  min={0} max={99999} value={valueInputGroup.min}
-                placeholder='Từ'
+                placeholder='From'
                 onChange={(val) => {
                   if (val > 99999) return;
                   const newRange = [val,rangeUI[1]];
@@ -136,7 +136,7 @@ export default function RangeFilter({
                 }} className="inputprice"/>
               <ArrowRightOutlined />
               <InputNumber size="large" value={valueInputGroup.max} min={0} max={99999}
-                placeholder='Đến'
+                placeholder='To'
                 onChange={(val) => {
                   if (val > 99999) return;
                   const newRange = [rangeUI[0],val];
@@ -173,8 +173,8 @@ export default function RangeFilter({
               }))} value={radioValue} onChange={(e)=> handleUILabel(e)} className="list-option"/>
       </RangeFilterMainContent>
       <RangeFilterContentBottom>
-        <span onClick={() => {clearfilter();clearControlUI(); }}>Đặt lại</span>
-        <ButtonComponent textButton={"Áp dụng"} size="large" className="btn-apply" 
+        <span onClick={() => {clearfilter();clearControlUI(); }}>Reset</span>
+        <ButtonComponent textButton={"Apply"} size="large" className="btn-apply" 
           onClick={() => {
           const found = findPresetMatch(rangeUI);
 

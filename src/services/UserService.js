@@ -75,7 +75,6 @@ export const logoutUser = async () => {
 }
 
 export const authenemail = async (data) => {
-    console.log(data);
     const res = await axios.post(`${process.env.REACT_APP_URL_BACKEND}/user/resend-verification-email`,data);
     return res.data; 
 }

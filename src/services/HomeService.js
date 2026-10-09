@@ -8,6 +8,7 @@ export const getHome = async (access_token) => {
             },
         }
     );
+    console.log("res: ",res);
     return res;
 }
 export const getListingFilter = async (data) => {

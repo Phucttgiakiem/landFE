@@ -5,7 +5,7 @@ export default function Contractpage () {
         <WrapperContract>
             <ContractContainer>
                 <ContractHeader>
-                    <h2>Quản lý hợp đồng</h2>
+                    <h2>Contract Management</h2>
                 </ContractHeader>
                 <ContractBody>
                     <ContractVipcomponent/>

@@ -21,26 +21,26 @@ export default function FilterComponent ({ListProvince,ListWard}) {
     const { query,setFilters,clearPrice,clearArea } = useFilters();
 
     const arr = location.pathname.split("/");
-    const TypeProperty = arr[2] || "Nha-dat-ban";
+    const TypeProperty = arr[2] || "Sale-property";
     
     
     const formatPriceLabel = (query, type) => {
         const min = convertPrice(query.priceMin);
         const max = convertPrice(query.priceMax);
-        if (min == null && max == null) return "Mức giá";
-        if (min === 0 && max === 0) return "Thỏa thuận";
-        if (max == null) return `Trên ${formatPriceToString(min)}`;
-        if (min === 0) return `Dưới ${formatPriceToString(max)}`;
+        if (min == null && max == null) return "Price";
+        if (min === 0 && max === 0) return "Negotiable";
+        if (max == null) return `Above ${formatPriceToString(min)}`;
+        if (min === 0) return `Below ${formatPriceToString(max)}`;
         return `${formatPriceToString(min)} - ${formatPriceToString(max)}`;
     };
     const formatAreaLabel = (query) => {
         const min = query.areaMin;
         const max = query.areaMax;
 
-        if (min == null && max == null) return "Diện tích";
+        if (min == null && max == null) return "Area";
 
-        if (max == null) return `Trên ${min} m²`;
-        if (min == null) return `Dưới ${max} m²`;
+        if (max == null) return `Above ${min} m²`;
+        if (min == null) return `Below ${max} m²`;
 
         return `${min} - ${max} m²`;
     };
@@ -111,7 +111,7 @@ export default function FilterComponent ({ListProvince,ListWard}) {
             <WrapperFilter>
                 <ButtonComponent 
                     size="middle" 
-                    textButton="lọc" 
+                    textButton="Filter" 
                     leftIcon={<FilterOutlined />} 
                     iconAction={ countFilters > 0 && <CounterFilter>{countFilters}</CounterFilter>}
                     onClick={() => setOpenfilterenhance(true)}
@@ -135,12 +135,12 @@ export default function FilterComponent ({ListProvince,ListWard}) {
                         <div className="dropdown">
                             <RangeFilter 
                                 typeDropdown="price" 
-                                title="Khoảng giá" 
-                                minLabel="Giá thấp nhất" 
-                                maxLabel="Giá cao nhất"
-                                presets={TypeProperty === "Nha-dat-ban" ? listPricesell : listPriceRent}
+                                title="All type of price" 
+                                minLabel="min price" 
+                                maxLabel="max price"
+                                presets={TypeProperty === "Sale-property" ? listPricesell : listPriceRent}
                                 sliderMin={0}
-                                sliderMax={TypeProperty === "Nha-dat-ban" ? 60000 : 100}
+                                sliderMax={TypeProperty === "Sale-property" ? 60000 : 100}
                                 sliderStep={10}
                                 onCloseFilter={handleCloseRangeFilter}
                                 formatValue={formatPriceToString}
@@ -171,9 +171,9 @@ export default function FilterComponent ({ListProvince,ListWard}) {
                         <div className="dropdown">
                             <RangeFilter 
                                  typeDropdown="area" 
-                                 title="Diện tích" 
-                                 minLabel="Diện tích nhỏ nhất" 
-                                 maxLabel="Diện tích lớn nhất"  
+                                 title="All type of area" 
+                                 minLabel="min area" 
+                                 maxLabel="max area"  
                                  presets={listacreage} 
                                  sliderMin={0}
                                  sliderMax={500}
@@ -190,7 +190,7 @@ export default function FilterComponent ({ListProvince,ListWard}) {
                 </div> 
                 <Select 
                     loading={ListProvince.isloading} 
-                    placeholder="Lựa chọn thành phố"
+                    placeholder="Select city"
                     style={{flexGrow:2}} 
                     mode="multiple" 
                     value={query?.province
@@ -202,7 +202,7 @@ export default function FilterComponent ({ListProvince,ListWard}) {
                 />
                 <Select 
                     loading={ListWard.isloading} 
-                    placeholder="Lựa chọn phường xã"
+                    placeholder="Select ward/ commune"
                     style={{flexGrow:2}} 
                     value={query?.commune && query?.province ? [formatNumberCodeCommuneZero(query.commune)]: undefined}
                     mode="multiple" 
@@ -212,15 +212,15 @@ export default function FilterComponent ({ListProvince,ListWard}) {
                     disabled={!query?.province}
                 />
                 <Select
-                    placeholder="Sắp xếp theo"
+                    placeholder="Sort by"
                     style={{flexGrow:2}}
                     allowClear
                     options={
                         [
-                            {value:"Price-ascend",label:"Giá tăng dần"},
-                            {value:"Price-descend",label:"Giá giảm dần"},
-                            {value:"createdAt-ascend",label:"Ngày mới nhất đến cũ nhất"},
-                            {value:"createdAt-descend",label:"Ngày cũ nhất đến mới nhất"},
+                            {value:"Price-ascend",label:"Price ascending"},
+                            {value:"Price-descend",label:"Price descending"},
+                            {value:"createdAt-ascend",label:"Newest to oldest"},
+                            {value:"createdAt-descend",label:"Oldest to newest"},
                         ]
                     }
                     onChange={handleGetSort}

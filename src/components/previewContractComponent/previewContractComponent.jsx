@@ -61,7 +61,6 @@ const styles = StyleSheet.create({
 })
 
 const PreviewContractComponent = ({ contract }) => {
-
     if (!contract) return null
 
     return (
@@ -75,7 +74,7 @@ const PreviewContractComponent = ({ contract }) => {
                 {/* TITLE */}
                 <View>
                     <Text style={styles.title}>
-                        HỢP ĐỒNG {contract.typeContract === "rent" ? "THUÊ" : "BÁN"}
+                        {contract.typeContract === "rent" ? "RENTAL" : "SELLING"} CONTRACT
                     </Text>
                 </View>
 
@@ -83,23 +82,23 @@ const PreviewContractComponent = ({ contract }) => {
                 <View style={styles.section}>
 
                     <Text style={styles.heading}>
-                        Thông Tin Bất Động Sản
+                        Detail for contract
                     </Text>
 
                     <Text style={styles.text}>
-                        Tên BĐS: {contract?.propertySnapshot?.title || "N/A"}
+                        Name of Property: {contract?.propertySnapshot?.title || "N/A"}
                     </Text>
 
                     <Text style={styles.text}>
-                        Địa chỉ: {contract?.propertySnapshot?.address || "N/A"}
+                        Address: {contract?.propertySnapshot?.address || "N/A"}
                     </Text>
 
                     <Text style={styles.text}>
-                        Diện tích: {contract?.propertySnapshot?.area || "N/A"}
+                        Area: {contract?.propertySnapshot?.area || "N/A"}
                     </Text>
 
                     <Text style={styles.text}>
-                        Giá {contract.typeContract === "rent" ? "thuê" : "bán"}:
+                        Price {contract.typeContract === "rent" ? " Rental" : " Sale"}:
                         {" "}
                         {Number(contract?.price || 0).toLocaleString("vi-VN")} VND
                     </Text>
@@ -110,11 +109,11 @@ const PreviewContractComponent = ({ contract }) => {
                 <View style={styles.section}>
 
                     <Text style={styles.heading}>
-                        Thông Tin Người {contract.typeContract === "rent" ? "Thuê" : "Mua"}
+                        Customer Information {contract.typeContract === "rent" ? "Tenant" : "Buyer"}
                     </Text>
 
                     <Text style={styles.text}>
-                        Tên:
+                        Name:
                         {" "}
                         {contract.typeContract === "rent"
                             ? contract?.tenantSnapshot?.fullName
@@ -122,7 +121,7 @@ const PreviewContractComponent = ({ contract }) => {
                     </Text>
 
                     <Text style={styles.text}>
-                        Số CMND/CCCD:
+                        ID Number:
                         {" "}
                         {contract.typeContract === "rent"
                             ? contract?.tenantSnapshot?.idNumber
@@ -130,7 +129,7 @@ const PreviewContractComponent = ({ contract }) => {
                     </Text>
 
                     <Text style={styles.text}>
-                        Địa chỉ thường trú:
+                        Address:
                         {" "}
                         {contract.typeContract === "rent"
                             ? contract?.tenantSnapshot?.address
@@ -146,11 +145,11 @@ const PreviewContractComponent = ({ contract }) => {
                         <View style={styles.section}>
 
                             <Text style={styles.heading}>
-                                Thông Tin Thuê
+                                Information about rental contract
                             </Text>
 
                             <Text style={styles.text}>
-                                Hạn hợp đồng:
+                                Contract Duration:
                                 {" "}
                                 {
                                     contract?.rentalInfo?.startDate &&
@@ -161,7 +160,7 @@ const PreviewContractComponent = ({ contract }) => {
                             </Text>
 
                             <Text style={styles.text}>
-                                Tiền cọc:
+                                Deposit:
                                 {" "}
                                 {
                                     contract?.rentalInfo?.deposit
@@ -177,11 +176,11 @@ const PreviewContractComponent = ({ contract }) => {
                         <View style={styles.section}>
 
                             <Text style={styles.heading}>
-                                Thông Tin Bán
+                                Information about sale contract
                             </Text>
 
                             <Text style={styles.text}>
-                                Ngày chuyển khoản:
+                                Payment Date:
                                 {" "}
                                 {
                                     contract?.saleInfo?.paymentDate
@@ -199,23 +198,23 @@ const PreviewContractComponent = ({ contract }) => {
                 <View style={styles.section}>
 
                     <Text style={styles.heading}>
-                        Thông Tin Người Lập Đơn
+                        Information about creator of contract
                     </Text>
 
                     <Text style={styles.text}>
-                        Họ tên:
+                        Name:
                         {" "}
                         {contract?.ownerSnapshot?.fullName || "N/A"}
                     </Text>
 
                     <Text style={styles.text}>
-                        Số CMND/CCCD:
+                        ID Number:
                         {" "}
                         {contract?.ownerSnapshot?.idNumber || "N/A"}
                     </Text>
 
                     <Text style={styles.text}>
-                        Địa chỉ thường trú:
+                        Address:
                         {" "}
                         {contract?.ownerSnapshot?.address || "N/A"}
                     </Text>
@@ -226,8 +225,8 @@ const PreviewContractComponent = ({ contract }) => {
                 <View>
 
                     <Text style={styles.footer}>
-                        Hợp đồng này được lập thành 02 bản có giá trị pháp lý như nhau,
-                        mỗi bên giữ 01 bản.
+                        This contract is made in 02 copies with equal legal value,
+                        each party keeps 01 copy.
                     </Text>
 
                 </View>

@@ -28,14 +28,14 @@ export default function DashboardSellerComponent ({iduser}) {
     return (
         <div>
             <DashboardSellerTitle>
-                <h4>Tổng quan</h4>
+                <h4>Overview</h4>
             </DashboardSellerTitle>
             <DashboardSellerpropertybyMonth>
                 <WrapperCardDashboard>
                     <CardDashboardComponent styleComponent={{
                         backgroundColor:"#10288C",  
                     }}
-                        content={`Tổng số bài đăng: ${totalProperty} bài `}
+                        content={`Total listings: ${totalProperty} posts`}
                     />
                 </WrapperCardDashboard>
                 <ChartContainer>
@@ -84,7 +84,7 @@ export default function DashboardSellerComponent ({iduser}) {
 
                                 }}
                             />
-                            <h5 style={{width:"100%",textAlign:"center"}}>Biểu đồ thống kê số bài đăng theo 12 tháng gần nhất</h5>
+                            <h5 style={{width:"100%",textAlign:"center"}}>The 12 Most Recent Listing Statistics</h5>
                         </div>
                         
                     </DashboardChartWapper>

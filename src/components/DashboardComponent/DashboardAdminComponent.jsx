@@ -26,19 +26,19 @@ export default function DashboardAdminComponent () {
     return (
         <div>
             <DashboardAdminTitle>
-                <h4>Tổng quan</h4>
+                <h4>Overview</h4>
             </DashboardAdminTitle>
             <DashboardAdminpropertybyMonth>
                 <WrapperCardDashboard>
                     <CardDashboardComponent styleComponent={{
                         backgroundColor:"#10288C",  
                     }}
-                        content={`Tổng số tài khoản sử dụng website: ${totalUser} `}
+                        content={`Total Users: ${totalUser} `}
                     />
                     <CardDashboardComponent styleComponent={{
                         backgroundColor:"#4B0090",  
                     }}
-                        content={`Tổng số tin đăng bất động sản: ${totalproperty} `}
+                        content={`Total Listings: ${totalproperty} `}
                     />
                 </WrapperCardDashboard>
                 <ChartContainer>
@@ -87,7 +87,7 @@ export default function DashboardAdminComponent () {
 
                                 }}
                             />
-                            <h5 style={{width:"100%",textAlign:"center"}}>Biểu đồ số bài đăng trên hệ thống trong 12 tháng gần nhất</h5>
+                            <h5 style={{width:"100%",textAlign:"center"}}>The 12 Most Recent Listing Statistics</h5>
                         </div>
                     </DashboardChartWapper>
                     <DashboardChartWapper>
@@ -135,7 +135,7 @@ export default function DashboardAdminComponent () {
 
                                 }}
                         />
-                        <h5 style={{width:"100%",textAlign:"center"}}>Biểu đồ số tài khoản đăng ký mới trong 12 tháng gần nhất</h5>
+                        <h5 style={{width:"100%",textAlign:"center"}}>The 12 Most Recent User Registration Statistics</h5>
                         </div>
                     </DashboardChartWapper>
                 </ChartContainer>

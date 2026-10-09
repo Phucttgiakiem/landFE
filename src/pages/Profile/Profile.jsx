@@ -133,11 +133,11 @@ export default function Profile() {
     }
     useEffect(() => {
         if (isSuccess) {
-            message.success("Cập nhật thành công")
+            message.success("Update successful");
             handleGetDetailsUser(user?.id, user?.access_Token);
             
         } else if (isError) {
-            message.error("Cập nhật thất bại")
+            message.error("Failed to update")
         }
         setUpdatefieldform({
             editName:false,
@@ -153,29 +153,29 @@ export default function Profile() {
     return (
         <WrapperProfile>
             <ProfileContainer>
-                <ProfileTitle>Quản lý tài khoản</ProfileTitle>
+                <ProfileTitle>Manage Account</ProfileTitle>
                 <Loading isLoading={isPending}>
                     <ProfileContent>
-                        <h3>Thông tin cá nhân</h3>
+                        <h3>Personal Information</h3>
                         <PanelField>
                             <div>
-                                <span>Họ và tên</span>
+                                <span>Full Name</span>
                                 <EditOutlined onClick={() => setUpdatefieldform(prev=> ({
                                     ...prev,
                                     editName:!prev.editName
                                 }))} />
                             </div>
-                            <InputForm TypePassword={false} placeholder={"Nhập họ và tên"} disabled={!updatefieldform.editName} size={"large"} value={formData.name} handleOnChange={updateName} />
+                            <InputForm TypePassword={false} placeholder={"Enter full name"} disabled={!updatefieldform.editName} size={"large"} value={formData.name} handleOnChange={updateName} />
                         </PanelField>
                             <PanelField>
                                 <div>
-                                    <span>Số điện thoại</span>
+                                    <span>Phone Number</span>
                                     <EditOutlined onClick={() => setUpdatefieldform(prev => ({
                                         ...prev,
                                         editPhone:!prev.editPhone
                                     }))} />
                                 </div>
-                                <InputForm type="text" TypePassword={false} placeholder="Nhập số điện thoại" disabled={!updatefieldform.editPhone} size="large" value={formData.phone} handleOnChange={updatePhoneNumber}/>
+                                <InputForm type="text" TypePassword={false} placeholder="Enter phone number" disabled={!updatefieldform.editPhone} size="large" value={formData.phone} handleOnChange={updatePhoneNumber}/>
                             </PanelField>
                             <PanelField>
                                 <div>
@@ -185,21 +185,21 @@ export default function Profile() {
                                         editEmail: !prev.editEmail
                                     }))} />
                                 </div>
-                                <InputForm type="text" TypePassword={false} placeholder="Nhập email" disabled={!updatefieldform.editEmail} size="large" value={formData.email} handleOnChange={updateEmail}/>
+                                <InputForm type="text" TypePassword={false} placeholder="Enter email" disabled={!updatefieldform.editEmail} size="large" value={formData.email} handleOnChange={updateEmail}/>
                             </PanelField>
                             <PanelField>
                                 <div>
-                                    <span>Địa chỉ</span>
+                                    <span>Address</span>
                                     <EditOutlined onClick={() => setUpdatefieldform(prev => ({
                                         ...prev,
                                         editAddress: !prev.editAddress
                                     }))} />
                                 </div>
-                                <InputForm type="text" TypePassword={false} placeholder="Nhập địa chỉ" disabled={!updatefieldform.editAddress} size="large" value={formData.address} handleOnChange={updateAddress}/>
+                                <InputForm type="text" TypePassword={false} placeholder="Enter address" disabled={!updatefieldform.editAddress} size="large" value={formData.address} handleOnChange={updateAddress}/>
                             </PanelField>
                             <PanelField>
                                 <div>
-                                    <span>Ngày sinh</span>
+                                    <span>Date of Birth</span>
                                     <EditOutlined onClick={() => setUpdatefieldform(prev => ({
                                         ...prev,
                                         editdateofbirth: !prev.editdateofbirth
@@ -207,7 +207,7 @@ export default function Profile() {
                                 </div>
                                 <DatePicker 
                                     size="large" 
-                                    placeholder="Chọn ngày sinh" 
+                                    placeholder="Enter date of birth" 
                                     disabled={!updatefieldform.editdateofbirth} 
                                     format="DD/MM/YYYY"
                                     value={
@@ -220,17 +220,17 @@ export default function Profile() {
                             </PanelField>
                             <PanelField>
                                 <div>
-                                    <span>Số căn cước công dân</span>
+                                    <span>Identity Number</span>
                                     <EditOutlined onClick={() => setUpdatefieldform(prev => ({
                                         ...prev,
                                         editIdnumber:!prev.editIdnumber
                                     }))}/>
                                 </div>
-                                <InputForm type="text" TypePassword={false} placeholder="Nhập số căn cước công dân" size="large" disabled={!updatefieldform.editIdnumber} value={formData.Idnumber} handleOnChange={updateIdnumber}/>
+                                <InputForm type="text" TypePassword={false} placeholder="Enter identity number" size="large" disabled={!updatefieldform.editIdnumber} value={formData.Idnumber} handleOnChange={updateIdnumber}/>
                             </PanelField>
                             <PanelField>
                                 <div>
-                                    <span>Ngày cấp</span>
+                                    <span>Issued Date</span>
                                     <EditOutlined onClick={() => setUpdatefieldform(prev => ({
                                         ...prev,
                                         editidIssuedDate: !prev.editidIssuedDate
@@ -238,7 +238,7 @@ export default function Profile() {
                                 </div>
                                 <DatePicker 
                                     size="large" 
-                                    placeholder="Chọn ngày cấp số căn cước công dân"
+                                    placeholder="Enter issued date"
                                     disabled={!updatefieldform.editidIssuedDate}
                                     format="DD/MM/YYYY"
                                     value={
@@ -255,13 +255,13 @@ export default function Profile() {
                             </PanelField>
                             <PanelField>
                                 <div>
-                                    <span>Đơn vị cấp</span>
+                                    <span>Issued Place</span>
                                     <EditOutlined onClick={() => setUpdatefieldform(prev => ({
                                         ...prev,
                                         editidIssuedPlace: !prev.editidIssuedPlace
                                     }))}/>
                                 </div>
-                                <InputForm type="text" TypePassword={false} placeholder="Nhập đơn vị cung cấp công dân" size="large" disabled={!updatefieldform.editidIssuedPlace} value={formData.idIssuedPlace} handleOnChange={updateidIssuedPlace}/>
+                                <InputForm type="text" TypePassword={false} placeholder="Enter issued place" size="large" disabled={!updatefieldform.editidIssuedPlace} value={formData.idIssuedPlace} handleOnChange={updateidIssuedPlace}/>
                             </PanelField>
                     </ProfileContent>
                 </Loading>
@@ -280,8 +280,8 @@ export default function Profile() {
                     || formData.idIssuedPlace !== user?.idIssuedPlace
                     ) &&
                     <ProfileFooter>
-                        <ButtonComponent color="primary" variant="solid" className="btn-success" textButton={'Hủy'} onClick={handleResetInput}/>
-                        <ButtonComponent color="danger" variant="solid" className="btn-success" textButton={'cập nhật'} onClick={handleUpdate}/>
+                        <ButtonComponent color="primary" variant="solid" className="btn-success" textButton={'Cancel'} onClick={handleResetInput}/>
+                        <ButtonComponent color="danger" variant="solid" className="btn-success" textButton={'Update'} onClick={handleUpdate}/>
                     </ProfileFooter>
                 }
             </ProfileContainer>

@@ -58,7 +58,7 @@ export default function Changepass() {
     },[formdata]);
     useEffect(() => {
             if (isSuccess) {
-                message.success("Đổi mật khẩu thành công!");
+                message.success("Password changed successfully!");
                 handleGetDetailsUser(user?.id, token);
             } else if (isError) {
                 message.error(error?.response?.data?.message);
@@ -74,7 +74,7 @@ export default function Changepass() {
         <WrapperChangePass>
             <ChangePassContainer>
                 <ChangePassTitle>
-                    Đổi mật khẩu
+                    change password
                 </ChangePassTitle>
                 <ChangePassContent>
                     <Loading isLoading={isPending}>
@@ -82,27 +82,27 @@ export default function Changepass() {
                         <Progress percent={percent} type="line" strokeColor="#02CBE0"/>
                         </div>
                         <div>
-                            <span>Mật khẩu cũ</span>
-                            <InputForm type="password" placeholder="Nhập mật khẩu cũ" size={"large"} TypePassword={true} value={formdata.oldpassword} handleOnChange={(value) => handleChange("oldpassword", value)} style={{marginTop: "0.5rem"}}/>
+                            <span>Old Password</span>
+                            <InputForm type="password" placeholder="Enter old password" size={"large"} TypePassword={true} value={formdata.oldpassword} handleOnChange={(value) => handleChange("oldpassword", value)} style={{marginTop: "0.5rem"}}/>
                         </div>
                         <div>
-                            <span>Mật khẩu mới</span>
-                            <InputForm type="password" placeholder="Nhập mật khẩu mới" size={"large"} TypePassword={true} value={formdata.newpassword} handleOnChange={(value) => handleChange("newpassword", value)} style={{marginTop: "0.5rem"}}/>
+                            <span>New Password</span>
+                            <InputForm type="password" placeholder="Enter new password" size={"large"} TypePassword={true} value={formdata.newpassword} handleOnChange={(value) => handleChange("newpassword", value)} style={{marginTop: "0.5rem"}}/>
                             <span style={{color:"rgba(160, 160, 160, 0.59)",fontSize:"1rem", display:"block", marginTop:"0.5rem"}}>
-                                Mật khẩu phải có từ 8 đến 16 ký tự, bao gồm chữ thường, chữ hoa, số và ký tự đặc biệt, không chứa khoảng trắng, ví dụ: Abcd@1234
+                                Password must be 8-16 characters, including lowercase, uppercase, numbers, and special characters, no spaces, e.g., Abcd@1234
                             </span>
                         </div>
                         <div>
-                            <span>Xác nhận mật khẩu mới</span>
-                            <InputForm type="password" placeholder="Xác nhận mật khẩu mới" size={"large"} TypePassword={true} value={formdata.confirmPassword} handleOnChange={(value) => handleChange("confirmPassword", value)} style={{marginTop: "0.5rem"}}/>
+                            <span>Confirm New Password</span>
+                            <InputForm type="password" placeholder="Confirm new password" size={"large"} TypePassword={true} value={formdata.confirmPassword} handleOnChange={(value) => handleChange("confirmPassword", value)} style={{marginTop: "0.5rem"}}/>
                         </div>
                     </Loading>
                 </ChangePassContent>
                 {
                     formdata.oldpassword && formdata.newpassword && formdata.confirmPassword &&
                     <ChangePassFooter>
-                        <ButtonComponent color="primary" variant="solid" className="btn-success" textButton={'Hủy'} onClick={handleCancelChangePass}/>
-                        <ButtonComponent color="danger" variant="solid" className="btn-success" textButton={'cập nhật'} onClick={handleChangePass}/>
+                        <ButtonComponent color="primary" variant="solid" className="btn-success" textButton={'Cancel'} onClick={handleCancelChangePass}/>
+                        <ButtonComponent color="danger" variant="solid" className="btn-success" textButton={'Update'} onClick={handleChangePass}/>
                     </ChangePassFooter>
                 }
             </ChangePassContainer>

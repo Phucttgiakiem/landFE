@@ -44,31 +44,31 @@ export default function SignUpPage () {
   const validate = () => {
       let newErrors = {};
       if(!formdata.name.trim()){
-         newErrors.name = "Vui lòng nhập họ tên"
+         newErrors.name = "please enter your full name"
       }
       if(!formdata.email.trim()){
-         newErrors.email = "Vui lòng nhập email"
+         newErrors.email = "please enter your email"
       }else if(!checkEmail(formdata.email.trim())){
-          newErrors.email = "Email không đúng định dạng"
+          newErrors.email = "Email is not in the correct format"
       }
       if(!formdata.phone.trim()){
-         newErrors.phone = "Vui lòng nhập số điện thoại"
+         newErrors.phone = "please enter your phone number"
       }
       if(!formdata.address.trim()){
-          newErrors.address = "Vui lòng nhập địa chỉ"
+          newErrors.address = "please enter your address"
       }
       if(!formdata.password.trim()){
-          newErrors.password = "Vui lòng nhập password"
+          newErrors.password = "please enter your password"
       }else if (!checkPass(formdata.password.trim())){
-          newErrors.password = "Mật khẩu không đúng định dạng"
+          newErrors.password = "Password is not in the correct format"
       }
       if(!formdata.confirmPassword.trim()){
-          newErrors.confirmPassword = "Vui lòng nhập Confirmpassword"
+          newErrors.confirmPassword = "please enter confirm password"
       }else if (formdata.confirmPassword !== formdata.password){
-          newErrors.confirmPassword = "confirmpassword không khớp với password"
+          newErrors.confirmPassword = "confirm password does not match password"
       }
       if(!formdata.typeuser){
-          newErrors.typeuser = "Vui lòng chọn một trong hai loại tài khoản"
+          newErrors.typeuser = "please select one of the two account types"
       }
       return newErrors;
   }
@@ -194,14 +194,14 @@ export default function SignUpPage () {
               <img src={backgroundland} alt="background land" style={{width: '100%',height:"100%", objectFit:'fill'}}/>
               <img src={logo} alt="logo" style={{position: 'absolute', top: '20px', left: '20px', width: '120px'}}/>
               <div style={{position: 'absolute', top: '20px', left: '160px', color:'rgba(21,71,132,1)'}}>
-                  <h4>Tìm nhà đất</h4>
-                  <h4>Batdongsan.com.vn dẫn lối</h4>
+                  <h4>Find Real Estate</h4>
+                  <h4>Batdongsan.com.vn leads the way</h4>
               </div>
           </WrapperContainerLeft>
           <WrapperContainerRight>
             <div>
-                <h5>Xin chào bạn</h5>
-                <h3>Đăng ký tài khoản mới</h3>
+                <h5>Hello there!</h5>
+                <h3>Sign up for a new account</h3>
                 {
                   data ? 
                   <WrapperInformationSuccess>
@@ -213,7 +213,7 @@ export default function SignUpPage () {
                         <Signupcontainer>
                           <PanelField>
                             <InputForm 
-                              placeholder={"Nhập họ tên"} 
+                              placeholder={"Enter your full name"} 
                               size={"large"} 
                               status={errors.name ? "error" : ""}
                               prefix={<IdcardOutlined />} 
@@ -232,7 +232,7 @@ export default function SignUpPage () {
                           </PanelField>
                           <PanelField>
                             <InputForm 
-                              placeholder={"Nhập địa chỉ email"} 
+                              placeholder={"Enter your email"} 
                               size={"large"} 
                               status={errors.email ? "error" : ""}
                               prefix={<IdcardOutlined />} 
@@ -250,7 +250,7 @@ export default function SignUpPage () {
                           </PanelField>
                           <PanelField>
                             <InputForm 
-                              placeholder={"Nhập số điện thoại"} 
+                              placeholder={"Enter your phone number"} 
                               size={"large"} 
                               status={errors.phone ? "error": ""}
                               prefix={<IdcardOutlined />} 
@@ -267,7 +267,7 @@ export default function SignUpPage () {
                           </PanelField>
                           <PanelField>
                             <InputForm 
-                              placeholder={"Nhập địa chỉ"} 
+                              placeholder={"Enter your address"} 
                               status={errors.address ? "error" : ""}
                               size={"large"} 
                               prefix={<IdcardOutlined />} 
@@ -284,15 +284,16 @@ export default function SignUpPage () {
                           </PanelField>
                           <PanelField>
                             <InputForm 
-                              placeholder={"Nhập password"} 
+                              placeholder={"Enter your password"} 
                               status={errors.password ? "error" : ""}
                               size={"large"} 
                               prefix={<LockOutlined />} 
                               TypePassword={true} 
                               style={{marginRight: '10px'}} 
                               value={formdata.password} handleOnChange={handleOnChangePassword}/>
-                              <span className="note-text">Mật khẩu phải có từ 8 đến 16 ký tự, bao gồm chữ cái hoa đầu chuỗi, 
-                                      chữ cái thường và số, ít nhất một ký tự đặc biệt trong nhóm này @$!%*?&</span>
+                              <span className="note-text">Password must be 8-16 characters long, 
+                                including at least one uppercase letter, lowercase letter, number, 
+                                and special character from this set @$!%*?&</span>
                             {
                               errors.password && (
                                   <span style={{ color: "red", marginBottom: 10}}>
@@ -303,7 +304,7 @@ export default function SignUpPage () {
                           </PanelField>
                           <PanelField>
                             <InputForm 
-                              placeholder={"Nhập lại password"} 
+                              placeholder={"Re-enter password"} 
                               status={errors.confirmPassword ? "error": ""}
                               size={"large"} 
                               prefix={<LockOutlined />} 
@@ -322,11 +323,11 @@ export default function SignUpPage () {
                             <WrapperTypeUser>
                                 <div className={`btn-choosetype ${formdata.typeuser === "sell-user" ? "active" : ""}`} onClick={()=> handleOnChangeTypeuser("sell-user") }>
                                   <FontAwesomeIcon icon={faUsers} />
-                                  <span>Bên bán</span>
+                                  <span>Seller</span>
                                 </div>
                                 <div className={`btn-choosetype ${formdata.typeuser === "user" ? "active" : ""}`} onClick={() => handleOnChangeTypeuser("user")}>
                                   <FontAwesomeIcon icon={faUser} />
-                                  <span>Khách</span>
+                                  <span>Customer</span>
                                 </div>
                             </WrapperTypeUser>
                             {
@@ -343,7 +344,7 @@ export default function SignUpPage () {
                         <ButtonComponent 
                           className={`btn-signup`} 
                           size="large" 
-                          textButton={"Đăng ký"} 
+                          textButton={"Sign up"} 
                           styleButton={{width:"100%"}}
                           onClick={handleSignUp}
                           />
@@ -353,7 +354,7 @@ export default function SignUpPage () {
                 }
             </div>
             <div className="signup_member">
-                <span>Bạn là thành viên? <Link rel="icon" onClick={(e) => handleLogin(e)} >Đăng nhập</Link> Tại đây</span>
+                <span>Already a member? <Link rel="icon" onClick={(e) => handleLogin(e)} >Sign in</Link> here</span>
             </div>
           </WrapperContainerRight>
         </WrapperSignUpPage>

@@ -48,7 +48,7 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
     }
     const [tempFilters, setTempFilters] = useState(appliedFilters);
     const navigate = useNavigate();
-    const listOption = tempFilters.type === "Nha-dat-ban" ? listPricesell : listPriceRent;
+    const listOption = tempFilters.type === "Sale-property" ? listPricesell : listPriceRent;
     
     const handleSetRadioGroup = (vlmin, vlmax,list) => {
         const numone = vlmin == null || vlmin === "" ? null : +vlmin;
@@ -139,7 +139,7 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
         });
     };
     const handleResetFilter = () => {
-        const newtype = "Nha-dat-ban";
+        const newtype = "Sale-property";
 
         setTempFilters({
             type: newtype,
@@ -244,29 +244,29 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
         <FilterPersonalpageContainer>
             <FilterPersonalpageWrapper>
                 <FilterPersonalpageHeader>
-                    <h3>Bộ lọc</h3>
+                    <h3>Filter</h3>
                     <CloseOutlined onClick={() => CloseDialog(false)}/>
                 </FilterPersonalpageHeader>
                 <FilterPersonalpageContent>
                     <FilterPersonalItem>
                         <FilterPersonalItemTitle>
-                            <h4>Loại bất động sản</h4>
+                            <h4>Type property</h4>
                         </FilterPersonalItemTitle>
                         <FilterPersonalItemContent>
                             <Select style={{ width: '100%' }} 
-                                placeholder="Chọn loại bất động sản" 
+                                placeholder="Select property type" 
                                 value={tempFilters?.type}
                                 size={"middle"} 
                                 onChange={(value)=>
                                     handleChangeTypeCatagory(value)
                                 }>
-                                <Select.Option value="Nha-dat-ban">Nhà đất bán</Select.Option>
-                                <Select.Option value="Nha-dat-cho-thue">Nhà đất cho thuê</Select.Option>
+                                <Select.Option value="Sale-property">Sell property</Select.Option>
+                                <Select.Option value="Rental-property">Rent property</Select.Option>
                             </Select>
                             <WrapperInputSearch>
                                 <Input 
                                     type="text" 
-                                    placeholder="Tìm kiếm tên bất động sản" 
+                                    placeholder="Search property name" 
                                     value={keywordCatagory}
                                     onChange={(e) =>{
                                         let value = e.target.value;
@@ -319,13 +319,13 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
                     </FilterPersonalItem>
                     <FilterPersonalItem>
                         <FilterPersonalItemTitle>
-                            <h4>Thành phố</h4>
+                            <h4>City</h4>
                         </FilterPersonalItemTitle>
                         <FilterPersonalItemContent>
                             <WrapperInputSearch>
                                 <Input 
                                     type="text" 
-                                    placeholder="Tìm kiếm thành phố" 
+                                    placeholder="Search city" 
                                     value={keywordCity}
                                     onChange={(e) =>{
                                         let value = e.target.value;
@@ -378,13 +378,13 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
                     </FilterPersonalItem>
                     <FilterPersonalItem>
                         <FilterPersonalItemTitle>
-                            <h4>Phường/Xã</h4>
+                            <h4>Ward/ Commune</h4>
                         </FilterPersonalItemTitle>
                         <FilterPersonalItemContent>
                             <WrapperInputSearch>
                                 <Input 
                                     type="text" 
-                                    placeholder="Tìm kiếm phường/xã" 
+                                    placeholder="Search ward/commune" 
                                     value={keywordCommune}
                                     onChange={(e) =>{
                                         let value = e.target.value;
@@ -436,33 +436,33 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
                     </FilterPersonalItem>
                     <FilterPersonalItem>
                         <FilterPersonalItemTitle>
-                            <h4>Mức giá (VND)</h4>
+                            <h4>Price Range (VND)</h4>
                         </FilterPersonalItemTitle>
                         <FilterPersonalItemContent>
-                            <h5>Chọn nhập tay hay sử dụng select</h5>
-                            <h6 style={{margin:0, color:"red"}}>lưu ý: các số khi nhập sẽ nhân với 1 triệu</h6>
-                            <InputNumber value={Number(tempFilters?.priceMin)} min={0} placeholder="Nhập giá thấp nhất" style={{width:"100%"}} onChange={(value) => {
+                            <h5>Choose manual input or select</h5>
+                            <h6 style={{margin:0, color:"red"}}>Note: Numbers entered will be multiplied by 1 million</h6>
+                            <InputNumber value={Number(tempFilters?.priceMin)} min={0} placeholder="Enter minimum price" style={{width:"100%"}} onChange={(value) => {
                                 setTempFilters(prev => (
                                     {
                                         ...prev,
                                         priceMin:value
                                     }))
                             }}/>
-                            <InputNumber value={Number(tempFilters?.priceMax)} min={0} placeholder="Nhập giá cao nhất" style={{width:"100%"}} onChange={(value) => {
+                            <InputNumber value={Number(tempFilters?.priceMax)} min={0} placeholder="Enter maximum price" style={{width:"100%"}} onChange={(value) => {
                                 setTempFilters(prev => (
                                     {
                                         ...prev,
                                         priceMax:value
                                     }))
                             }}/>
-                            <Select style={{ width: '100%' }} placeholder="Chọn khung giá" size={"middle"}
+                            <Select style={{ width: '100%' }} placeholder="Choose price range" size={"middle"}
                                     value={handleSetRadioGroup(tempFilters?.priceMin,tempFilters?.priceMax,listOption)?.key}
                                     onChange={(value) => {
                                     handleSetPriceSelected(value);
                                 }}
                             >
                                 {
-                                    tempFilters.type === "Nha-dat-ban" ? 
+                                    tempFilters.type === "Sale-property" ? 
                                     (
                                         listPricesell.map((item,index) => (
                                             <Select.Option key={item.key} value={item.key}>{item.label}</Select.Option>
@@ -478,25 +478,25 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
                     </FilterPersonalItem>
                     <FilterPersonalItem>
                         <FilterPersonalItemTitle>
-                            <h4>Diện tích</h4>
+                            <h4>Area</h4>
                         </FilterPersonalItemTitle>
                         <FilterPersonalItemContent>
-                            <h5>Chọn nhập tay hay sử dụng select</h5>
-                            <Input type="number" value={Number(tempFilters?.areaMin)} placeholder="Diện tích nhỏ nhất" onChange={(e) => {
+                            <h5>Choose manual input or select</h5>
+                            <Input type="number" value={Number(tempFilters?.areaMin)} placeholder="Minimum area" onChange={(e) => {
                                 setTempFilters(prev => (
                                     {
                                         ...prev,
                                         areaMin:e.target.value
                                     }))
                             }}/>
-                            <Input type="number" value={Number(tempFilters?.areaMax)} placeholder="Diện tích lớn nhất"  onChange={(e) => {
+                            <Input type="number" value={Number(tempFilters?.areaMax)} placeholder="Maximum area"  onChange={(e) => {
                                 setTempFilters(prev => (
                                     {
                                         ...prev,
                                         areaMax:e.target.value
                                     }))
                             }}/>
-                            <Select style={{ width: '100%' }} placeholder="Chọn khoảng diện tích" size={"middle"}
+                            <Select style={{ width: '100%' }} placeholder="Choose area range" size={"middle"}
                                     value={handleSetRadioGroup(tempFilters?.areaMin,tempFilters?.areaMax,listacreage)?.key}
                                     onChange={(value) => {
                                     handleSetAcreageSelected(value);
@@ -512,7 +512,7 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
                     </FilterPersonalItem>
                     <FilterPersonalItem>
                         <FilterPersonalItemTitle>
-                            <h4>Số phòng ngủ</h4>
+                            <h4>Number of Bedrooms</h4>
                         </FilterPersonalItemTitle>
                         <FilterPersonalItemContent>
                             <Wrapperlistselect>
@@ -536,7 +536,7 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
                     </FilterPersonalItem>
                     <FilterPersonalItem>
                         <FilterPersonalItemTitle>
-                            <h4>Số phòng tắm</h4>
+                            <h4>Number of Bathrooms</h4>
                         </FilterPersonalItemTitle>
                         <FilterPersonalItemContent>
                             <Wrapperlistselect>
@@ -560,7 +560,7 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
                     </FilterPersonalItem>
                     <FilterPersonalItem>
                         <FilterPersonalItemTitle>
-                            <h4>Số toilet</h4>
+                            <h4>Number of Toilets</h4>
                         </FilterPersonalItemTitle>
                         <FilterPersonalItemContent>
                             <Wrapperlistselect>
@@ -584,8 +584,8 @@ export default function FilterEnhanceComponent ({CloseDialog}) {
                     </FilterPersonalItem>
                 </FilterPersonalpageContent>
                 <FilterEnhancepageFooter>
-                    <ButtonComponent textButton={"Đặt lại"} size="medium" variant="text" color="default" onClick={() => handleResetFilter()}/>
-                    <ButtonComponent textButton={"Áp dụng"} size="medium" className="btn-apply" onClick={() => handleApply()}/>
+                    <ButtonComponent textButton={"Reset"} size="medium" variant="text" color="default" onClick={() => handleResetFilter()}/>
+                    <ButtonComponent textButton={"Apply"} size="medium" className="btn-apply" onClick={() => handleApply()}/>
                 </FilterEnhancepageFooter>
             </FilterPersonalpageWrapper>
         </FilterPersonalpageContainer>

@@ -28,7 +28,7 @@ import {getSuggestionsSearch} from "../../services/ListingService";
 import {formatDate,formatacreage,toSlug,isNew} from "../../utils";
 
 const HomePage = () => {
-    const [activeMenu, setActiveMenu] = useState("Nhà đất bán");
+    const [activeMenu, setActiveMenu] = useState("Sale");
     const [suggestions,setSuggestions] = useState([]);
     const [keyword,setKeyword] = useState("");
     const wrapperRef = useRef(null);
@@ -38,7 +38,6 @@ const HomePage = () => {
     const user = useSelector((state) => state.user);
     const navigate = useNavigate();
     const { featured, latest, cheap, countnews, entities,loading } = homeState;
-
     const dispatch = useDispatch();
     const getList = (ids, entities) => {
             return ids.map(id => entities[id]).filter(Boolean)
@@ -49,8 +48,8 @@ const HomePage = () => {
     const cheapls = getList(cheap, entities)
     const handleSearch = () => {
         if(!keyword.trim()) return;
-        const typecata = toSlug(activeMenu)
-        navigate(`/listing/${typecata}?keyword=${keyword.trim()}`)
+        const typecata = activeMenu+"-property";
+        navigate(`/listing/${typecata}?keyword=${keyword.trim()}`);
     };
     useEffect(() => {
         const fetchHomeData = async () => {
@@ -101,8 +100,8 @@ const HomePage = () => {
                     right: "20px",
                     zIndex: 1 }}
             onClick={onClick}
-            >
-                
+            > 
+
             </div>
         );
     }
@@ -146,8 +145,6 @@ const HomePage = () => {
                     keyword:keyword,
                     typeproperty: activeMenu
                 });
-
-                console.log(res);
                 setSuggestions(res.result);
 
             } catch(error) {
@@ -190,7 +187,9 @@ const HomePage = () => {
                             dots:true,
                             fade: true,
                             infinite: true,
-                            speed: 500,
+                            autoplay: true,
+                            autoplaySpeed:4000,
+                            speed:1000,
                             slidesToShow: 1,
                             slidesToScroll: 1,
                             waitForAnimate:false,
@@ -211,13 +210,13 @@ const HomePage = () => {
                     </SliderEffectComponent>
                     <WrapperSearch >
                         <ul>
-                            {['Nhà đất bán', 'Nhà đất cho thuê'].map((type) => (
+                            {['Sale', 'Rental'].map((type) => (
                             <MenuItem
                                     key={type}
                                     $active={activeMenu === type}
                                     onClick={() => setActiveMenu(type)}
                                 >
-                            {type === 'Nhà đất bán' ? 'Mua bán' : 'Cho thuê'}
+                                {type === 'Sale' ? 'Sale' : 'Rental'}
                                 </MenuItem>
                             ))}
                         </ul>
@@ -226,21 +225,21 @@ const HomePage = () => {
                                 <SearchboxHeader>
                                     <SearchOutlined className="icon-search"/>
                                     <div className="input-searchbox">
-                                        <input type="text" placeholder="Nhập nội dung tìm kiếm" value={keyword}
+                                        <input type="text" placeholder="Enter search content" value={keyword}
                                             onChange={(e) => setKeyword(e.target.value)}
                                             onFocus={() => setIsOpen(true)}
                                         />
                                        {keyword && <CloseCircleOutlined className="closeItemoutlined" onClick={()=> setKeyword("")}/>} 
                                     </div>
                                     <div className="btn-searchbox">
-                                        <ButtonComponent textButton={"Tìm kiếm"} className="btn-search" onClick={() => handleSearch()}/>
+                                        <ButtonComponent textButton={"Find"} className="btn-search" onClick={() => handleSearch()}/>
                                     </div>
                                 </SearchboxHeader>
                                 {
                                 isOpen &&
                                 <Searchboxdropdown>
                                     {
-                                        !keyword ? <EmptySearch>Nhập nội dung tìm kiếm</EmptySearch> :
+                                        !keyword ? <EmptySearch>Enter search content</EmptySearch> :
                                         suggestions.length > 0 ?
 
                                         suggestions.map(item => (
@@ -262,7 +261,7 @@ const HomePage = () => {
                                         :
 
                                         <EmptySearch>
-                                            Không có thông tin tìm thấy
+                                            No information found
                                         </EmptySearch>
                                     }
 
@@ -277,7 +276,7 @@ const HomePage = () => {
                 {
                     featuredls && featuredls.length > 0 && (
                         <div>
-                            <h2>Nổi bật</h2>
+                            <h2>Featured</h2>
                             <WrapperLandslist className="slider-container">
                                 {
                                     featuredls && featuredls.length > 0 ? 
@@ -369,7 +368,7 @@ const HomePage = () => {
                                                 ))
                                         }
                                     </SliderEffectComponent> :
-                                    <span>Không có thông tin</span>
+                                    <span>No information found</span>
                                 }
                             </WrapperLandslist>
                         </div>
@@ -378,7 +377,7 @@ const HomePage = () => {
                 {
                     latestls && latestls.length > 0 && (
                         <div>
-                            <h2>Mới nhất</h2>
+                            <h2>Latest</h2>
                             <WrapperLandslist className="slider-container">
                                 <SliderEffectComponent 
                                         setting={{
@@ -475,7 +474,7 @@ const HomePage = () => {
                 {
                     cheapls && cheapls.length > 0 && (
                         <div>
-                            <h2>Đáng quan tâm</h2>
+                            <h2>Many people are interested</h2>
                             <WrapperLandslist className="slider-container">
                                 <SliderEffectComponent 
                                         setting={{
@@ -567,7 +566,7 @@ const HomePage = () => {
                     )
                 }
                 <div style={{marginTop:"4rem"}}>
-                    <h2>Bất động sản theo địa điểm</h2>
+                    <h2>Properties by Location</h2>
                     <WrapperPlacespecial>
                             <CardPlaceComponent Img={<img src={Imagecity_HCM} 
                             alt="imagebuilding" style={{width:"100%",height:"100%"}}/>}

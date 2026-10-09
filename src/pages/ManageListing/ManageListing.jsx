@@ -16,86 +16,86 @@ import {setListings,setPage,setSort,setFilter,setcountdeleted,setFilterClean} fr
 const tabsData = [
     {
         key: 'all',
-        label: 'Tất cả',
+        label: 'All',
         filter: {}
     },
     {
-        key: 'hết hạn',
-        label: 'Hết hạn',
+        key: 'expired',
+        label: 'Expired',
         filter: {
-            visibility_status: 'hết hạn'
+            visibility_status: 'expired'
         }
     },
     {
-        key: 'công khai',
-        label: 'Đang hiển thị',
+        key: 'public',
+        label: 'Public',
         filter: {
-            visibility_status: 'công khai'
+            visibility_status: 'public'
         }
     },
     {
-        key: 'chưa xác thực',
-        label: 'Đang chờ duyệt',
+        key: 'pending',
+        label: 'Pending Approval',
         filter: {
-            approval_status: 'chưa xác thực',
+            approval_status: 'pending',
         }
     },
     {
-        key: 'đã xác thực',
-        label: 'Đã duyệt',
+        key: 'approved',
+        label: 'Approved',
         filter: {
-            approval_status: 'đã xác thực',
+            approval_status: 'approved',
         }
     },
     {
-        key: 'từ chối',
-        label: 'Bị từ chối',
+        key: 'rejected',
+        label: 'Rejected',
         filter: {
-            approval_status: 'từ chối',
+            approval_status: 'rejected',
         }
     },
     {
-        key: 'ẩn',
-        label: 'Bị ẩn',
+        key: 'private',
+        label: 'Hidden',
         filter: {
-            visibility_status: 'ẩn',
+            visibility_status: 'private',
         }
     },
     {
-        key: 'bị khóa',
-        label: 'Bị khóa',
+        key: 'blocked',
+        label: 'Blocked',
         filter: {
-            visibility_status: 'bị khóa',
+            visibility_status: 'blocked',
         }
     }
 ]
 const getColumns = (handleDelete,iduser,selectedowner) => [
     {
-        title: 'Tên bất động sản',
+        title: 'Name of Listing',
         dataIndex: 'Title',
         width:400,
     },
     {
-        title: 'Giá',
+        title: 'Price',
         dataIndex: 'Price',
         render: (value) => formatPrice(value),
         sorter: true,
         width:200,
     },
     {
-        title: 'Ngày tạo',
+        title: 'Created Date',
         dataIndex: 'createdAt',
         render: (value) => formatDateVN(value),
         sorter: true,
         width:180
     },
     {
-        title: 'Trạng thái',
+        title: 'Approval Status',
         dataIndex: 'approval_status',
         width:150    
     },
     {
-        title: 'Hành động',
+        title: 'Actions',
         dataIndex: '',
         key: 'x',
         render: (_, record) => 
@@ -129,12 +129,12 @@ export default function ManageListing() {
             (data) => ListingService.softDeleteListing(data),
             {
                 onSuccess: () => {
-                    message.success("Đã chuyển tin đăng vào thùng rác");
+                    message.success("Delete listing successfully");
                     fetchData();
                     
                 },
                 onError: () => {
-                    message.error("Xóa tin đăng thất bại");
+                    message.error("Failed to delete listing");
                     setLoading(false);
                 }
             }
@@ -152,7 +152,7 @@ export default function ManageListing() {
     }
     const handleDeleteSelected = () => {
         if(selectedRowKeys.length === 0) {
-            message.warning("Vui lòng chọn ít nhất một tin đăng để xóa");
+            message.warning("Please select at least one listing to delete");
             return;
         }
         handleDelete(selectedRowKeys);
@@ -164,7 +164,7 @@ export default function ManageListing() {
         selections: [
             {
                 key: 'all',
-                text: 'Chọn tất cả',
+                text: 'Select All',
                 onSelect: (changeableRowKeys) => {
                     setSelectedRowKeys(prev => [
                     ...new Set([...prev, ...changeableRowKeys])
@@ -173,7 +173,7 @@ export default function ManageListing() {
             },
             {
                 key: 'none',
-                text: 'Bỏ chọn tất cả',
+                text: 'Deselect All',
                 onSelect: (changeableRowKeys) => {
                     setSelectedRowKeys(prev => prev.filter(key => !changeableRowKeys.includes(key)));   
                 }
@@ -281,7 +281,7 @@ export default function ManageListing() {
             <WrapperManageListing>
                 <ManageListingContainer>
                     <ManageListingHeader>
-                        <h2>Quản lý tin đăng</h2>
+                        <h2>Manage Listings</h2>
                         <ManageListingHeaderContent>
                             <SearchContainer>
                                 <SearchButton onClick={() => handleSearch()}>
@@ -289,7 +289,7 @@ export default function ManageListing() {
                                 </SearchButton>
                                 <input 
                                     type="text" 
-                                    placeholder="Tìm kiếm tin đăng..." 
+                                    placeholder="Search listings..." 
                                     value={keywordfind}
                                     onChange={(e) => setKeywordfind(e.target.value)}
                                     />
@@ -298,7 +298,7 @@ export default function ManageListing() {
                                 user?.role === "admin" &&
                                 <Selectownerproperty>
                                     <Select
-                                        placeholder="Chọn tên người đăng bài đăng"
+                                        placeholder="Select owner"
                                         className="select-owner"
                                         variant="underlined"
                                         value={selectedowner}
@@ -340,7 +340,7 @@ export default function ManageListing() {
                                     </Badge>
                                 }
                                 <ButtonComponent 
-                                    textButton="Tạo mới" 
+                                    textButton="Create New" 
                                     size="large" 
                                     color="danger" 
                                     variant="solid"
@@ -371,7 +371,7 @@ export default function ManageListing() {
                             {
                                 selectedowner.split("-")[0] === user?.id && (
                                     <ButtonComponent 
-                                        textButton="Xóa tin đã chọn" 
+                                        textButton="Delete Selected Listings" 
                                         size="large"
                                         color="danger" 
                                         variant="outlined"

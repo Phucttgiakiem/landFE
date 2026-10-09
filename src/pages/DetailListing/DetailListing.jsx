@@ -51,29 +51,29 @@ export default function DetailListing() {
         return [
             {
                 key: "1",
-                label: "Tên bất động sản",
+                label: "Title",
                 children: data.Title,
             },
             {
                 key: "2",
-                label: "Giá",
+                label: "Price",
                 children: formatCurrency(data.Price),
             },
             {
                 key: "3",
-                label: "Diện tích",
+                label: "Area",
                 children: `${
                     Number(data.horizontal) * Number(data.vertical) || 0
                 } m²`,
             },
             {
                 key: "4",
-                label: "Địa chỉ",
+                label: "Address",
                 children: `${data?.Address?.numberhouse || ""} - ${data?.Address?.Commune.name} - ${data?.Address?.City.name}`,
             },
             {
                 key: "5",
-                label: "Tình trạng",
+                label: "Approval Status",
                 children: (
                     <Badge 
                         status= {
@@ -88,7 +88,7 @@ export default function DetailListing() {
             },
             {
                 key: "6",
-                label: "Trạng thái",
+                label: "Visibility Status",
                 children: (
                     <Tag 
                         color={
@@ -102,25 +102,25 @@ export default function DetailListing() {
             },
             {
                 key: "7",
-                label: "Ngày tạo",
+                label: "Creation Date",
                 children: formatDate(data.createdAt),
                 span: 3
             },
             {
                 key: "8",
-                label: "Ngày cập nhật gần nhất",
+                label: "Last Updated Date",
                 children: formatDate(data.updatedAt),
                 span: 1
             },
             {
                 key: "9",
-                label: "Ngày hết hạn",
+                label: "Expiration Date",
                 children: isDefaultDate(data.ExpiredAt) ? "Chưa có thông tin" : formatDate(data.ExpiredAt),
                 span: 2
             },
             {
                 key: "10",
-                label: "Mô tả",
+                label: "Description",
                 span: 3,
                 children: <div
                     dangerouslySetInnerHTML={{
@@ -130,7 +130,7 @@ export default function DetailListing() {
             },
             {
                 key: "11",
-                label: "Hình ảnh",
+                label: "Images",
                 span: 3,
                 children: <WrapperImage>
                     {urlimage?.length > 0 &&
@@ -153,9 +153,9 @@ export default function DetailListing() {
         <WrapperDetaillisting>
             <DetailListingContainer>
                 <DetailListingHeader>
-                    <h2>Chi tiết thông tin bất động sản</h2>
+                    <h2>Detail Listing</h2>
                     <ButtonComponent 
-                        textButton={"Quay lại"} 
+                        textButton={"Back"} 
                         size="large" 
                         color="cyan" 
                         variant="solid" 

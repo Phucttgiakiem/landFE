@@ -45,7 +45,7 @@ export default function ForgotPassPage () {
     useEffect(() => {
         if(isSuccess && !error) {
             
-            message.success("Bạn có thể sử dụng mật khẩu mới để đăng nhập");
+            message.success("your password has been changed successfully, please login again");
             setTimeout(()=>{
                 navigate("/sign-in")
             },1500)
@@ -73,26 +73,26 @@ export default function ForgotPassPage () {
               <img src={backgroundland} alt="background land" style={{width: '100%',height:"100%", objectFit:'fill'}}/>
               <img src={logo} alt="logo" style={{position: 'absolute', top: '20px', left: '20px', width: '120px'}}/>
               <div style={{position: 'absolute', top: '20px', left: '160px', color:'rgba(21,71,132,1)'}}>
-                  <h4>Tìm nhà đất</h4>
-                  <h4>Batdongsan.com.vn dẫn lối</h4>
+                  <h4>Find properties</h4>
+                  <h4>Batdongsan.com.vn helps you</h4>
               </div>
           </WrapperContainerLeft>
           <WrapperContainerRight>
-                <h3>Để lấy lại mật khẩu, vui lòng nhập thông tin dưới đây</h3>
+                <h3>To reset your password, please enter the information below</h3>
                 {
                     Verified?.response?.data?.status !== "error" ? (
                         <>
                             <Panelfield>
-                                <InputForm placeholder={"Nhập mật khẩu mới"} size={"large"}
+                                <InputForm placeholder={"Enter new password"} size={"large"}
                                 status={error?.response.data?.field === "newpass" ? "error": ""} 
                                 TypePassword={true} handleOnChange={handleChangeNewpass}
                                 />
-                                <span className="note-text">Mật khẩu phải có từ 8 đến 16 ký tự, bao gồm chữ cái hoa đầu chuỗi, 
-                                chữ cái thường và số, ít nhất một ký tự đặc biệt trong nhóm này @$!%*?&</span>
+                                <span className="note-text">Password must be between 8 and 16 characters, including uppercase letters, 
+                                    lowercase letters and numbers, at least one special character from this group @$!%*?&</span>
                                 {error?.response.data?.field === "newpass" && <span className="error-text">{error?.response.data?.message}</span>}
                             </Panelfield>
                             <Panelfield>
-                                <InputForm placeholder={"Nhập lại mật khẩu mới"} size={"large"} 
+                                <InputForm placeholder={"Confirm new password"} size={"large"} 
                                  status={error?.response.data?.field === "confirmpass" ? "error": ""} 
                                 TypePassword={true} handleOnChange={handleChangeConfirmpass}/>
                                 {error?.response.data?.field === "confirmpass" && <span className="error-text">{error?.response.data?.message}</span>}
@@ -100,14 +100,14 @@ export default function ForgotPassPage () {
                             <ButtonComponent 
                                 className="btn-submitforgotpass" 
                                 size="large" 
-                                textButton={"Gửi"} 
+                                textButton={"Submit"} 
                                 styleButton={{width:"100%"}}
                                 onClick={handleForgotpass}
                             />
                         </>
                     ): <span style={{color:"rgb(238, 72, 72)"}}>{Verified?.response?.data?.message}</span>
                 }
-                <span>Quay lại <Link rel="icon" to="/sign-in" className="link-login">Đăng nhập</Link> Tại đây</span>
+                <span>Back to <Link rel="icon" to="/sign-in" className="link-login">Sign In</Link> here</span>
             
           </WrapperContainerRight>
         </WrapperForgetPass>

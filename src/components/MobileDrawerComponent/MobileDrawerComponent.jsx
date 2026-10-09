@@ -43,10 +43,10 @@ const MobileDrawerComponent = ({open,onClose,user,menuData,loadingmenuData,logou
                         ) : (
                             <DrawerAuth>
                                 <Link to="/sign-in" className="btn-auth">
-                                    Đăng nhập
+                                    Login
                                 </Link>
                                 <Link to="/sign-up" className="btn-auth">
-                                    Đăng ký
+                                    Sign up
                                 </Link>
                             </DrawerAuth>
                         )
@@ -59,7 +59,7 @@ const MobileDrawerComponent = ({open,onClose,user,menuData,loadingmenuData,logou
                 <Drawersection>
 
                     <DrawerTitle>
-                        Trang chính
+                        Main Page
                     </DrawerTitle>
 
                     <DrawerList>
@@ -205,7 +205,7 @@ const MobileDrawerComponent = ({open,onClose,user,menuData,loadingmenuData,logou
                         <Drawersection>
 
                             <DrawerTitle>
-                                Quản lý
+                                Manage
                             </DrawerTitle>
 
                             <DrawerList>
@@ -326,7 +326,7 @@ const MobileDrawerComponent = ({open,onClose,user,menuData,loadingmenuData,logou
 
                                 <LogoutOutlined />
                                 <span>
-                                    Đăng xuất
+                                    Logout
                                 </span>
                             </DrawerLogout>
                         </Drawersection>

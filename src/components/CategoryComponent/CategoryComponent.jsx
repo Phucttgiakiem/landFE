@@ -33,13 +33,13 @@ export default function CategoryComponent ({
     const validate = () => {
         let newErrors = {};
         if(!name){
-            newErrors.name = "Nhập tên danh mục"
+            newErrors.name = "Please enter a category name";
         }
         if(!typePost){
-            newErrors.typePost ="Vui lòng chọn loại danh mục tin"
+            newErrors.typePost ="Please select a post type";
         }
         if(!friendlyURL){
-            newErrors.friendlyURL = "Vui lòng nhập tên miền thân thiện"
+            newErrors.friendlyURL = "Please enter a friendly URL";
         }
         return newErrors;
     }
@@ -62,7 +62,7 @@ export default function CategoryComponent ({
             name,
             typePost,
             friendlyURL,
-            friendlyTypePostURL: typePost === "Nhà đất bán"? "Nha-dat-ban" : "Nha-dat-cho-thue"
+            friendlyTypePostURL: typePost === "Sale"? "Sale-property" : "Rental-property"
         };
         if (isEdit) {
             await onUpdate(category._id,payload);
@@ -75,11 +75,11 @@ export default function CategoryComponent ({
         <CategoryOverlay>
             <CategoryDialog>
                 <Categoryheader>
-                    <h2>{isEdit ? "Chỉnh sửa danh mục" : "Tạo danh mục"}</h2>
+                    <h2>{isEdit ? "Edit Category" : "Create Category"}</h2>
                     <FontAwesomeIcon icon={faXmark} onClick={() =>{ResetModal(); onClose()}}/>
                 </Categoryheader>
                 <Categorybody>
-                    <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nhập tên danh mục" size="large" />
+                    <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter category name" size="large" />
                     {
                         errors.name && (
                             <span style={{ color: "red", marginBottom: 10 }}>
@@ -90,9 +90,9 @@ export default function CategoryComponent ({
                     <Select
                         value={typePost}
                         options={[
-                            {value:"",label: <span>-------- Chọn loại tin --------</span>},
-                            {value: "Nhà đất bán",label: <span>Bán</span>},
-                            {value: "Nhà đất cho thuê",label: <span>Cho thuê</span>},
+                            {value:"",label: <span>-------- Select Post Type --------</span>},
+                            {value: "Sale",label: <span>Sale</span>},
+                            {value: "Rental",label: <span>Rental</span>},
                         ]}
                         onChange={setTypepost}
                         size="large"
@@ -105,7 +105,7 @@ export default function CategoryComponent ({
                             </span>
                         )
                     }
-                    <Input value={friendlyURL} onChange={(e) => setFriendlyURL(e.target.value)} placeholder="Nhập đường dẫn thân thiện" size="large"/>
+                    <Input value={friendlyURL} onChange={(e) => setFriendlyURL(e.target.value)} placeholder="Enter friendly URL" size="large"/>
                     {
                         errors.friendlyURL && (
                             <span style={{ color: "red", marginBottom: 10 }}>
@@ -118,7 +118,7 @@ export default function CategoryComponent ({
                         size="large" 
                         className="btn-submit"
                         onClick={() => handleSubmit()} 
-                        textButton={"Gửi"}
+                        textButton={"Submit"}
                         disabled={loading}
                     />
                 </Categorybody>

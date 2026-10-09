@@ -23,9 +23,9 @@ export const isNew = (date) => {
 export const formatPriceToString = (price) => {
   price = Number.isNaN(price) !== "number" ?  Number(price) : price;
   if (price >= 1000000000) {
-    return (price / 1000000000) + " tỷ";
+    return (price / 1000000000) + " B";
   } else if (price >= 1000000) {
-    return (price / 1000000) + " triệu";
+    return (price / 1000000) + " M";
   }
   return price.toString();
 };
@@ -140,13 +140,13 @@ export const getJoinedTime = (createdAt) => {
 
     const result = [];
 
-    if (years > 0) result.push(`${years} năm`);
-    if (months > 0) result.push(`${months} tháng`);
-    if (days > 0) result.push(`${days} ngày`);
+    if (years > 0) result.push(`${years} years`);
+    if (months > 0) result.push(`${months} months`);
+    if (days > 0) result.push(`${days} days`);
 
     return result.length > 0
         ? `${result.join(" ")}`
-        : "Mới tham gia";
+        : "New member";
 };
 export const comparedateInputwithtoday = (date) => {
     const joinDate = new Date(date);
