@@ -1,7 +1,7 @@
 import axios from "axios";
 import axiosJWT from "./axiosJWT";
 export const getinfoforCreatecontract = async(iduser) => {
-    const res = await axios.get(`${process.env.URL_BACKEND}/Contract/getInfoforContract?iduser=${iduser}`);
+    const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/Contract/getInfoforContract?iduser=${iduser}`);
     return res;
 }
 export const createContract = async (data) => {
@@ -16,21 +16,21 @@ export const createContract = async (data) => {
     return res.data;
 }
 export const getAllContract = async (searchParams,user,role) => {
-    const res = await axios.get(`${process.env.URL_BACKEND}/Contract/getAllContract?${searchParams.toString()}&user=${user}&role=${role}`);
+    const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/Contract/getAllContract?${searchParams.toString()}&user=${user}&role=${role}`);
     //console.log("data: ",res.data);
     return res.data;
 }
 export const getContractById = async (idcontract,iduser) => {
-    const res = await axios.get(`${process.env.URL_BACKEND}/Contract/getContractById/${idcontract}?iduser=${iduser}`);
+    const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/Contract/getContractById/${idcontract}?iduser=${iduser}`);
     return res.data;
 }
 export const getContractByIdnotiduser = async (idcontract) => {
-    const res = await axios.get(`${process.env.URL_BACKEND}/Contract/getContractByIdnotiduser/${idcontract}`);
+    const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/Contract/getContractByIdnotiduser/${idcontract}`);
     return res.data;
 }
 export const updateContract = async (data) => {
     console.log("data: ",data);
-    const res = await axiosJWT.put(`${process.env.URL_BACKEND}/Contract/updateContract`,data,{
+    const res = await axiosJWT.put(`${process.env.REACT_APP_URL_BACKEND}/Contract/updateContract`,data,{
         headers:{
             authorization: `Bearer ${data.token}`,
         }

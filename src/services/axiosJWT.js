@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 const axiosJWT = axios.create({
-    baseURL: process.env.URL_BACKEND,
+    baseURL: process.env.REACT_APP_URL_BACKEND,
     withCredentials: true
 })
 
@@ -28,7 +28,7 @@ axiosJWT.interceptors.response.use(
         if (error.response.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
-                const res = await axios.post(`${process.env.URL_BACKEND}/user/refresh-token`,{ withCredentials: true });
+                const res = await axios.post(`${process.env.REACT_APP_URL_BACKEND}/user/refresh-token`,{ withCredentials: true });
                 const newAccessToken = res.data.access_token;
                 localStorage.setItem("access_token",JSON.stringify(newAccessToken));
                 originalRequest.headers.authorization = `Bearer ${newAccessToken}`;

@@ -1,7 +1,7 @@
 import axios from "axios";
 export const axiosJWT = axios.create();
 export const getHome = async (access_token) => {
-    const res = await axiosJWT.get(`${process.env.URL_BACKEND}/home/get-all`,
+    const res = await axiosJWT.get(`${process.env.REACT_APP_URL_BACKEND}/home/get-all`,
       {
             headers: {
                 authorization: `Bearer ${access_token}`,
@@ -12,7 +12,7 @@ export const getHome = async (access_token) => {
     return res;
 }
 export const getListingFilter = async (data) => {
-   const res = await axios.get(`${process.env.URL_BACKEND}/home/get-listing-filter`,{
+   const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/home/get-listing-filter`,{
       params: {
         ...data,
       }
@@ -21,7 +21,7 @@ export const getListingFilter = async (data) => {
 }
 export const getListingRelated = async (data) => {
    // console.log("key: ",data);
-    const res = await axios.get(`${process.env.URL_BACKEND}/home/get-listing-related`,
+    const res = await axios.get(`${process.env.REACT_APP_URL_BACKEND}/home/get-listing-related`,
       {
         params: {
           ...data,
@@ -41,7 +41,7 @@ export const getArea = async () => {
 }
 export const getPropertyofBroker = async (data) => {
     const res = await axios.get(
-        `${process.env.URL_BACKEND}/home/getAllListingofbroder`,{
+        `${process.env.REACT_APP_URL_BACKEND}/home/getAllListingofbroder`,{
         params: {
           ...data,
         }
