@@ -28,7 +28,7 @@ https://drive.google.com/file/d/1G1I9TAyzI3lztAwVjwRWvaqnm7Sc2egY/view?usp=shari
 Linkweb:
 https://land-fe-omega.vercel.app
 ### Environment Variables
-REACT_APP_URL_BACKEND=https://landbe.onrender.com
+URL_BACKEND=https://landbe.onrender.com
 
 ## Related Repository
 
