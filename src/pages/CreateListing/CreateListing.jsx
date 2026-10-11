@@ -426,7 +426,7 @@ export default function CreateListing() {
     useEffect(()=>{
         const fetchData = async () => {
             const res = await axios.get(
-                "http://localhost:3000/api/catagory_property/getAll"
+                `${process.env.REACT_APP_API_URL}/catagory_property/getAll`
             );
                 const apiData = res.data.data;
 
