@@ -37,8 +37,8 @@ const getColumns  = (openConfirmModal) => [
         width:200,
         render: (_, record) => 
             <Space>
-                <span style={{cursor: 'pointer'}} onClick={() => openConfirmModal(record._id, "Khôi phục")}>Restore</span>
-                <span style={{cursor: 'pointer'}} onClick={() => openConfirmModal(record._id,"Xóa")}>Delete</span>
+                <span style={{cursor: 'pointer'}} onClick={() => openConfirmModal(record._id, "Restore")}>Restore</span>
+                <span style={{cursor: 'pointer'}} onClick={() => openConfirmModal(record._id,"Delete")}>Delete</span>
             </Space>
         
     }
@@ -62,16 +62,16 @@ export default function DeleteListingPage() {
     const message = useMessage();
     const mutation = useMutationHook(
                 ({ arrid, action }) => {
-                    if (action === "Xóa") {
+                    if (action === "Delete") {
                         return ListingService.hardDeleteListing({ arrid,id:user.id,token,typedelete:"harddelete" });
-                    } else if (action === "Khôi phục") {
+                    } else if (action === "Restore") {
                         return ListingService.restoreListing({ arrid,id:user.id,token });
                     }
                 },{
                     onSuccess: () => {
                         setConfirmModal(false);
                         setLoadingModal(false);
-                        message.success(`Thao tác ${pendingData.action} thành công`);
+                        message.success(`${pendingData.action}ed successfully`);
                         setSelectedRowKeys([]);
                         setPendingData({
                             ids: [],
@@ -82,7 +82,7 @@ export default function DeleteListingPage() {
                     onError: () => {
                         setConfirmModal(false);
                         setLoadingModal(false);
-                        message.error(`Thao tác ${pendingData.action} thất bại`);
+                        message.error(`Failed to ${pendingData.action.toLowerCase()}`);
                         setPendingData({
                             ids: [],
                             action: ""
@@ -201,7 +201,7 @@ export default function DeleteListingPage() {
                             <Button 
                                 size="large" 
                                 type="primary" 
-                                danger={pendingData.action === "Xóa"}
+                                danger={pendingData.action === "Delete"}
                                 onClick={() => { setLoadingModal(true); executeAction(pendingData.ids,pendingData.action)}}>
                                     Confirm
                             </Button>
@@ -215,7 +215,7 @@ export default function DeleteListingPage() {
                         !loadingModal ? (
                             <>
                                 <WarningTwoTone twoToneColor="#eb2f2f" style={{ fontSize: '40px' }} />
-                                <p style={{ textAlign: 'center',fontSize:"20px" }}>{pendingData.action === "Xóa" 
+                                <p style={{ textAlign: 'center',fontSize:"20px" }}>{pendingData.action === "Delete" 
                                 ? "This will permanently delete the listing, are you sure?" 
                                 : "Are you sure you want to restore this listing?"}</p>
                             </>
@@ -255,8 +255,8 @@ export default function DeleteListingPage() {
                             placeholder="--- Select ---"
                             style={{ width: 180 }}
                             options={[
-                                { value: 'Xóa', label: 'Delete' },
-                                { value: 'Khôi phục', label: 'Restore' },
+                                { value: 'Delete', label: 'Delete' },
+                                { value: 'Restore', label: 'Restore' },
                             ]}
                             size="large"
                             onChange={(value) => setSelectedAction(value)}
