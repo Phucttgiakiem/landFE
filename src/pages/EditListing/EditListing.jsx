@@ -534,7 +534,7 @@ export default function EditListing () {
     useEffect(()=>{
         const fetchData = async () => {
             const res = await axios.get(
-                `${process.env.REACT_APP_API_URL}/catagory_property/getAll`
+                `${process.env.REACT_APP_URL_BACKEND}/catagory_property/getAll`
             );
                 const apiData = res.data.data;
 
