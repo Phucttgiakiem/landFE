@@ -358,8 +358,8 @@ export default function EditContractpage() {
                                                 style={{width:"100%"}}
                                                 value={editedContract?.paymentMethod}
                                                 options={[
-                                                    {value:"chuyển khoản",label:"Transfer"},
-                                                    {value: "tiền mặt",label:"Cash"},
+                                                    {value:"Transfer",label:"Transfer"},
+                                                    {value: "Cash",label:"Cash"},
                                                 ]}
                                                 onChange={(value) => handleAddvalueinformdata(value,"paymentMethod")}
                                                 allowClear
@@ -429,10 +429,10 @@ export default function EditContractpage() {
                                     value={editedContract?.statusContract}
                                     onChange={(value) => handleAddvalueinformdata(value,"statusContract")}
                                     options={[
-                                        {value:"new",label:"New",disabled:contractoriginal?.status === "completed" || contractoriginal?.status === "cancelled" || contractoriginal?.status === "signed"},
+                                        {value:"new",label:"New",disabled:contractoriginal?.status !== "new" && contractoriginal?.status !== "signed"},
                                         {value: "signed",label:"Signed",disabled:contractoriginal?.status === "completed" || contractoriginal?.status === "cancelled"},
-                                        {value:"completed",label:"Completed",disabled:contractoriginal?.status === "cancelled"},
-                                        {value:"cancelled",label:"Cancelled",disabled:contractoriginal?.status !== "cancelled"},
+                                        {value:"completed",label:"Completed",disabled:contractoriginal?.status === "new" || contractoriginal?.status === "cancelled"},
+                                        {value:"cancelled",label:"Cancelled",disabled:contractoriginal?.status === "completed"},
                                     ]}
                                     
                                     allowClear

@@ -566,8 +566,8 @@ export default function CreateContractpage () {
                                                 style={{width:"100%"}}
                                                 value={dataCreateContract.paymentMethod}
                                                 options={[
-                                                    {value:"chuyển khoản",label:"Bank Transfer"},
-                                                    {value: "tiền mặt",label:"Cash"},
+                                                    {value:"Transfer",label:"Transfer"},
+                                                    {value: "Cash",label:"Cash"},
                                                 ]}
                                                 onChange={(value) => handleAddvalueinformdata(value,"paymentMethod")}
                                                 allowClear

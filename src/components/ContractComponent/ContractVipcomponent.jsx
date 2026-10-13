@@ -18,13 +18,13 @@ const tabsData = [
         key: 'sale',
         label: 'Sale',
         field: 'typeContract',
-        value: 'sale',
+        value: 'Sale',
     },
     {
         key: 'rent',
         label: 'Rent',
         field: 'typeContract',
-        value: 'rent',
+        value: 'Rental',
         
     },
     {
