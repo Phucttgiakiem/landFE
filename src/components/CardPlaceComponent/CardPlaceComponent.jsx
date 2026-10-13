@@ -13,7 +13,7 @@ const CardPlaceComponent = ({Img,Title,number,width,height,gridArea}) => {
             {Img}
             <WrapperTitleandNumber>
                 <span>{Title}</span>
-                <span>{number} tin đăng</span>
+                {number !== 0 && <span>{number} posts</span>}
             </WrapperTitleandNumber>
         </div>
     )
