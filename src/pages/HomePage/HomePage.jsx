@@ -292,18 +292,19 @@ const HomePage = () => {
                                             nextArrow:<SampleNextArrow />,
                                             responsive: [
                                                 {
-                                                    breakpoint: 1199,
+                                                    breakpoint: 1024, 
                                                     settings: {
-                                                    slidesToShow: 2,
-                                                    slidesToScroll: 2,
-                                                    infinite: true,
+                                                        slidesToShow: 2,
+                                                        slidesToScroll: 2,
+                                                        infinite: true,
                                                     }
                                                 },
                                                 {
-                                                    breakpoint: 767,
+                                                    breakpoint: 768, 
                                                     settings: {
-                                                    slidesToShow: 1,
-                                                    slidesToScroll: 1
+                                                        slidesToShow: 1,
+                                                        slidesToScroll: 1,
+                                                        initialSlide: 1
                                                     }
                                                 }
                                             ]
@@ -391,19 +392,19 @@ const HomePage = () => {
                                             nextArrow:<SampleNextArrow />,
                                             responsive: [
                                                 {
-                                                    breakpoint: 1199,
+                                                    breakpoint: 1024, 
                                                     settings: {
-                                                    slidesToShow: 2,
-                                                    slidesToScroll: 2,
-                                                    infinite: true,
-                                                    
+                                                        slidesToShow: 2,
+                                                        slidesToScroll: 2,
+                                                        infinite: true,
                                                     }
                                                 },
                                                 {
-                                                    breakpoint: 767,
+                                                    breakpoint: 768, 
                                                     settings: {
-                                                    slidesToShow: 1,
-                                                    slidesToScroll: 1
+                                                        slidesToShow: 1,
+                                                        slidesToScroll: 1,
+                                                        initialSlide: 1
                                                     }
                                                 }
                                             ]
@@ -488,19 +489,19 @@ const HomePage = () => {
                                             nextArrow:<SampleNextArrow />,
                                             responsive: [
                                                 {
-                                                    breakpoint: 1199,
+                                                    breakpoint: 1024, 
                                                     settings: {
-                                                    slidesToShow: 2,
-                                                    slidesToScroll: 2,
-                                                    infinite: true,
-                                                    
+                                                        slidesToShow: 2,
+                                                        slidesToScroll: 2,
+                                                        infinite: true,
                                                     }
                                                 },
                                                 {
-                                                    breakpoint: 767,
+                                                    breakpoint: 768, 
                                                     settings: {
-                                                    slidesToShow: 1,
-                                                    slidesToScroll: 1
+                                                        slidesToShow: 1,
+                                                        slidesToScroll: 1,
+                                                        initialSlide: 1
                                                     }
                                                 }
                                             ]
