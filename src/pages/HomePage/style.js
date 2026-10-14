@@ -231,30 +231,39 @@ export const WrapperLandslist = styled.div`
 
   .slick-track {
     margin-left: 0 !important;
+    margin-right: 0 !important;
   }
-  .slick-slide > div {
-    margin: 0 12px;
+
+  .slick-slide {
+    > div {
+      margin: 0 12px;
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .slick-slideCards, .slick-slide > div > div {
+    width: 100%;
   }
 
   .slick-list {
     width: 100%;
-    height: 24rem;
     padding: 0;
     margin: 0 -12px;
-    overflow: visible;
+    overflow: hidden; 
   }
   
-  .image-land{
+  .image-land {
     width: 100%;
     aspect-ratio: 16/9;
     object-fit: cover;
     display: block;
   }
 
-  .no-image{
-      object-fit: contain;
-      padding: 20px;
-      background: #f5f5f5;
+  .no-image {
+    object-fit: contain;
+    padding: 20px;
+    background: #f5f5f5;
   }
   
 `;
