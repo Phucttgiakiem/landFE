@@ -8,72 +8,8 @@ export const LandDetail = styled.div`
         padding: 0 20px;
     }
 `
-export const WrapperSlider = styled.div`
-    width: 100%;
-    margin: 0;
-    position: relative;
-    @media screen and (max-width: 767px){
-      .slidersmall {
-        display:none;
-      }
-    }
-`;
-export const SliderContent = styled.div`
-    width: 100%;
-    height: 30rem;
-    .loading-image {
-      width: 100%;
-      height: 100%;
-    }
-    img {
-      width: 100%;
-      height: 100%;
-      border-radius: 0.5rem;
-    }
-    @media screen and (max-width: 767px){
-      height: 18rem;
-    }
-`
-export const Sliderbottom = styled.div`
-    width: 100%;
-    margin-top:0.3rem;
 
-    & .slick-slide {
-      padding: 0 4px;
-      box-sizing: border-box;
-    }
 
-    & .slick-slide > div {
-      width: 100%;
-    }
-
-    & .img-listing {
-      height: 6rem;
-      overflow: hidden;
-      border-radius:0.8rem;
-    }
-
-    & .img-listing img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display:block;
-    }
-
-    & .slick-track {
-      display: flex !important;
-      margin:0;
-    }
-
-    & .slick-list {
-      overflow: hidden;
-    }
-    @media screen and (max-width:767px){
-      & .img-listing {
-        height:4.5rem;
-      }
-    }
-`
 export const ImageSlider = styled.img`
     height: 30rem;
     border-radius: 8px;

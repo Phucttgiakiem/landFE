@@ -5,7 +5,7 @@ import {
     SpecItemTitle,SpecItemValue,WrapperSpecs,SpecTitle,SpecBody,SpecItem,BodyDescription,
     WrapperDiscriptionLand,TitleDescription,
     InfoItemExtend,InfoItemValue,InfoItemTitle,InfoLand,InfoItem,
-    Nameland,LocationLand,WrapperSlider, SliderContent,Sliderbottom,
+    Nameland,LocationLand,
    InfoContact,ImageUser,WrapperCtBup,InformationBroker,DetailInfor,PhoneInfor
    ,SwitchTypeproperty,SwitchItem,Titlewrapper } from "./style";
 import { useParams,Link} from "react-router-dom";
@@ -24,7 +24,7 @@ import * as ImageService from "../../services/ImageService";
 import * as HomeService from "../../services/HomeService";
 import { formatDateVN,formatacreage,formatPriceToString } from "../../utils";
 import {setEntities, setLoading,setRelated,setLoadingRelated,setPageRelated} from "../../redux/slides/HomeSlide";
-import {EmblaCarousel} from "../../components/EmblaCarousel/EmblaCarousel";
+import EmblaCarouThumb from "../../components/EmblaCarousel/EmblaCarouThumb";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CardsmallComponent from "../../components/CardsmallComponent/CardsmallComponent";
 import {formatDate,getJoinedTime} from "../../utils";
@@ -50,10 +50,6 @@ export default function LandsDetailPage () {
         limit: 6,
         total: 0
   })
-    
-
-
-    
   const handleReplaceString = (value) => {
     const wordsToRemove = ["Phường ", "Thành phố ", "Xã "];
     const regex = new RegExp(wordsToRemove.join('|'), 'gi');
@@ -93,8 +89,6 @@ export default function LandsDetailPage () {
         ListingService.getListing(id),
         ImageService.getAllImage(id)
       ]);
-
-      
       
       dispatch(setEntities([{ ...listingRes.data.data }]));
 
@@ -177,33 +171,29 @@ export default function LandsDetailPage () {
                      {createbreadcrumb()}
                 </Col>
                 <Col xs={24} sm={24} md={24} lg={24} xl={18} xxl={18}>
-                    <WrapperSlider>
-                        <SliderContent>
-                            {
-                                isimagesLoading || !imageClick
-                                    ? <Skeleton.Node active className="loading-image"/>
-                                    : <img src={imageClick} alt="image-listing"/>    
-                            }
-                        </SliderContent>
-                        <Sliderbottom>
-                            <EmblaCarousel options={{ loop: true }} slidesToShow={1}>
-                                {
-                                    isimagesLoading ? 
-                                        <div>
-                                            <Skeleton.Image active/>
-                                        </div>
-                                        :
+                    
+                            <EmblaCarouThumb>
+                                {/* 1. Phần ảnh lớn ở trên (có nút mũi tên điều hướng) */}
+                                <EmblaCarouThumb.Main>
+                                    {
                                         imagesland && imagesland.length > 0 && imagesland.map((item,index) => (
-                                            <div key={index} className="img-listing" onClick={() => setImageclick(item.URL)}>
+                                            <EmblaCarouThumb.Item key={index}>
                                                 <img  src={item.URL} alt="image-listing"/>
-                                            </div>
+                                            </EmblaCarouThumb.Item>
+                                        ))
+                                    }
+                                </EmblaCarouThumb.Main>
+                                {/* 2. Phần ảnh nhỏ (thumbnails) ở dưới */}
+                                {/* Trên máy tính hiện nhiều tấm, trên điện thoại sẽ tự động thu gọn hiển thị đúng 2 tấm và cuộn theo ảnh lớn */}
+                                <EmblaCarouThumb.Thumbs>
+                                {
+                                        imagesland && imagesland.length > 0 && imagesland.map((item,index) => (
+                                                <img key={index}  src={item.URL} alt="image-listing"/>
                                         ))
                                 }
-                            </EmblaCarousel>
-                                
-                            
-                        </Sliderbottom>
-                    </WrapperSlider>
+                                </EmblaCarouThumb.Thumbs>
+                            </EmblaCarouThumb>
+                   
                 </Col>
                 <Col xs={0} sm={0} md={0} lg={0} xl={6} xxl={6}>
                     <WrapperContactBox>
