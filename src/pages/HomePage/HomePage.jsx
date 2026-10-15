@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import {WrapperHeadofHomepage,WrapperSlider,WrapperSearch,
     MenuItem,SearchboxContent,SearchboxHeader,Searchboxdropdown,SearchItem,SearchIconWrapper,SearchContent,EmptySearch,
-    WrapperContentHomepage,WrapperLandslist,WrapperPlacespecial} from "./style";
+    WrapperContentHomepage,WrapperPlacespecial} from "./style";
 import { CloseCircleOutlined,SearchOutlined } from "@ant-design/icons";
 import buildingone from "../../assets/images/Buldingone.jpg"
 import buildingtwo from "../../assets/images/buildingtwo.jpg"
@@ -18,15 +18,14 @@ import Imagecity_hanoi from "../../assets/images/hanoi_city.jpg"
 import Vipicon from "../../assets/images/vip.png";
 import Newicon from "../../assets/images/new.png"
 import Noimage from "../../assets/images/not_image.jpg"
-import SliderEffectComponent from "../../components/SlickEffectComponent/SlickEffectComponent";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CardsmallComponent from "../../components/CardsmallComponent/CardsmallComponent";
 import CardPlaceComponent from "../../components/CardPlaceComponent/CardPlaceComponent";
 import * as HomeService from "../../services/HomeService";
 import { setData,setLoading,setError } from "../../redux/slides/HomeSlide";
 import {getSuggestionsSearch} from "../../services/ListingService";
-import {formatDate,formatacreage,toSlug,isNew} from "../../utils";
-
+import {formatDate,formatacreage,isNew,formatPriceToString} from "../../utils";
+import {EmblaCarousel} from "../../components/EmblaCarousel/EmblaCarousel";
 const HomePage = () => {
     const [activeMenu, setActiveMenu] = useState("Sale");
     const [suggestions,setSuggestions] = useState([]);
@@ -78,55 +77,6 @@ const HomePage = () => {
         };
         fetchHomeData();
     }, [dispatch,user?.access_Token]);
-    const styleitemslider = {
-        display: "flex",
-        "justify-content": "center",
-        "align-items": "center"
-    }
-    function SampleNextArrow(props) {
-        const { className, style, onClick } = props;
-        return (
-            <div
-            className={className}
-            style={{ ...style, 
-                    width: "35px",
-                    height: "35px",
-                    borderRadius: "20%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "#02CBE0",
-                    right: "20px",
-                    zIndex: 1 }}
-            onClick={onClick}
-            > 
-
-            </div>
-        );
-    }
-
-    function SamplePrevArrow(props) {
-        const { className, style, onClick } = props;
-        return (
-            <div
-            className={className}
-            style={{ ...style,width: "35px",
-                    height: "35px",
-                    borderRadius: "20%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "#02CBE0",
-                     left: "20px", zIndex: 1 }}
-            onClick={onClick}
-            >
-                
-            </div>
-
-        );
-    }
     useEffect(() => {
 
         if(!keyword.trim()) {
@@ -162,52 +112,24 @@ const HomePage = () => {
         return () => clearTimeout(timer);
 
     },[keyword]);
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (
-                wrapperRef.current &&
-                !wrapperRef.current.contains(event.target)
-            ) {
-                setIsOpen(false);
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
+    
    return (
-        <div>
+        <>
             <WrapperHeadofHomepage>
                 <WrapperSlider>
-                    <SliderEffectComponent 
-                        setting={{
-                            dots:true,
-                            fade: true,
-                            infinite: true,
-                            autoplay: true,
-                            autoplaySpeed:4000,
-                            speed:1000,
-                            slidesToShow: 1,
-                            slidesToScroll: 1,
-                            waitForAnimate:false,
-                            prevArrow:<SamplePrevArrow />,
-                            nextArrow:<SampleNextArrow />,
+                    <EmblaCarousel options={{ loop: true }} slidesToShow={1} showDots={true} >
+                        <div className="embla__slide">
+                            <img src={buildingone} alt="slider-1" style={{ width: "100%", height: "30rem", objectFit: "fill", display: "block" }} />
+                        </div>
+                        <div className="embla__slide">
+                            <img src={buildingtwo} alt="slider-2" style={{ width: "100%", height: "30rem", objectFit: "fill", display: "block" }} />
+                        </div>
+                        <div className="embla__slide">
+                            <img src={buildingthree} alt="slider-3" style={{ width: "100%", height: "30rem", objectFit: "fill", display: "block" }} />
+                        </div>
+                    </EmblaCarousel>
                             
-                        }}
-                    >
-                        <div style={{...styleitemslider}}>
-                            <img src={buildingone} alt="slider-img" style={{ width: "100%", height: "30rem", objectFit: "fill" }} />
-                        </div>
-                        <div style={{...styleitemslider}}>
-                            <img src={buildingtwo} alt="slider-img" style={{ width: "100%", height: "30rem", objectFit: "fill" }}/>
-                        </div>
-                        <div style={{...styleitemslider}}>
-                            <img src={buildingthree} alt="slider-img" style={{ width: "100%", height: "30rem", objectFit: "fill" }}/>
-                        </div>
-                    </SliderEffectComponent>
+                        
                     <WrapperSearch >
                         <ul>
                             {['Sale', 'Rental'].map((type) => (
@@ -270,45 +192,20 @@ const HomePage = () => {
                             </SearchboxContent>
                         </div>
                     </WrapperSearch>
-                </WrapperSlider>
+                </WrapperSlider> 
             </WrapperHeadofHomepage>
             <WrapperContentHomepage>
                 {
                     featuredls && featuredls.length > 0 && (
-                        <div>
+                        <>
                             <h2>Featured</h2>
-                            <WrapperLandslist className="slider-container">
+                            <>
                                 {
                                     featuredls && featuredls.length > 0 ? 
-                                    <SliderEffectComponent 
-                                        setting={{
-                                            dots: false,
-                                            infinite: true,
-                                            slidesToShow: 4,
-                                            slidesToScroll: 1,
-                                            arrows: true,
-                                            centerMode: false,
-                                            prevArrow:<SamplePrevArrow />,
-                                            nextArrow:<SampleNextArrow />,
-                                            responsive: [
-                                                {
-                                                    breakpoint: 1024, 
-                                                    settings: {
-                                                        slidesToShow: 2,
-                                                        slidesToScroll: 2,
-                                                        infinite: true,
-                                                    }
-                                                },
-                                                {
-                                                    breakpoint: 768, 
-                                                    settings: {
-                                                        slidesToShow: 1,
-                                                        slidesToScroll: 1,
-                                                        initialSlide: 1
-                                                    }
-                                                }
-                                            ]
-                                        }}
+                                    <EmblaCarousel 
+                                        
+                                        slideSpacing="20px"
+                                        hiddenArrow={featuredls.length > 4}
                                     >
                                     {
                                         loading?.featured
@@ -320,12 +217,11 @@ const HomePage = () => {
                                                     ))
                                             )
                                             : featuredls.map((item, index) => (
-                                                <div key={item._id}>
                                                     <CardsmallComponent 
                                                         Id={item._id}
                                                         loading={false}
                                                         Title={item.Title}
-                                                        Price={item.Price}
+                                                        Price={formatPriceToString(item.Price)}
                                                         Area={item.Address.Commune.name+" / "+item.Address.City.name}
                                                         createdAt={formatDate(item.createdAt)}
                                                         Img={
@@ -357,7 +253,6 @@ const HomePage = () => {
                                                                 <img
                                                                     src={item?.images?.URL || Noimage}
                                                                     alt={`imagebuilding${index}`}
-                                                                    className={"image-land"}
                                                                 />
                                                             </div>
                                                             
@@ -365,52 +260,24 @@ const HomePage = () => {
                                                         Acreage={formatacreage(item.horizontal, item.vertical)}
                                                         className="card-small-component"
                                                     />
-                                                </div>
                                                 ))
                                         }
-                                    </SliderEffectComponent> :
+                                    </EmblaCarousel> :
                                     <span>No information found</span>
                                 }
-                            </WrapperLandslist>
-                        </div>
+                            </>
+                        </>
                     )
                 }
-                {
+                 {
                     latestls && latestls.length > 0 && (
-                        <div>
+                        <>
                             <h2>Latest</h2>
-                            <WrapperLandslist className="slider-container">
-                                <SliderEffectComponent 
-                                        setting={{
-                                            dots: false,
-                                            infinite: true,
-                                            slidesToShow: 4,
-                                            slidesToScroll: 1,
-                                            arrows: true,
-                                            centerMode: false,
-                                            prevArrow:<SamplePrevArrow />,
-                                            nextArrow:<SampleNextArrow />,
-                                            responsive: [
-                                                {
-                                                    breakpoint: 1024, 
-                                                    settings: {
-                                                        slidesToShow: 2,
-                                                        slidesToScroll: 2,
-                                                        infinite: true,
-                                                    }
-                                                },
-                                                {
-                                                    breakpoint: 768, 
-                                                    settings: {
-                                                        slidesToShow: 1,
-                                                        slidesToScroll: 1,
-                                                        initialSlide: 1
-                                                    }
-                                                }
-                                            ]
-                                        }}
-                                    >
-                                    {
+                            <EmblaCarousel 
+                                slideSpacing="20px"
+                                hiddenArrow={latestls.length > 4}
+                            >
+                                        {
                                         loading.latest
                                         ? (
                                              Array(5).fill(null).map((_, index) => (
@@ -425,7 +292,7 @@ const HomePage = () => {
                                                 Id={item._id}
                                                 loading={false}
                                                 Title={item.Title}
-                                                Price={item.Price}
+                                                Price={formatPriceToString(item.Price)}
                                                 Area={item.Address.Commune.name+" / "+item.Address.City.name}
                                                 createdAt={formatDate(item.createdAt)}
                                                 Img={
@@ -467,47 +334,23 @@ const HomePage = () => {
                                             </div>
                                             ))
                                     }
-                                </SliderEffectComponent>
-                            </WrapperLandslist>
-                        </div>
+                        
+                    
+                
+
+                            </EmblaCarousel>
+                        </>
                     )
-                }
+                }            
                 {
                     cheapls && cheapls.length > 0 && (
                         <div>
-                            <h2>Many people are interested</h2>
-                            <WrapperLandslist className="slider-container">
-                                <SliderEffectComponent 
-                                        setting={{
-                                            dots: false,
-                                            infinite: true,
-                                            slidesToShow: 4,
-                                            slidesToScroll: 1,
-                                            arrows: true,
-                                            centerMode: false,
-                                            prevArrow:<SamplePrevArrow />,
-                                            nextArrow:<SampleNextArrow />,
-                                            responsive: [
-                                                {
-                                                    breakpoint: 1024, 
-                                                    settings: {
-                                                        slidesToShow: 2,
-                                                        slidesToScroll: 2,
-                                                        infinite: true,
-                                                    }
-                                                },
-                                                {
-                                                    breakpoint: 768, 
-                                                    settings: {
-                                                        slidesToShow: 1,
-                                                        slidesToScroll: 1,
-                                                        initialSlide: 1
-                                                    }
-                                                }
-                                            ]
-                                        }}
-                                    >
-                                    {
+                            <h2>Cheap</h2>
+                            <EmblaCarousel 
+                                slideSpacing="20px"
+                                hiddenArrow={cheapls.length > 4}
+                            >
+                                {
                                         loading.cheap ? (
                                              Array(5).fill(null).map((_, index) => (
                                                 <div key={index}>
@@ -520,7 +363,7 @@ const HomePage = () => {
                                                 <CardsmallComponent 
                                                     Id={item._id}
                                                     Title={item.Title}
-                                                    Price={item.Price}
+                                                    Price={formatPriceToString(item.Price)}
                                                     Area={item.Address.Commune.name+" / "+item.Address.City.name}
                                                     createdAt={formatDate(item.createdAt)}
                                                     Img={
@@ -561,11 +404,10 @@ const HomePage = () => {
                                             </div>
                                     ))
                                     }
-                                </SliderEffectComponent>
-                            </WrapperLandslist>
+                            </EmblaCarousel>
                         </div>
                     )
-                }
+                } 
                 <div style={{marginTop:"4rem"}}>
                     <h2>Properties by Location</h2>
                     <WrapperPlacespecial>
@@ -587,7 +429,7 @@ const HomePage = () => {
                     </WrapperPlacespecial>
                 </div>
             </WrapperContentHomepage>
-        </div>
+        </>
    )
 }
 export default HomePage;

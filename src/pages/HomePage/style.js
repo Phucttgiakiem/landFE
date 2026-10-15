@@ -12,7 +12,7 @@ export const WrapperHeadofHomepage = styled.div`
 export const WrapperSlider = styled.div`
     width:100%;
     margin: 0;
-    position: relative;
+    /* position: relative;
     overflow: hidden;
     .slick-dots {
         position: absolute;
@@ -26,13 +26,13 @@ export const WrapperSlider = styled.div`
     }
     .slick-dots li button:before {
         font-size: 8px;
-        color: rgba(177, 177, 177, 1); /* màu mặc định */;
+        color: rgba(177, 177, 177, 1); 
         opacity:1 !important
     }
 
     .slick-dots li.slick-active button:before {
-        color: #ffffffff /* màu khi dot đang active */
-    }
+        color: #ffffffff 
+    } */
 `
 
 export const WrapperSearch = styled.div`
@@ -219,53 +219,76 @@ export const MenuItemSearchright = styled.div`
   }
 `
 export const WrapperContentHomepage = styled.div`
-  margin:40px 120px 40px;
-  min-height:525px;
+  max-width: 1440px; 
+  margin: 40px auto;  
+  padding: 0 120px;    
+  min-height: 525px;
+  box-sizing: border-box;
+
   @media screen and (max-width: 1199px) {
-    margin:40px 20px 40px;
+    padding: 0 20px;   
+  }
+
+  @media screen and (max-width: 768px) {
+    padding: 0 10px;   
   }
 `
 export const WrapperLandslist = styled.div`
-  margin-top:20px;
-  overflow-x: hidden;
+  margin-top: 20px;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 
-  .slick-track {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-
-  .slick-slide {
-    > div {
-      margin: 0 12px;
-      display: flex;
-      justify-content: center;
-    }
-  }
-
-  .slick-slideCards, .slick-slide > div > div {
-    width: 100%;
+  .slick-slider {
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -khtml-user-select: none;
+    -ms-user-select: none;
+    touch-action: pan-y;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .slick-list {
-    width: 100%;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    margin: 0;
     padding: 0;
-    margin: 0 -12px;
-    overflow: hidden; 
-  }
-  
-  .image-land {
     width: 100%;
-    aspect-ratio: 16/9;
-    object-fit: cover;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .slick-track {
+    position: relative;
+    top: 0;
+    left: 0;
+    display: flex !important;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .slick-slide {
+    display: none;
+    float: left;
+    height: 100%;
+    min-height: 1px;
+    
+    /* Ép mỗi item con nhận đúng không gian trên mobile */
+    > div {
+      margin: 0 8px;
+    }
+  }
+
+  .slick-slide.slick-active {
     display: block;
   }
 
-  .no-image {
-    object-fit: contain;
-    padding: 20px;
-    background: #f5f5f5;
-  }
-  
 `;
 export const WrapperPlacespecial = styled.div`
   width:100%;

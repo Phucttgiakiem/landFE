@@ -64,29 +64,29 @@ export const formatDate = (DateInput) => {
 
   const diffMs = now - date;
 
-  if (diffMs < 0) return "sắp tới";
+  if (diffMs < 0) return "upcoming";
 
   const seconds = Math.floor(diffMs / 1000);
-  if (seconds < 60) return "vừa xong";
+  if (seconds < 60) return "just now";
 
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes} phút trước`;
+  if (minutes < 60) return `${minutes} minute ago`;
 
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours} giờ trước`;
+  if (hours < 24) return `${hours} hour ago`;
 
   const days = Math.floor(hours / 24);
-  if (days < 7) return `${days} ngày trước`;
+  if (days < 7) return `${days} day ago`;
 
   if (days < 30) {
-    return `${Math.floor(days / 7)} tuần trước`;
+    return `${Math.floor(days / 7)} last week`;
   }
 
   const months = Math.floor(days / 30);
-  if (months < 12) return `${months} tháng trước`;
+  if (months < 12) return `${months} last month`;
 
   const years = Math.floor(months / 12);
-  return `${years} năm trước`;
+  return `${years} last year`;
 };
 export const formatacreage = (horizontal, vertical) => {
   
