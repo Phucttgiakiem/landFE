@@ -8,8 +8,6 @@ import {
     Nameland,LocationLand,WrapperSlider, SliderContent,Sliderbottom,
    InfoContact,ImageUser,WrapperCtBup,InformationBroker,DetailInfor,PhoneInfor
    ,SwitchTypeproperty,SwitchItem,Titlewrapper } from "./style";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { useParams,Link} from "react-router-dom";
 import {useState,useEffect} from "react";
 import { useDispatch,useSelector } from "react-redux";
@@ -26,10 +24,9 @@ import * as ImageService from "../../services/ImageService";
 import * as HomeService from "../../services/HomeService";
 import { formatDateVN,formatacreage,formatPriceToString } from "../../utils";
 import {setEntities, setLoading,setRelated,setLoadingRelated,setPageRelated} from "../../redux/slides/HomeSlide";
-
+import {EmblaCarousel} from "../../components/EmblaCarousel/EmblaCarousel";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 import CardsmallComponent from "../../components/CardsmallComponent/CardsmallComponent";
-import SlickEffectComponent from "../../components/SlickEffectComponent/SlickEffectComponent";
 import {formatDate,getJoinedTime} from "../../utils";
 import Noimage from "../../assets/images/not_image.jpg"
 export default function LandsDetailPage () {
@@ -188,41 +185,23 @@ export default function LandsDetailPage () {
                                     : <img src={imageClick} alt="image-listing"/>    
                             }
                         </SliderContent>
-                        <Sliderbottom className="slider-container">
-                            <SlickEffectComponent
-                               setting={{
-                                    dots: false,
-                                    infinite: true,
-                                    slidesToShow: 8,
-                                    slidesToScroll: 1,
-                                    centerMode: false,
-                                    responsive: [
-                                        {
-                                            breakpoint: 767,
-                                            settings: {
-                                            slidesToShow: 4,
-                                            slidesToScroll: 4,
-                                            infinite: true,
-                                            }
-                                        }
-                                    ]
-                               }}
-                              
-                            >
+                        <Sliderbottom>
+                            <EmblaCarousel options={{ loop: true }} slidesToShow={1}>
                                 {
                                     isimagesLoading ? 
                                         <div>
                                             <Skeleton.Image active/>
                                         </div>
                                         :
-                                        // eslint-disable-next-line array-callback-return
                                         imagesland && imagesland.length > 0 && imagesland.map((item,index) => (
                                             <div key={index} className="img-listing" onClick={() => setImageclick(item.URL)}>
                                                 <img  src={item.URL} alt="image-listing"/>
                                             </div>
                                         ))
                                 }
-                            </SlickEffectComponent>
+                            </EmblaCarousel>
+                                
+                            
                         </Sliderbottom>
                     </WrapperSlider>
                 </Col>
